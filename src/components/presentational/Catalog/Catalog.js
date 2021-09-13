@@ -1,27 +1,39 @@
 import React from "react";
 import { useEffect } from 'react';
-import actions from './../../../redux/actions';
-import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 
-const Catalog = (props) => {
-
-    const dispatch = useDispatch();
+const Catalog = ({ onFiltersSelected, onNeedMoreBusinesses, onInit, filters, shouldDisplayFilters, businesses }) => {
 
     useEffect(() => {
-      dispatch(actions.fetchCategories());
-      dispatch(actions.fetchTypes());
+        onInit();
+        onNeedMoreBusinesses(businesses.offset, businesses.count, filters);
     }, []);
 
     return (
-        <section onClick={() => (props.onFiltersSelected(props.filters))}>
-            WOW
+        <section>
+            <div onClick={() => (onFiltersSelected(filters))} >WOW</div>
             {
-                props.shouldDisplayFilters ?
-                <div>COOL</div> :
-                <div>LOADING...</div>
+                shouldDisplayFilters ?
+                    <div>COOL</div> :
+                    <div>LOADING...</div>
+            }
+            {
+                businesses.content.map(e => (<div key={e.id}>{e.description}</div>))
+            }
+            {
+                businesses.needMore && !businesses.isLoading ? <div onClick={() => {onNeedMoreBusinesses(businesses.offset, businesses.count, filters);}}>load more</div> : businesses.needMore ? 'BUSINESS LOADING' : null
             }
         </section>
     );
+}
+
+Catalog.propTypes = {
+    onInit: PropTypes.func.isRequired,
+    onFiltersSelected: PropTypes.func.isRequired,
+    onNeedMoreBusinesses: PropTypes.func.isRequired,
+    filters: PropTypes.object.isRequired,
+    shouldDisplayFilters: PropTypes.bool.isRequired,
+    businesses: PropTypes.object.isRequired
 }
 
 export default Catalog;

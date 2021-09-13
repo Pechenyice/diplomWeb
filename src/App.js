@@ -1,24 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import styles from './App.module.css';
+import { Route, Switch } from 'react-router';
+import Header from './components/presentational/Header/Header';
+import Landing from './components/presentational/Landing/Landing';
+import AuthorizedRouteManager from './components/container/AuthorizedRouteManager/AuthorizedRouteManager';
+import CatalogComponent from './components/container/CatalogComponent/CatalogComponent';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <section className="App">
+      <Route path='/' component={Header} />
+
+      <Switch>
+        <Route path='/catalog' component={CatalogComponent} />
+        <Route path='/' component={Landing} />
+
+        {/* <AuthorizedRouteManager path='/profile' component={Profile} /> */}
+      </Switch>
+    </section>
   );
 }
 

@@ -1,0 +1,12 @@
+.landing {
+    width: 100%;
+}
+  
+.buttonsWrapper {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    width: 50%;
+    height: 100px;
+    background-color: grey;
+}

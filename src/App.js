@@ -4,11 +4,13 @@ import Header from './components/presentational/Header/Header';
 import Landing from './components/presentational/Landing/Landing';
 import AuthorizedRouteManager from './components/container/AuthorizedRouteManager/AuthorizedRouteManager';
 import CatalogComponent from './components/container/CatalogComponent/CatalogComponent';
+import ErrorsDisplay from './components/container/ErrorsDisplay/ErrorsDisplay';
 
 function App() {
   return (
     <section className="App">
-      <Route path='/' component={Header} />
+      <Header />
+      <ErrorsDisplay />
 
       <Switch>
         <Route path='/catalog' component={CatalogComponent} />

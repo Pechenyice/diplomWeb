@@ -10,6 +10,8 @@ const initialState = {
     },
     plan: {
         isLoading: false,
+        isChecked: false,
+        isFetched: false,
         activeBusiness: null,
         activeEdition: null,
         data: null,
@@ -48,6 +50,14 @@ function reducer(state = initialState, action) {
             return state;
         }
 
+        case actions.types.FIND_ACTIVE_PLAN:
+        case actions.types.NULLIFY_ACTIVE_PLAN:
+        case actions.types.PLAN_REQUEST_STARTED:
+        case actions.types.PLAN_REQUEST_SUCCESSED:
+        case actions.types.PLAN_REQUEST_FAILED: {
+            return Object.assign({}, state, { plan: planReducer(state.plan, action, state.businesses) });
+        }
+
         case actions.types.REMOVE_ERROR:
         case actions.types.ADD_ERROR: {
             return Object.assign({}, state, { errors: errorsReducer(state.errors, action) });
@@ -73,6 +83,70 @@ function reducer(state = initialState, action) {
         }
 
         default: return state;
+    }
+}
+
+function planReducer(state, action, businesses) {
+    switch (action.type) {
+        case actions.types.FIND_ACTIVE_PLAN: {
+            const bId = action.q.planId;
+            const eId = action.q.edId;
+
+            let plan = businesses.content.find(b => b.id === bId);
+
+            let edition = plan?.editions.find(e => e.id === eId);
+
+            console.log('FOUND ', edition?.content || null)
+
+            let newPlan = plan ?
+                {
+                    isLoading: false,
+                    isChecked: true,
+                    activeBusiness: plan.id,
+                    activeEdition: edition?.id,
+                    data: edition?.content || null,
+                    comments: {
+                        isLoading: false,
+                        needMore: true,
+                        offset: 0,
+                        count: 20,
+                        content: []
+                    },
+                } :
+                {};
+
+            return Object.assign({}, state, newPlan, {isChecked: true});
+        }
+
+        case actions.types.NULLIFY_ACTIVE_PLAN: {
+            return Object.assign({}, state, {
+                isLoading: false,
+                isChecked: false,
+                isFetched: false,
+                activeBusiness: null,
+                activeEdition: null,
+                data: null,
+                comments: {
+                    isLoading: false,
+                    needMore: true,
+                    offset: 0,
+                    count: 20,
+                    content: []
+                },
+            });
+        }
+
+        case actions.types.PLAN_REQUEST_STARTED: {
+            return Object.assign({}, state, {isChecked: true, isLoading: true});
+        }
+
+        case actions.types.PLAN_REQUEST_SUCCESSED: {
+            return Object.assign({}, state, {isLoading: false, isFetched: true, data: action.plan});
+        }
+
+        case actions.types.PLAN_REQUEST_FAILED: {
+            return Object.assign({}, state, {isFetched: true});
+        }
     }
 }
 

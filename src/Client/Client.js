@@ -56,6 +56,19 @@ const Client = {
                 return response.json();
             });
     },
+
+    loadPlan: function (planId, edId) {
+        return fetch(this.constructUrl(`/getPlan?planId=${planId}&edId=${edId}`), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(this.checkStatus)
+            .then((response) => {
+                return response.json();
+            });
+    }
 }
 
 export default Client;

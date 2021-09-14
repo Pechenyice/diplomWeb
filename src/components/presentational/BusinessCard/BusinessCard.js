@@ -5,34 +5,34 @@ import { Link } from "react-router-dom";
 
 const BusinessCard = ({ data }) => {
     return (
-        <Link to={`/plan/${data.id}/ed/${data.editions[0]}`} style={{margin: '50px'}}>
+        <Link to={`/plan/${data.id}/ed/${data.editions[0].id}`} style={{margin: '50px'}}>
             <div>
                 <div>
-                    {data.name}
+                    {data.editions[0].content.name}
                 </div>
                 <div>
-                    {data.category}
+                    {data.editions[0].content.category}
                 </div>
                 <div>
-                    {data.type}
+                    {data.editions[0].content.type}
                 </div>
                 <div>
-                    {data.description}
+                    {data.editions[0].content.description}
                 </div>
                 <div>
-                    {data.created}
+                    {data.editions[0].content.created}
                 </div>
                 <div>
-                    {data.likes} {data.dislikes}
+                    {data.editions[0].content.likes} {data.editions[0].content.dislikes}
                 </div>
                 <div>
-                    income: {data.income.sum} {data.income.text}
+                    income: {data.editions[0].content.income.sum} {data.editions[0].content.income.text}
                 </div>
                 <div>
-                    expence: {data.expence.sum} {data.expence.text}
+                    expence: {data.editions[0].content.expence.sum} {data.editions[0].content.expence.text}
                 </div>
                 {
-                    data.editions.map(e => (<div key={e}>{e}</div>))
+                    data.editions.map(e => (<div key={e.id}>{e.id}</div>))
                 }
             </div>
         </Link>

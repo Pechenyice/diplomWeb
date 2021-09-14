@@ -1,12 +1,13 @@
 import React from "react";
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import BusinessCard from "../BusinessCard/BusinessCard";
 
 const Catalog = ({ onFiltersSelected, onNeedMoreBusinesses, onInit, filters, shouldDisplayFilters, businesses }) => {
 
     useEffect(() => {
         onInit();
-        onNeedMoreBusinesses(businesses.offset, businesses.count, filters);
+        onNeedMoreBusinesses();
     }, []);
 
     return (
@@ -18,10 +19,10 @@ const Catalog = ({ onFiltersSelected, onNeedMoreBusinesses, onInit, filters, sho
                     <div>LOADING...</div>
             }
             {
-                businesses.content.map(e => (<div key={e.id}>{e.description}</div>))
+                businesses.content.map(e => (<BusinessCard key={e.id} data={e} />))
             }
             {
-                businesses.needMore && !businesses.isLoading ? <div onClick={() => {onNeedMoreBusinesses(businesses.offset, businesses.count, filters);}}>load more</div> : businesses.needMore ? 'BUSINESS LOADING' : null
+                businesses.needMore && !businesses.isLoading ? <div onClick={() => {onNeedMoreBusinesses();}}>load more</div> : businesses.needMore ? 'BUSINESS LOADING' : null
             }
         </section>
     );

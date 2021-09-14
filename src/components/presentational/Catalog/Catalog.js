@@ -7,7 +7,7 @@ const Catalog = ({ onFiltersSelected, onNeedMoreBusinesses, onInit, filters, sho
 
     useEffect(() => {
         onInit();
-        onNeedMoreBusinesses();
+        if (businesses.content.length < businesses.count) onNeedMoreBusinesses();
     }, []);
 
     return (
@@ -19,7 +19,7 @@ const Catalog = ({ onFiltersSelected, onNeedMoreBusinesses, onInit, filters, sho
                     <div>LOADING...</div>
             }
             {
-                businesses.content.map(e => (<BusinessCard key={e.id} data={e} />))
+                businesses.content.length >= businesses.count ? businesses.content.map(e => (<BusinessCard key={e.id} data={e} />)) : 'loading animation'
             }
             {
                 businesses.needMore && !businesses.isLoading ? <div onClick={() => {onNeedMoreBusinesses();}}>load more</div> : businesses.needMore ? 'BUSINESS LOADING' : null

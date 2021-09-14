@@ -6,15 +6,22 @@ import BusinessPlan from "../../presentational/BusinessPlan/BusinessPlan";
 const BusinessPlanDisplay = connect(mapStateToProps, mapDispatchToProps)(BusinessPlan);
 
 function mapStateToProps(state) {
+    console.log("STATE ", state.plan)
     return {
-        businesses: state.businesses
+        plan: state.plan
     }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
     return {
-        onNeedBusiness: (businessId, editionId) => {
-            dispatch(actions.fetchBusiness(businessId, editionId));
+        onInit: () => {
+            dispatch(actions.findPlan(ownProps.match.params));
+        },
+        onNullPlan: () => {
+            dispatch(actions.fetchPlan(ownProps.match.params));
+        },
+        onClear: () => {
+            dispatch(actions.clearPlanInfo());
         }
     }
 }
@@ -23,7 +30,9 @@ function mergePropsWithDispatch(stateProps, dispatchProps) {
     return {
         ...stateProps,
         ...dispatchProps,
-        
+        onNeedMoreComments: (businessesId, editionId) => {
+            dispatchProps.dispatch(actions.fetchComments(businessesId, editionId, stateProps.plan.messages.offset, stateProps.plan.messages.count));
+        }
     }
 }
 

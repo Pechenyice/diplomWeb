@@ -8,8 +8,19 @@ const initialState = {
         type: null,
         pattern: ''
     },
-    activeEdition: null,
-    comments: [],
+    plan: {
+        isLoading: false,
+        activeBusiness: null,
+        activeEdition: null,
+        data: null,
+        comments: {
+            isLoading: false,
+            needMore: true,
+            offset: 0,
+            count: 20,
+            content: []
+        },
+    },
     categories: {
         isLoading: false,
         content: []
@@ -69,7 +80,7 @@ function errorsReducer(state, action) {
     switch (action.type) {
         case actions.types.REMOVE_ERROR: {
             let ind = state.content.findIndex(e => e.id === action.id);
-            
+
             return {
                 content: [
                     ...state.content.slice(0, ind),

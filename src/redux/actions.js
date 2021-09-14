@@ -13,10 +13,64 @@ const actions = {
         TYPES_REQUEST_SUCCESSED: 'TYPES_REQUEST_SUCCESSED',
         BUSINESSES_REQUEST_STARTED: 'BUSINESSES_REQUEST_STARTED',
         BUSINESSES_REQUEST_FAILED: 'BUSINESSES_REQUEST_FAILED',
-        BUSINESSES_REQUEST_SUCCESSED: 'BUSINESSES_REQUEST_SUCCESSED'
+        BUSINESSES_REQUEST_SUCCESSED: 'BUSINESSES_REQUEST_SUCCESSED',
+        FIND_ACTIVE_PLAN: 'FIND_ACTIVE_PLAN',
+        NULLIFY_ACTIVE_PLAN: 'NULLIFY_ACTIVE_PLAN',
+        PLAN_REQUEST_STARTED: 'PLAN_REQUEST_STARTED',
+        PLAN_REQUEST_SUCCESSED: 'PLAN_REQUEST_SUCCESSED',
+        PLAN_REQUEST_FAILED: 'PLAN_REQUEST_FAILED'
     },
 
-    applyFilters: function (filters) {
+    findPlan: function({planId, edId}) {
+        return {
+            type: this.types.FIND_ACTIVE_PLAN,
+            q: {
+                planId,
+                edId
+            }
+        }
+    },
+
+    clearPlanInfo: function() {
+        return {
+            type: this.types.NULLIFY_ACTIVE_PLAN
+        }
+    },
+
+    fetchPlanRequest: function () {
+        return {
+            type: this.types.PLAN_REQUEST_STARTED
+        }
+    },
+
+    fetchPlanSuccess: function (plan) {
+        return {
+            type: this.types.PLAN_REQUEST_SUCCESSED,
+            plan
+        }
+    },
+
+    fetchPlanFail: function () {
+        return {
+            type: this.types.PLAN_REQUEST_FAILED
+        }
+    },
+
+    fetchPlan: function ({planId, edId}) {
+        return (dispatch) => {
+            dispatch(this.fetchPlanRequest());
+            Client.loadPlan(planId, edId)
+                .then((plan) => {
+                    dispatch(this.fetchPlanSuccess(plan));
+                })
+                .catch(() => {
+                    dispatch(this.fetchPlanFail());
+                    dispatch(this.addError('Failed load current business plan!'));
+                })
+        }
+    },
+
+    applyFilters: function(filters) {
         return {
             type: this.types.APPLY_FILTERS,
             filters

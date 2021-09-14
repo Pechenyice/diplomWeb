@@ -12,35 +12,82 @@ let businesses = [];
 
 for (let i = 0; i < 22; i++) {
     businesses.push({
-        id: uuid.v4(), 
-        name: `name${i}`,
-        description: `kal${i}`,
-        category: 0,
-        type: 0,
+        id: uuid.v4(),
         created: 1631638551000,
         editions: [
-            0,
-            7,
-            12
+            {
+                id: uuid.v4(),
+                content: {
+                    name: `name${i}`,
+                    description: `kal${i}`,
+                    category: 0,
+                    type: 0,
+                    created: 1631638551000,
+                    income: {
+                        sum: 100,
+                        text: 'test'
+                    },
+                    expence: {
+                        sum: 100,
+                        text: 'test expence'
+                    },
+                    likes: 121,
+                    dislikes: 300
+                }
+            },
+            {
+                id: uuid.v4(),
+                content: {
+                    name: `name${i}`,
+                    description: `a tut ia pokakal kal${i}`,
+                    category: 0,
+                    type: 0,
+                    created: 1631638551000,
+                    income: {
+                        sum: 100,
+                        text: 'test'
+                    },
+                    expence: {
+                        sum: 100,
+                        text: 'test expence'
+                    },
+                    likes: 121,
+                    dislikes: 300
+                }
+            }
         ],
-        income: {
-            sum: 100,
-            text: 'test'
-        },
-        expence: {
-            sum: 100,
-            text: 'test expence'
-        },
-        likes: 121,
-        dislikes: 300
+
     });
 }
+
+app.get('/api/getPlan', (req, res) => {
+    console.log('asked test');
+    setTimeout(() => {
+        res.send(JSON.stringify({
+            name: `name test`,
+            description: `a tut ia pokakal kal test`,
+            category: 0,
+            type: 0,
+            created: 1631638551000,
+            income: {
+                sum: 100,
+                text: 'test'
+            },
+            expence: {
+                sum: 100,
+                text: 'test expence'
+            },
+            likes: 121,
+            dislikes: 300
+        }));
+    }, 5000);
+});
 
 app.get('/api/getFiltersCategories', (req, res) => {
     setTimeout(() => {
         res.send(JSON.stringify([
-            {id: 0, name: 'Franchise'},
-            {id: 1, name: 'Startup'},
+            { id: 0, name: 'Franchise' },
+            { id: 1, name: 'Startup' },
         ]));
     }, 5000);
 });

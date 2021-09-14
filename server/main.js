@@ -8,7 +8,33 @@ const uuid = require('uuid');
 
 app.use(express.json());
 
-let businesses = new Array(20).fill({id: uuid.v4(), description: 'kal'});
+let businesses = [];
+
+for (let i = 0; i < 22; i++) {
+    businesses.push({
+        id: uuid.v4(), 
+        name: `name${i}`,
+        description: `kal${i}`,
+        category: 0,
+        type: 0,
+        created: 1631638551000,
+        editions: [
+            0,
+            7,
+            12
+        ],
+        income: {
+            sum: 100,
+            text: 'test'
+        },
+        expence: {
+            sum: 100,
+            text: 'test expence'
+        },
+        likes: 121,
+        dislikes: 300
+    });
+}
 
 app.get('/api/getFiltersCategories', (req, res) => {
     setTimeout(() => {

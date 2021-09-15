@@ -82,6 +82,12 @@ function reducer(state = initialState, action) {
             return Object.assign({}, state, { businesses: businessesReducer(state.businesses, action) });
         }
 
+        case actions.types.COMMENTS_REQUEST_STARTED:
+        case actions.types.COMMENTS_REQUEST_FAILED:
+        case actions.types.COMMENTS_REQUEST_SUCCESSED: {
+            return Object.assign({}, state, {plan: Object.assign({}, {...state.plan}, {comments: planCommentsReducer(state.plan.comments, action)})});
+        }
+
         default: return state;
     }
 }
@@ -141,7 +147,7 @@ function planReducer(state, action, businesses) {
         }
 
         case actions.types.PLAN_REQUEST_SUCCESSED: {
-            return Object.assign({}, state, {isLoading: false, isFetched: true, data: action.plan});
+            return Object.assign({}, state, {isLoading: false, isFetched: true, activeBusiness: action.planId, activeEdition: action.edId, data: action.plan});
         }
 
         case actions.types.PLAN_REQUEST_FAILED: {
@@ -179,12 +185,10 @@ function categoriesReducer(state, action) {
         }
 
         case actions.types.CATEGORIES_REQUEST_FAILED: {
-            console.log('categories loading failed');
             return state;
         }
 
         case actions.types.CATEGORIES_REQUEST_SUCCESSED: {
-            console.log('categories loading success');
             return Object.assign({}, state, { content: action.categories, isLoading: false });
         }
     }
@@ -193,37 +197,51 @@ function categoriesReducer(state, action) {
 function typesReducer(state, action) {
     switch (action.type) {
         case actions.types.TYPES_REQUEST_STARTED: {
-            console.log('types loading started');
             return Object.assign({}, state, { content: state.content, isLoading: true });
         }
 
         case actions.types.TYPES_REQUEST_FAILED: {
-            console.log('types loading failed');
             return state;
         }
 
         case actions.types.TYPES_REQUEST_SUCCESSED: {
-            console.log('types loading success');
             return Object.assign({}, state, { content: action.types, isLoading: false });
         }
     }
 }
 
-function businessesReducer(state, action) {
-    console.log(action);
+function businessesReducer(state, action) { 
     switch (action.type) {
         case actions.types.BUSINESSES_REQUEST_STARTED: {
-            console.log('businesses loading started');
             return Object.assign({}, state, { isLoading: true });
         }
 
         case actions.types.BUSINESSES_REQUEST_FAILED: {
-            console.log('businesses loading failed');
             return state;
         }
 
         case actions.types.BUSINESSES_REQUEST_SUCCESSED: {
-            console.log('businesses loading success');
+            return Object.assign({}, state, { isLoading: false, content: state.content.concat(action.result.content), offset: action.result.offset, needMore: action.result.needMore });
+        }
+    }
+}
+
+function planCommentsReducer(state, action) {
+    console.log(action);
+    switch (action.type) {
+        case actions.types.COMMENTS_REQUEST_STARTED: {
+            console.log('comments loading started');
+            return Object.assign({}, state, { isLoading: true });
+        }
+
+        case actions.types.COMMENTS_REQUEST_FAILED: {
+            console.log('comments loading failed');
+            return state;
+        }
+
+        case actions.types.COMMENTS_REQUEST_SUCCESSED: {
+            console.log('comments loading success');
+            console.log(Object.assign({}, state, { isLoading: false, content: state.content.concat(action.result.content), offset: action.result.offset, needMore: action.result.needMore }))
             return Object.assign({}, state, { isLoading: false, content: state.content.concat(action.result.content), offset: action.result.offset, needMore: action.result.needMore });
         }
     }

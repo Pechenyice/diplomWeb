@@ -1,13 +1,16 @@
 import React from "react";
 import {Redirect, Route} from "react-router";
 
-const AuthorizedRoute = ({component, ...rest}) => {
+const AuthorizedRoute = ({isLogged, component, location, path}) => {
     return (
         <div>
         {
-            rest.isLogged ?
-            <Route {...rest} component={component}/> :
-            <Redirect to={'/'} />
+            isLogged ?
+            <Route path={path} component={component}/> :
+            <Redirect to={{
+                pathname: '/auth',
+                state: { from: location }
+            }} />
         }
         </div>
     );

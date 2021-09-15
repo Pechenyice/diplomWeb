@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styles from './BusinessPlan.module.css';
 
-const BusinessPlan = ({ plan, onInit, onNullPlan, onClear, onNeedMoreComments }) => {
+const BusinessPlan = ({ plan, onInit, onNullPlan, onClear, onNeedMoreComments, onNeedInitialComments }) => {
 
     useEffect(() => {
         return () => {
@@ -43,6 +43,17 @@ const BusinessPlan = ({ plan, onInit, onNullPlan, onClear, onNeedMoreComments })
                             </div>
                             <div>
                                 expence: {plan.data.expence.sum} {plan.data.expence.text}
+                            </div>
+                            {
+                                plan.comments.content.map(e => (<div key={e.id}>{e.text} {e.author.nickname}</div>))
+                            }
+                            <div>
+                                {
+                                    !plan.comments.offset && !plan.comments.isLoading ? onNeedMoreComments(plan.activeBusiness, plan.activeEdition) : null
+                                }
+                                {
+                                    plan.comments.needMore && !plan.comments.isLoading ? <div onClick={() => { onNeedMoreComments(plan.activeBusiness, plan.activeEdition); }}>load more comments</div> : plan.comments.needMore ? 'COMMENTS LOADING' : null
+                                }
                             </div>
                         </div> :
                         <div>NO DATA</div>

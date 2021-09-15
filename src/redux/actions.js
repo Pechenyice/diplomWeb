@@ -18,7 +18,10 @@ const actions = {
         NULLIFY_ACTIVE_PLAN: 'NULLIFY_ACTIVE_PLAN',
         PLAN_REQUEST_STARTED: 'PLAN_REQUEST_STARTED',
         PLAN_REQUEST_SUCCESSED: 'PLAN_REQUEST_SUCCESSED',
-        PLAN_REQUEST_FAILED: 'PLAN_REQUEST_FAILED'
+        PLAN_REQUEST_FAILED: 'PLAN_REQUEST_FAILED',
+        COMMENTS_REQUEST_STARTED: 'COMMENTS_REQUEST_STARTED',
+        COMMENTS_REQUEST_SUCCESSED: 'COMMENTS_REQUEST_SUCCESSED',
+        COMMENTS_REQUEST_FAILED: 'COMMENTS_REQUEST_FAILED'
     },
 
     findPlan: function({planId, edId}) {
@@ -43,10 +46,12 @@ const actions = {
         }
     },
 
-    fetchPlanSuccess: function (plan) {
+    fetchPlanSuccess: function (plan, planId, edId) {
         return {
             type: this.types.PLAN_REQUEST_SUCCESSED,
-            plan
+            plan,
+            planId, 
+            edId
         }
     },
 
@@ -61,7 +66,7 @@ const actions = {
             dispatch(this.fetchPlanRequest());
             Client.loadPlan(planId, edId)
                 .then((plan) => {
-                    dispatch(this.fetchPlanSuccess(plan));
+                    dispatch(this.fetchPlanSuccess(plan, planId, edId));
                 })
                 .catch(() => {
                     dispatch(this.fetchPlanFail());
@@ -153,6 +158,53 @@ const actions = {
                 .catch(() => {
                     dispatch(this.fetchBusinessesFail());
                     dispatch(this.addError('Failed load businesses!'));
+                })
+        }
+    },
+
+    fetchCommentsRequest: function () {
+        return {
+            type: this.types.COMMENTS_REQUEST_STARTED
+        }
+    },
+
+    fetchCommentsSuccess: function (result) {
+        return {
+            type: this.types.COMMENTS_REQUEST_SUCCESSED,
+            result
+        }
+    },
+
+    fetchCommentsFail: function () {
+        return {
+            type: this.types.COMMENTS_REQUEST_FAILED
+        }
+    },
+
+    fetchInitialComments: function(businessId, edId, offset, count) {
+        return (dispatch) => {
+            dispatch(this.fetchCommentsRequest());
+            Client.loadComments(businessId, edId, offset, count)
+                .then((result) => {
+                    dispatch(this.fetchCommentsSuccess(result));
+                })
+                .catch(() => {
+                    dispatch(this.fetchCommentsFail());
+                    dispatch(this.addError('Failed load comments!'));
+                })
+        }
+    },
+
+    fetchComments: function(businessId, edId, offset, count) {
+        return (dispatch) => {
+            dispatch(this.fetchCommentsRequest());
+            Client.loadComments(businessId, edId, offset, count)
+                .then((result) => {
+                    dispatch(this.fetchCommentsSuccess(result));
+                })
+                .catch(() => {
+                    dispatch(this.fetchCommentsFail());
+                    dispatch(this.addError('Failed load comments!'));
                 })
         }
     },

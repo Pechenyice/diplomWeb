@@ -7,6 +7,7 @@ import CatalogComponent from './components/container/CatalogComponent/CatalogCom
 import ErrorsDisplay from './components/container/ErrorsDisplay/ErrorsDisplay';
 import InvalidRoute from './components/presentational/404/404';
 import BusinessPlanDisplay from './components/container/BusinessPlanDisplay/BusinessPlanDisplay';
+import AuthDisplay from './components/container/AuthDisplay/AuthDisplay';
 
 function App() {
   return (
@@ -17,10 +18,13 @@ function App() {
       <Switch>
         <Route path='/plan/:planId/ed/:edId' component={BusinessPlanDisplay} />
         <Route path='/catalog' component={CatalogComponent} />
+        <Route path='/auth' component={AuthDisplay} />
         <Route exact path='/' component={Landing} />
 
+        <AuthorizedRouteManager path='/profile' component={Header} />
+        <AuthorizedRouteManager path='/newPlan' component={Header} />
+
         <Route component={InvalidRoute} />
-        {/* <AuthorizedRouteManager path='/profile' component={Profile} /> */}
       </Switch>
     </section>
   );

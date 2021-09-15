@@ -1,6 +1,7 @@
 import React from "react";
 import { Redirect } from "react-router";
 import styles from './Auth.module.css';
+import PropTypes from 'prop-types';
 
 const Auth = ({location}) => {
 
@@ -15,6 +16,10 @@ const Auth = ({location}) => {
     return (
         <div onClick={() => (<Redirect to={redirectPath()} />)}>Хто я</div>
     );
+}
+
+Auth.propTypes = {
+    location: PropTypes.object
 }
 
 export default Auth;

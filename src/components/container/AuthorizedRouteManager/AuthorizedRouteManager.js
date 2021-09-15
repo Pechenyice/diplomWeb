@@ -1,16 +1,19 @@
-// import React from "react";
-// import { connect } from "react-redux";
-// import AuthorizedRoute from "../../helpers/AuthorizedRoute/AuthorizedRoute";
+import React from "react";
+import { connect } from "react-redux";
+import AuthorizedRoute from "../../helpers/AuthorizedRoute/AuthorizedRoute";
 
-// const AuthorizedRouteManager = (props) => {
+const AuthorizedRouteManager = connect(mapStateToProps, mapDispatchToProps)(AuthorizedRoute);
 
-// }
+function mapStateToProps(state, ownProps) {
+    return {
+        isLogged: state.user === null ? false : true
+    };
+}
 
-// function mapStateToProps(state) {
-//     return {
-//         'isLogged':  state.user == null ? false : true
-//         'component': 
-//     };
-// }
+function mapDispatchToProps(dispatch) {
+    return {
+        dispatch
+    };
+}
 
-// export default AuthorizedRouteManager;
+export default AuthorizedRouteManager;

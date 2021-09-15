@@ -1,5 +1,4 @@
 const Client = {
-
     apiPath: '/api',
 
     constructUrl: function (path) {
@@ -18,9 +17,9 @@ const Client = {
         }
     },
 
-    loadCategories: function () {
-        return fetch(this.constructUrl('/getFiltersCategories'), {
-            method: 'GET',
+    safeFetch: function(url, method) {
+        return fetch(url, {
+            method: method,
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -29,45 +28,26 @@ const Client = {
             .then((response) => {
                 return response.json();
             });
+    },
+
+    loadCategories: function () {
+        return this.safeFetch(this.constructUrl('/getFiltersCategories'), 'GET');
     },
 
     loadTypes: function () {
-        return fetch(this.constructUrl('/getFiltersTypes'), {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(this.checkStatus)
-            .then((response) => {
-                return response.json();
-            });
+        return this.safeFetch(this.constructUrl('/getFiltersTypes'), 'GET');
     },
 
     loadBusinesses: function (offset, count, filters) {
-        return fetch(this.constructUrl(`/getBusinesses?offset=${offset}&count=${count}&f_category=${filters.category}&f_type=${filters.type}&f_pattern=${filters.pattern}`), {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(this.checkStatus)
-            .then((response) => {
-                return response.json();
-            });
+        return this.safeFetch(this.constructUrl(`/getBusinesses?offset=${offset}&count=${count}&f_category=${filters.category}&f_type=${filters.type}&f_pattern=${filters.pattern}`), 'GET');
+    },
+
+    loadComments: function (businessId, edId, offset, count) {
+        return this.safeFetch(this.constructUrl(`/getComments?businessId=${businessId}&edId=${edId}&offset=${offset}&count=${count}`), 'GET');
     },
 
     loadPlan: function (planId, edId) {
-        return fetch(this.constructUrl(`/getPlan?planId=${planId}&edId=${edId}`), {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(this.checkStatus)
-            .then((response) => {
-                return response.json();
-            });
+        return this.safeFetch(this.constructUrl(`/getPlan?planId=${planId}&edId=${edId}`), 'GET');
     }
 }
 

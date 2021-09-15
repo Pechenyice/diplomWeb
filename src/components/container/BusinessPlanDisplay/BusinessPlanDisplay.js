@@ -3,12 +3,12 @@ import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import BusinessPlan from "../../presentational/BusinessPlan/BusinessPlan";
 
-const BusinessPlanDisplay = connect(mapStateToProps, mapDispatchToProps)(BusinessPlan);
+const BusinessPlanDisplay = connect(mapStateToProps, mapDispatchToProps, mergePropsWithDispatch)(BusinessPlan);
 
 function mapStateToProps(state) {
     console.log("STATE ", state.plan)
     return {
-        plan: state.plan
+        plan: state.plan,
     }
 }
 
@@ -22,7 +22,8 @@ function mapDispatchToProps(dispatch, ownProps) {
         },
         onClear: () => {
             dispatch(actions.clearPlanInfo());
-        }
+        },
+        dispatch
     }
 }
 
@@ -31,7 +32,7 @@ function mergePropsWithDispatch(stateProps, dispatchProps) {
         ...stateProps,
         ...dispatchProps,
         onNeedMoreComments: (businessesId, editionId) => {
-            dispatchProps.dispatch(actions.fetchComments(businessesId, editionId, stateProps.plan.messages.offset, stateProps.plan.messages.count));
+            dispatchProps.dispatch(actions.fetchComments(businessesId, editionId, stateProps.plan.comments.offset, stateProps.plan.comments.count));
         }
     }
 }

@@ -9,6 +9,19 @@ const uuid = require('uuid');
 app.use(express.json());
 
 let businesses = [];
+let comments = [];
+
+for (let i = 0; i < 22; i++) {
+    comments.push({
+        id: uuid.v4(),
+        created: 1631638551000,
+        text: `test${i}`,
+        author: {
+            id: uuid.v4(),
+            nickname: `user${i}`
+        }
+    });
+}
 
 for (let i = 0; i < 22; i++) {
     businesses.push({
@@ -89,6 +102,24 @@ app.get('/api/getFiltersCategories', (req, res) => {
             { id: 0, name: 'Franchise' },
             { id: 1, name: 'Startup' },
         ]));
+    }, 5000);
+});
+
+app.get('/api/getComments', (req, res) => {
+    let analysed = {
+        offset: +req.query.offset + +req.query.count
+    };
+
+    let min = comments.length < analysed.offset ? comments.length : analysed.offset;
+
+    let ans = comments.slice(+req.query.offset, min);
+
+    analysed['needMore'] = min == ans.length;
+
+    analysed['content'] = ans;
+
+    setTimeout(() => {
+        res.send(JSON.stringify(analysed));
     }, 5000);
 });
 

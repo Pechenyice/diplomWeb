@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import styles from './BusinessPlan.module.css';
+import PropTypes from 'prop-types';
 
-const BusinessPlan = ({ plan, onInit, onNullPlan, onClear, onNeedMoreComments, onNeedInitialComments }) => {
+const BusinessPlan = ({ plan, onInit, onNullPlan, onClear, onNeedMoreComments }) => {
 
     useEffect(() => {
         return () => {
@@ -60,6 +61,14 @@ const BusinessPlan = ({ plan, onInit, onNullPlan, onClear, onNeedMoreComments, o
             }
         </section>
     )
+}
+
+BusinessPlan.propTypes = {
+    plan: PropTypes.object,
+    onInit: PropTypes.func,
+    onNullPlan: PropTypes.func,
+    onClear: PropTypes.func,
+    onNeedMoreComments: PropTypes.func
 }
 
 export default BusinessPlan;

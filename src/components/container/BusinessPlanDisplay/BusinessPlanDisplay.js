@@ -9,6 +9,7 @@ function mapStateToProps(state) {
     console.log("STATE ", state.plan)
     return {
         plan: state.plan,
+        user: state.user.id
     }
 }
 

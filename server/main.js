@@ -10,6 +10,7 @@ app.use(express.json());
 
 let businesses = [];
 let comments = [];
+let user = {};
 
 for (let i = 0; i < 22; i++) {
     comments.push({
@@ -24,15 +25,22 @@ for (let i = 0; i < 22; i++) {
 }
 
 for (let i = 0; i < 22; i++) {
+    let tmp = null;
+    if (!i) {
+        tmp = uuid.v4();
+        user['id'] = tmp;
+    }
+
     businesses.push({
-        id: uuid.v4(),
+        id: !i ? tmp : uuid.v4(),
+        owner: !i ? tmp : uuid.v4(),
         created: 1631638551000,
         editions: [
             {
                 id: uuid.v4(),
                 content: {
                     name: `name${i}`,
-                    description: `kal${i}`,
+                    description: `desc${i}`,
                     category: 0,
                     type: 0,
                     created: 1631638551000,
@@ -52,7 +60,7 @@ for (let i = 0; i < 22; i++) {
                 id: uuid.v4(),
                 content: {
                     name: `name${i}`,
-                    description: `a tut ia pokakal kal${i}`,
+                    description: `test desc${i}`,
                     category: 0,
                     type: 0,
                     created: 1631638551000,
@@ -78,7 +86,8 @@ app.get('/api/getPlan', (req, res) => {
     setTimeout(() => {
         res.send(JSON.stringify({
             name: `name test`,
-            description: `a tut ia pokakal kal test`,
+            owner: user.id,
+            description: `desc for non fetched test`,
             category: 0,
             type: 0,
             created: 1631638551000,
@@ -102,6 +111,36 @@ app.get('/api/getFiltersCategories', (req, res) => {
             { id: 0, name: 'Franchise' },
             { id: 1, name: 'Startup' },
         ]));
+    }, 5000);
+});
+
+app.get('/api/getOwnPlans', (req, res) => {
+    setTimeout(() => {
+        res.send(JSON.stringify(businesses));
+    }, 5000);
+});
+
+app.get('/api/getLikedPlans', (req, res) => {
+    setTimeout(() => {
+        res.send(JSON.stringify(businesses));
+    }, 5000);
+});
+
+// app.get('/api/getDislikedPlans', (req, res) => {
+//     setTimeout(() => {
+//         res.send(JSON.stringify(businesses));
+//     }, 5000);
+// });
+
+app.post('/api/auth', (req, res) => {
+    setTimeout(() => {
+        res.send(user);
+    }, 5000);
+});
+
+app.post('/api/checkToken', (req, res) => {
+    setTimeout(() => {
+        res.send(user);
     }, 5000);
 });
 

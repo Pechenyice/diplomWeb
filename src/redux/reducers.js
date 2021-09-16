@@ -2,7 +2,13 @@ import actions from "./actions";
 import { v4 as uuidv4 } from 'uuid';
 
 const initialState = {
-    user: null,
+    user: {
+        id: null,
+        auth: {
+            isChecking: false
+        },
+        isLoading: false
+    },
     filters: {
         category: null,
         type: null,
@@ -14,6 +20,7 @@ const initialState = {
         isFetched: false,
         activeBusiness: null,
         activeEdition: null,
+        activeOwner: null,
         data: null,
         comments: {
             isLoading: false,
@@ -38,6 +45,24 @@ const initialState = {
         needMore: true,
         content: []
     },
+    profilePlans: {
+        forUser: null,
+        own: {
+            isFetched: false,
+            isLoading: false,
+            content: []
+        },
+        liked: {
+            isFetched: false,
+            isLoading: false,
+            content: []
+        },
+        disliked: {
+            isFetched: false,
+            isLoading: false,
+            content: []
+        }
+    },
     errors: {
         content: []
     }
@@ -48,6 +73,27 @@ function reducer(state = initialState, action) {
         case actions.types.APPLY_FILTERS: {
             console.log('dispatched ' + JSON.stringify(action.filters))
             return state;
+        }
+
+        case actions.types.OWN_PLANS_REQUEST_STARTED:
+        case actions.types.OWN_PLANS_REQUEST_SUCCESSED:
+        case actions.types.OWN_PLANS_REQUEST_FAILED:
+        case actions.types.LIKED_PLANS_REQUEST_STARTED:
+        case actions.types.LIKED_PLANS_REQUEST_SUCCESSED:
+        case actions.types.LIKED_PLANS_REQUEST_FAILED:
+        case actions.types.DISLIKED_PLANS_REQUEST_STARTED:
+        case actions.types.DISLIKED_PLANS_REQUEST_SUCCESSED:
+        case actions.types.DISLIKED_PLANS_REQUEST_FAILED: {
+            return Object.assign({}, state, { profilePlans: profilePlansReducer(state.profilePlans, action) });
+        }
+
+        case actions.types.AUTH_REQUEST_STARTED:
+        case actions.types.AUTH_REQUEST_SUCCESSED:
+        case actions.types.AUTH_REQUEST_FAILED:
+        case actions.types.USER_AUTH_CHECK_REQUEST_STARTED:
+        case actions.types.USER_AUTH_CHECK_REQUEST_SUCCESSED:
+        case actions.types.USER_AUTH_CHECK_REQUEST_FAILED: {
+            return Object.assign({}, state, { user: userReducer(state.user, action) });
         }
 
         case actions.types.FIND_ACTIVE_PLAN:
@@ -85,7 +131,7 @@ function reducer(state = initialState, action) {
         case actions.types.COMMENTS_REQUEST_STARTED:
         case actions.types.COMMENTS_REQUEST_FAILED:
         case actions.types.COMMENTS_REQUEST_SUCCESSED: {
-            return Object.assign({}, state, {plan: Object.assign({}, {...state.plan}, {comments: planCommentsReducer(state.plan.comments, action)})});
+            return Object.assign({}, state, { plan: Object.assign({}, { ...state.plan }, { comments: planCommentsReducer(state.plan.comments, action) }) });
         }
 
         default: return state;
@@ -108,8 +154,9 @@ function planReducer(state, action, businesses) {
                 {
                     isLoading: false,
                     isChecked: true,
-                    activeBusiness: plan.id,
+                    activeBusiness: plan?.id,
                     activeEdition: edition?.id,
+                    activeOwner: plan?.owner,
                     data: edition?.content || null,
                     comments: {
                         isLoading: false,
@@ -121,7 +168,7 @@ function planReducer(state, action, businesses) {
                 } :
                 {};
 
-            return Object.assign({}, state, newPlan, {isChecked: true});
+            return Object.assign({}, state, newPlan, { isChecked: true });
         }
 
         case actions.types.NULLIFY_ACTIVE_PLAN: {
@@ -131,6 +178,7 @@ function planReducer(state, action, businesses) {
                 isFetched: false,
                 activeBusiness: null,
                 activeEdition: null,
+                activeOwner: null,
                 data: null,
                 comments: {
                     isLoading: false,
@@ -143,15 +191,15 @@ function planReducer(state, action, businesses) {
         }
 
         case actions.types.PLAN_REQUEST_STARTED: {
-            return Object.assign({}, state, {isChecked: true, isLoading: true});
+            return Object.assign({}, state, { isChecked: true, isLoading: true });
         }
 
         case actions.types.PLAN_REQUEST_SUCCESSED: {
-            return Object.assign({}, state, {isLoading: false, isFetched: true, activeBusiness: action.planId, activeEdition: action.edId, data: action.plan});
+            return Object.assign({}, state, { isLoading: false, isFetched: true, activeOwner: action.plan.owner, activeBusiness: action.planId, activeEdition: action.edId, data: action.plan });
         }
 
         case actions.types.PLAN_REQUEST_FAILED: {
-            return Object.assign({}, state, {isFetched: true});
+            return Object.assign({}, state, { isFetched: true });
         }
     }
 }
@@ -174,6 +222,80 @@ function errorsReducer(state, action) {
         case actions.types.ADD_ERROR: {
             console.log(action.text)
             return { content: state.content.concat({ id: uuidv4(), text: action.text }) };
+        }
+    }
+}
+
+function userReducer(state, action) {
+    switch (action.type) {
+        case actions.types.USER_AUTH_CHECK_REQUEST_STARTED: {
+            console.log('auth check started')
+            return Object.assign({}, state, { auth: { isChecking: true } });
+        }
+
+        case actions.types.USER_AUTH_CHECK_REQUEST_SUCCESSED: {
+            console.log('auth check completed', action.user.id)
+            return Object.assign({}, state, { id: action.user.id, auth: { isChecking: false } });
+        }
+
+        case actions.types.USER_AUTH_CHECK_REQUEST_FAILED: {
+            console.log('auth check failed')
+            return Object.assign({}, state, { id: null, auth: { isChecking: false }});
+        }
+
+        case actions.types.AUTH_REQUEST_STARTED: {
+            console.log('auth started')
+            return Object.assign({}, state, { isLoading: true });
+        }
+
+        case actions.types.AUTH_REQUEST_FAILED: {
+            console.log('auth failed')
+            return Object.assign({}, state, { id: null, isLoading: false });
+        }
+
+        case actions.types.AUTH_REQUEST_SUCCESSED: {
+            console.log('auth successed', action.user.id)
+            return Object.assign({}, state, { id: action.user.id, isLoading: false });
+        }
+    }
+}
+
+function profilePlansReducer(state, action) {
+    switch (action.type) {
+        case actions.types.OWN_PLANS_REQUEST_STARTED: {
+            return Object.assign({}, state, { forUser: action.userId, own: Object.assign({}, state.own, {isLoading: true}) });
+        }
+
+        case actions.types.OWN_PLANS_REQUEST_SUCCESSED: {
+            return Object.assign({}, state, { forUser: action.userId, own: Object.assign({}, state.own, {isLoading: false, isFetched: true, content: action.result}) });
+        }
+
+        case actions.types.OWN_PLANS_REQUEST_FAILED: {
+            return Object.assign({}, state, { forUser: action.userId, own: Object.assign({}, state.own, {isLoading: false, isFetched: true}) });
+        }
+
+        case actions.types.LIKED_PLANS_REQUEST_STARTED: {
+            return Object.assign({}, state, { forUser: action.userId, liked: Object.assign({}, state.liked, {isLoading: true}) });
+        }
+
+        case actions.types.LIKED_PLANS_REQUEST_SUCCESSED: {
+            return Object.assign({}, state, { forUser: action.userId, liked: Object.assign({}, state.liked, {isLoading: false, isFetched: true, content: action.result}) });
+        }
+
+        case actions.types.LIKED_PLANS_REQUEST_FAILED: {
+            return Object.assign({}, state, { forUser: action.userId, liked: Object.assign({}, state.liked, {isLoading: false, isFetched: true}) });
+        }
+
+        case actions.types.DISLIKED_PLANS_REQUEST_STARTED: {
+            return Object.assign({}, state, { forUser: action.userId, disliked: Object.assign({}, state.disliked, {isLoading: true}) });
+        }
+
+        case actions.types.DISLIKED_PLANS_REQUEST_SUCCESSED: {
+            return Object.assign({}, state, { forUser: action.userId, disliked: Object.assign({}, state.disliked, {isLoading: false, isFetched: true, content: action.result}) });
+        }
+
+        case actions.types.DISLIKED_PLANS_REQUEST_FAILED: {
+            return Object.assign({}, state, { forUser: action.userId, disliked: Object.assign({}, state.disliked, {isLoading: false, isFetched: true}) });
         }
     }
 }
@@ -210,7 +332,7 @@ function typesReducer(state, action) {
     }
 }
 
-function businessesReducer(state, action) { 
+function businessesReducer(state, action) {
     switch (action.type) {
         case actions.types.BUSINESSES_REQUEST_STARTED: {
             return Object.assign({}, state, { isLoading: true });

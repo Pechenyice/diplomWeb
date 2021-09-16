@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import styles from './BusinessPlan.module.css';
 import PropTypes from 'prop-types';
+import { Redirect } from "react-router";
+import { Link } from "react-router-dom";
 
-const BusinessPlan = ({ plan, onInit, onNullPlan, onClear, onNeedMoreComments }) => {
+const BusinessPlan = ({ plan, user, onInit, onNullPlan, onClear, onNeedMoreComments }) => {
 
     useEffect(() => {
         return () => {
@@ -21,6 +23,16 @@ const BusinessPlan = ({ plan, onInit, onNullPlan, onClear, onNeedMoreComments })
                     <div>LOADING</div> :
                     plan.data ?
                         <div>
+                            {
+                                plan.activeOwner === user ?
+                                    <Link to={{
+                                        pathname: `/editPlan/plan/${plan.activeBusiness}/ed/${plan.activeEdition}/owner/${plan.activeOwner}`,
+                                        state: {plan}
+                                    }}>
+                                        <div>'canEdit'</div>
+                                    </Link> :
+                                    <div>'not mine'</div>
+                            }
                             <div>
                                 {plan.data.name}
                             </div>
@@ -65,6 +77,7 @@ const BusinessPlan = ({ plan, onInit, onNullPlan, onClear, onNeedMoreComments })
 
 BusinessPlan.propTypes = {
     plan: PropTypes.object,
+    user: PropTypes.string,
     onInit: PropTypes.func,
     onNullPlan: PropTypes.func,
     onClear: PropTypes.func,

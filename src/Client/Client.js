@@ -48,6 +48,26 @@ const Client = {
 
     loadPlan: function (planId, edId) {
         return this.safeFetch(this.constructUrl(`/getPlan?planId=${planId}&edId=${edId}`), 'GET');
+    },
+
+    loadAuthData: function() {
+        return this.safeFetch(this.constructUrl(`/auth`), 'POST');
+    },
+
+    loadUserAuthCheckData: function() {
+        return this.safeFetch(this.constructUrl('/checkToken'), 'POST');
+    },
+
+    loadOwnPlans: function(userId) {
+        return this.safeFetch(this.constructUrl(`/getOwnPlans?userId=${userId}`, 'GET'));
+    },
+
+    loadLikedPlans: function(userId) {
+        return this.safeFetch(this.constructUrl(`/getLikedPlans?userId=${userId}`, 'GET'));
+    },
+
+    loadDislikedPlans: function(userId) {
+        return this.safeFetch(this.constructUrl(`/getDislikedPlans?userId=${userId}`, 'GET'));
     }
 }
 

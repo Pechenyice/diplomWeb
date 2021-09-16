@@ -6,7 +6,7 @@ const AuthorizedRouteManager = connect(mapStateToProps, mapDispatchToProps)(Auth
 
 function mapStateToProps(state, ownProps) {
     return {
-        isLogged: state.user === null ? false : true
+        isLogged: state.user.id === null ? false : true
     };
 }
 

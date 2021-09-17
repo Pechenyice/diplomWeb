@@ -3,11 +3,14 @@ import styles from './BusinessPlan.module.css';
 import PropTypes from 'prop-types';
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
+import Client from "../../../Client/Client";
 
 const BusinessPlan = ({ plan, user, onInit, onNullPlan, onClear, onNeedMoreComments }) => {
 
     useEffect(() => {
         return () => {
+            Client.abortLoadPlanFetch();
+            Client.abortLoadCommentsFetch();
             onClear();
         }
     }, []);

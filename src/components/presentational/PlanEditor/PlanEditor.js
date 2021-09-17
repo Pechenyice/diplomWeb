@@ -2,10 +2,13 @@ import React, { useEffect } from "react";
 import styles from './PlanEditor.module.css';
 import PropTypes from 'prop-types';
 import { Redirect } from "react-router";
+import Client from "../../../Client/Client";
 
 const PlanEditor = ({ planData, plan, user, edition, onClear, onInit, onNullPlan, onNeedFetchEdition, match }) => {
     useEffect(() => {
         return () => {
+            Client.abortLoadPlanFetch();
+            // Client.abort
             onClear();
         }
     }, []);

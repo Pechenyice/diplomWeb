@@ -5,8 +5,14 @@ const port = process.env.PORT || 8888;
 const fs = require('fs');
 const chalk = require('chalk');
 const uuid = require('uuid');
+const middlewares = require('./middlewares');
 
 app.use(express.json());
+
+if (process.env.ENV === 'DEV') app.use(middlewares.bindLogs);
+// app.use(middlewares.bindAuth);
+
+const API_ANSWER_DELAY = 1000;
 
 let businesses = [];
 let comments = [];
@@ -82,7 +88,6 @@ for (let i = 0; i < 22; i++) {
 }
 
 app.get('/api/getPlan', (req, res) => {
-    console.log('asked test');
     setTimeout(() => {
         res.send(JSON.stringify({
             name: `name test`,
@@ -102,7 +107,16 @@ app.get('/api/getPlan', (req, res) => {
             likes: 121,
             dislikes: 300
         }));
-    }, 5000);
+    }, API_ANSWER_DELAY);
+});
+
+app.get('/api/getFiltersTypes', (req, res) => {
+    setTimeout(() => {
+        res.send(JSON.stringify([
+            { id: 0, name: 'Food' },
+            { id: 1, name: 'IT' },
+        ]));
+    }, API_ANSWER_DELAY);
 });
 
 app.get('/api/getFiltersCategories', (req, res) => {
@@ -111,37 +125,37 @@ app.get('/api/getFiltersCategories', (req, res) => {
             { id: 0, name: 'Franchise' },
             { id: 1, name: 'Startup' },
         ]));
-    }, 5000);
+    }, API_ANSWER_DELAY);
 });
 
-app.get('/api/getOwnPlans', (req, res) => {
+app.get('/api/getOwnPlans', middlewares.bindAuth, (req, res) => {
     setTimeout(() => {
         res.send(JSON.stringify(businesses));
-    }, 5000);
+    }, API_ANSWER_DELAY);
 });
 
-app.get('/api/getLikedPlans', (req, res) => {
+app.get('/api/getLikedPlans', middlewares.bindAuth, (req, res) => {
     setTimeout(() => {
         res.send(JSON.stringify(businesses));
-    }, 5000);
+    }, API_ANSWER_DELAY);
 });
 
-// app.get('/api/getDislikedPlans', (req, res) => {
-//     setTimeout(() => {
-//         res.send(JSON.stringify(businesses));
-//     }, 5000);
-// });
+app.get('/api/getDislikedPlans', middlewares.bindAuth, (req, res) => {
+    setTimeout(() => {
+        res.send(JSON.stringify(businesses));
+    }, API_ANSWER_DELAY);
+});
 
 app.post('/api/auth', (req, res) => {
     setTimeout(() => {
         res.send(user);
-    }, 5000);
+    }, API_ANSWER_DELAY);
 });
 
-app.post('/api/checkToken', (req, res) => {
+app.post('/api/checkToken', middlewares.bindAuth, (req, res) => {
     setTimeout(() => {
         res.send(user);
-    }, 5000);
+    }, API_ANSWER_DELAY);
 });
 
 app.get('/api/getComments', (req, res) => {
@@ -159,7 +173,7 @@ app.get('/api/getComments', (req, res) => {
 
     setTimeout(() => {
         res.send(JSON.stringify(analysed));
-    }, 5000);
+    }, API_ANSWER_DELAY);
 });
 
 app.get('/api/getBusinesses', (req, res) => {
@@ -177,13 +191,13 @@ app.get('/api/getBusinesses', (req, res) => {
 
     setTimeout(() => {
         res.send(JSON.stringify(analysed));
-    }, 5000);
+    }, API_ANSWER_DELAY);
 });
 
 fs.readFile('./../TODO', (_, content) => {
     app.listen(port, () => {
         console.log(`Listening at http://localhost:${port}`);
         console.log(chalk.bgYellow.whiteBright.bold(`\nTODO:\n`));
-        console.log(chalk.yellowBright(content));
+        console.log(chalk.yellowBright(content) + '\n\n');
     })
 });

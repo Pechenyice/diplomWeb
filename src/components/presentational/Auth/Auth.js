@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect } from "react-router";
 import styles from './Auth.module.css';
 import PropTypes from 'prop-types';
+import Client from "../../../Client/Client";
 
 const Auth = ({ location, isLogged, onAuthTry }) => {
+    useEffect(() => {
+        return () => {
+            Client.abortLoadAuthDataFetch();
+        }
+    }, []);
 
     const redirectPath = () => {
         const locationState = location.state;

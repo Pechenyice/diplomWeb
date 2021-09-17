@@ -6,7 +6,6 @@ import Profile from "../../presentational/Profile/Profile";
 const ProfileDisplay = connect(mapStateToProps, mapDispatchToProps, mergePropsWithDispatch)(Profile);
 
 function mapStateToProps(state, ownProps) {
-    console.log('state.profilePlans', state.profilePlans)
     return {
         userId: ownProps.match.params.userId,
         cachedLoadedForUser: state.profilePlans.forUser,

@@ -6,7 +6,6 @@ import BusinessPlan from "../../presentational/BusinessPlan/BusinessPlan";
 const BusinessPlanDisplay = connect(mapStateToProps, mapDispatchToProps, mergePropsWithDispatch)(BusinessPlan);
 
 function mapStateToProps(state) {
-    console.log("STATE ", state.plan)
     return {
         plan: state.plan,
         user: state.user.id

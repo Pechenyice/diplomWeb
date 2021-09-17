@@ -83,7 +83,10 @@ const actions = {
                 .then((plan) => {
                     dispatch(this.fetchPlanSuccess(plan, planId, edId));
                 })
-                .catch(() => {
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
                     dispatch(this.fetchPlanFail());
                     dispatch(this.addError('Failed load current business plan!'));
                 })
@@ -137,7 +140,10 @@ const actions = {
                 .then((categories) => {
                     dispatch(this.fetchCategoriesSuccess(categories));
                 })
-                .catch(() => {
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
                     dispatch(this.fetchCategoriesFail());
                     dispatch(this.addError('Failed load categories for businesses!'));
                 })
@@ -170,7 +176,10 @@ const actions = {
                 .then((result) => {
                     dispatch(this.fetchBusinessesSuccess(result));
                 })
-                .catch(() => {
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
                     dispatch(this.fetchBusinessesFail());
                     dispatch(this.addError('Failed load businesses!'));
                 })
@@ -217,7 +226,10 @@ const actions = {
                 .then((result) => {
                     dispatch(this.fetchCommentsSuccess(result));
                 })
-                .catch(() => {
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
                     dispatch(this.fetchCommentsFail());
                     dispatch(this.addError('Failed load comments!'));
                 })
@@ -250,7 +262,10 @@ const actions = {
                 .then((user) => {
                     dispatch(this.fetchAuthSuccess(user));
                 })
-                .catch(() => {
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
                     dispatch(this.fetchAuthFail());
                     dispatch(this.addError('Failed load account data: something went wrong!'));
                 })
@@ -284,7 +299,10 @@ const actions = {
                 .then((result) => {
                     dispatch(this.fetchOwnPlansSuccess(result, userId));
                 })
-                .catch(() => {
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
                     dispatch(this.fetchOwnPlansFail());
                     dispatch(this.addError('Failed load own plans for account!'));
                 })
@@ -318,7 +336,10 @@ const actions = {
                 .then((result) => {
                     dispatch(this.fetchLikedPlansSuccess(result, userId));
                 })
-                .catch(() => {
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
                     dispatch(this.fetchLikedPlansFail());
                     dispatch(this.addError('Failed load liked plans for account!'));
                 })
@@ -352,7 +373,10 @@ const actions = {
                 .then((result) => {
                     dispatch(this.fetchDislikedPlansSuccess(result, userId));
                 })
-                .catch(() => {
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
                     dispatch(this.fetchDislikedPlansFail());
                     dispatch(this.addError('Failed load disliked plans for account!'));
                 })
@@ -385,7 +409,10 @@ const actions = {
                 .then((user) => {
                     dispatch(this.fetchUserAuthCheckSuccess(user));
                 })
-                .catch(() => {
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
                     dispatch(this.fetchUserAuthCheckFail());
                     dispatch(this.addError('Failed load account data token: request failed!'));
                 })
@@ -399,7 +426,10 @@ const actions = {
                 .then((result) => {
                     dispatch(this.fetchEditionDataForPlanViewSuccess(result));
                 })
-                .catch(() => {
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
                     dispatch(this.fetchEditionDataForPlanViewFail());
                     dispatch(this.addError('Failed load plan edition data!'));
                 })
@@ -432,7 +462,10 @@ const actions = {
                 .then((types) => {
                     dispatch(this.fetchTypesSuccess(types));
                 })
-                .catch(() => {
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
                     dispatch(this.fetchTypesFail());
                     dispatch(this.addError('Failed load types for businesses!'));
                 })

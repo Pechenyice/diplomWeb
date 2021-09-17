@@ -15,7 +15,6 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
-    console.log(ownProps.match)
     return {
         onClear: () => {
             dispatch(actions.clearPlanInfo());

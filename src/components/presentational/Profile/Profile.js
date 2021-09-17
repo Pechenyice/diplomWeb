@@ -1,15 +1,21 @@
 import React, { useEffect } from "react";
 import styles from './Profile.module.css';
 import PropTypes from 'prop-types';
+import Client from "../../../Client/Client";
 
 const Profile = ({ userId, cachedForUser, profilePlans, onNeedLoadOwnPlans, onNeedLoadLikedPlans, onNeedLoadDislikedPlans }) => {
     useEffect(() => {
+        if (cachedForUser !== userId && !profilePlans.own.isFetched && !profilePlans.own.isLoading) console.log('i want get plans of account')
         if (cachedForUser !== userId && !profilePlans.own.isFetched && !profilePlans.own.isLoading) onNeedLoadOwnPlans();
         if (cachedForUser !== userId && !profilePlans.liked.isFetched && !profilePlans.liked.isLoading) onNeedLoadLikedPlans();
         if (cachedForUser !== userId && !profilePlans.disliked.isFetched && !profilePlans.disliked.isLoading) onNeedLoadDislikedPlans();
-    }, []);
 
-    console.log('profilePlans', profilePlans)
+        return () => {
+            // Client.abortLoadOwnPlansFetch();
+            // Client.abortLoadLikedPlansFetch();
+            // Client.abortLoadDislikedPlansFetch();
+        }
+    }, []);
 
     return (
         <section>

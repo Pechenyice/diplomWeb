@@ -70,6 +70,7 @@ const initialState = {
 
 function reducer(state = initialState, action) {
     switch (action.type) {
+
         case actions.types.APPLY_FILTERS: {
             console.log('dispatched ' + JSON.stringify(action.filters))
             return state;
@@ -93,6 +94,8 @@ function reducer(state = initialState, action) {
         case actions.types.USER_AUTH_CHECK_REQUEST_STARTED:
         case actions.types.USER_AUTH_CHECK_REQUEST_SUCCESSED:
         case actions.types.USER_AUTH_CHECK_REQUEST_FAILED: {
+            if (action?.user?.AUTH === 'FAIL') return Object.assign({}, state, toInitialState(state));
+
             return Object.assign({}, state, { user: userReducer(state.user, action) });
         }
 
@@ -135,6 +138,52 @@ function reducer(state = initialState, action) {
         }
 
         default: return state;
+    }
+}
+
+function toInitialState(state) {
+    return {
+        user: {
+            id: null,
+            auth: {
+                isChecking: false
+            },
+            isLoading: false
+        },
+        profilePlans: {
+            forUser: null,
+            own: {
+                isFetched: false,
+                isLoading: false,
+                content: []
+            },
+            liked: {
+                isFetched: false,
+                isLoading: false,
+                content: []
+            },
+            disliked: {
+                isFetched: false,
+                isLoading: false,
+                content: []
+            }
+        },
+        plan: {
+            isLoading: false,
+            isChecked: false,
+            isFetched: false,
+            activeBusiness: null,
+            activeEdition: null,
+            activeOwner: null,
+            data: null,
+            comments: {
+                isLoading: false,
+                needMore: true,
+                offset: 0,
+                count: 20,
+                content: []
+            },
+        }
     }
 }
 

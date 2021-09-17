@@ -7,7 +7,6 @@ import Profile from "../../presentational/Profile/Profile";
 const ProfileRedirect = connect(mapStateToProps, mapDispatchToProps, mergePropsWithDispatch)(Profile);
 
 function mapStateToProps(state) {
-    console.log('state.profilePlans', state.profilePlans)
     return {
         userId: state.user.id,
         cachedForUser: state.profilePlans.forUser,

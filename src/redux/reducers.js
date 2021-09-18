@@ -85,6 +85,8 @@ function reducer(state = initialState, action) {
         case actions.types.DISLIKED_PLANS_REQUEST_STARTED:
         case actions.types.DISLIKED_PLANS_REQUEST_SUCCESSED:
         case actions.types.DISLIKED_PLANS_REQUEST_FAILED: {
+            if (action?.result?.AUTH === 'FAIL') return Object.assign({}, state, toInitialState(state));
+
             return Object.assign({}, state, { profilePlans: profilePlansReducer(state.profilePlans, action) });
         }
 

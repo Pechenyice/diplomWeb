@@ -6,8 +6,10 @@ const fs = require('fs');
 const chalk = require('chalk');
 const uuid = require('uuid');
 const middlewares = require('./middlewares');
+const cookieParser = require('cookie-parser');
 
 app.use(express.json());
+app.use(cookieParser());
 
 if (process.env.ENV === 'DEV') app.use(middlewares.bindLogs);
 // app.use(middlewares.bindAuth);

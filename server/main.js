@@ -87,6 +87,54 @@ for (let i = 0; i < 22; i++) {
     });
 }
 
+app.post('/api/checkToken', middlewares.bindAuth, (req, res) => {
+    setTimeout(() => {
+        res.send(user);
+    }, API_ANSWER_DELAY);
+});
+
+app.post('/api/auth', (req, res) => {
+    setTimeout(() => {
+        res.send(user);
+    }, API_ANSWER_DELAY);
+});
+
+app.get('/api/getComments', (req, res) => {
+    let analysed = {
+        offset: +req.query.offset + +req.query.count
+    };
+
+    let min = comments.length < analysed.offset ? comments.length : analysed.offset;
+
+    let ans = comments.slice(+req.query.offset, min);
+
+    analysed['needMore'] = min == ans.length;
+
+    analysed['content'] = ans;
+
+    setTimeout(() => {
+        res.send(JSON.stringify(analysed));
+    }, API_ANSWER_DELAY);
+});
+
+app.get('/api/getBusinesses', (req, res) => {
+    let analysed = {
+        offset: +req.query.offset + +req.query.count
+    };
+
+    let min = businesses.length < analysed.offset ? businesses.length : analysed.offset;
+
+    let ans = businesses.slice(+req.query.offset, min);
+
+    analysed['needMore'] = min == ans.length;
+
+    analysed['content'] = ans;
+
+    setTimeout(() => {
+        res.send(JSON.stringify(analysed));
+    }, API_ANSWER_DELAY);
+});
+
 app.get('/api/getPlan', (req, res) => {
     setTimeout(() => {
         res.send(JSON.stringify({
@@ -143,54 +191,6 @@ app.get('/api/getLikedPlans', middlewares.bindAuth, (req, res) => {
 app.get('/api/getDislikedPlans', middlewares.bindAuth, (req, res) => {
     setTimeout(() => {
         res.send(JSON.stringify(businesses));
-    }, API_ANSWER_DELAY);
-});
-
-app.post('/api/auth', (req, res) => {
-    setTimeout(() => {
-        res.send(user);
-    }, API_ANSWER_DELAY);
-});
-
-app.post('/api/checkToken', middlewares.bindAuth, (req, res) => {
-    setTimeout(() => {
-        res.send(user);
-    }, API_ANSWER_DELAY);
-});
-
-app.get('/api/getComments', (req, res) => {
-    let analysed = {
-        offset: +req.query.offset + +req.query.count
-    };
-
-    let min = comments.length < analysed.offset ? comments.length : analysed.offset;
-
-    let ans = comments.slice(+req.query.offset, min);
-
-    analysed['needMore'] = min == ans.length;
-
-    analysed['content'] = ans;
-
-    setTimeout(() => {
-        res.send(JSON.stringify(analysed));
-    }, API_ANSWER_DELAY);
-});
-
-app.get('/api/getBusinesses', (req, res) => {
-    let analysed = {
-        offset: +req.query.offset + +req.query.count
-    };
-
-    let min = businesses.length < analysed.offset ? businesses.length : analysed.offset;
-
-    let ans = businesses.slice(+req.query.offset, min);
-
-    analysed['needMore'] = min == ans.length;
-
-    analysed['content'] = ans;
-
-    setTimeout(() => {
-        res.send(JSON.stringify(analysed));
     }, API_ANSWER_DELAY);
 });
 

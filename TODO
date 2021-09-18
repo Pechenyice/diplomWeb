@@ -1,5 +1,5 @@
 1. End diplom
-2. Clear fetches (if see error)
-3. All errors with handling plans editions and creations should find in PlanEditor.js (Now is not realised onNeddFetchEdition)
+2. Clear fetches in return of useEffect (if see error)
+3. All errors with handling plans editions and creations should find in PlanEditor.js (Now is not realised onNeedFetchEdition)
 4. Possible errors: fetchPlan and fetchBusinesses return different edition value (owner:) check if errors
 5. Check AUTH: FALSE answer from server in all authentificated actions (as in checkAuth of preloader case)

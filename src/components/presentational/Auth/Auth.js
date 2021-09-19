@@ -7,7 +7,7 @@ import Input from "../Input/Input";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
 
-const Auth = ({ location, isLogged, onAuthTry, onSignUp }) => {
+const Auth = ({ location, isLogged, onSignIn, onSignUp }) => {
     useEffect(() => {
         return () => {
             Client.abortLoadAuthDataFetch();
@@ -108,6 +108,18 @@ const Auth = ({ location, isLogged, onAuthTry, onSignUp }) => {
         );
     }
 
+    function handleAgreementClick() {
+        setState(
+            Object.assign(
+                {},
+                state,
+                {
+                    signUp: Object.assign({}, state.signUp, { agreement: !state.signUp.agreement })
+                }
+            )
+        );
+    }
+
     return (
         <section className={styles.authWrapper}>
             {
@@ -121,7 +133,7 @@ const Auth = ({ location, isLogged, onAuthTry, onSignUp }) => {
                 <div className={styles.inputsWrapper} >
                     <Input id={'signInlogin'} label={'Login/Email'} isEmpty={!state.signIn.login} onChange={handleSignInLoginChange} />
                     <Input id={'signInPassword'} label={'Password'} isEmpty={!state.signIn.pass} onChange={handleSignInPasswordChange} />
-                    <Button text={'Sign in'} onClick={() => {}} style={{marginTop: '15px'}} />
+                    <Button text={'Sign in'} onClick={() => {onSignIn(state.signIn)}} style={{marginTop: '15px'}} />
                 </div>
                 <div className={styles.inputsWrapper} >
                     <Input id={'signUplogin'} label={'Login/Email'} isEmpty={!state.signUp.login} onChange={handleSignUpLoginChange} />
@@ -129,13 +141,12 @@ const Auth = ({ location, isLogged, onAuthTry, onSignUp }) => {
                     <Input id={'signUpPassword'} label={'Password'} isEmpty={!state.signUp.pass} onChange={handleSignUpPasswordChange} />
                     <Input id={'signUpRePassword'} label={'Repeat password'} isEmpty={!state.signUp.rePass} onChange={handleSignUpRePasswordChange} />
                     <div style={{margin: '15px 0'}}>
-                        <input type='checkbox' id='checkbox'/>
+                        <input type='checkbox' id='checkbox' checked={state.signUp.agreement} onChange={handleAgreementClick}/>
                         <label style={{marginLeft: '10px'}} htmlFor='checkbox'>I agree <Link className={styles.agreementLink} to={'/terms'}>Terms & conditions</Link></label>
                     </div>
                     <Button text={'Create account'} onClick={() => {onSignUp(state.signUp)}} />
                 </div>
             </div>
-            {/* <div onClick={() => { onAuthTry() }}>Авторизоваться</div> */}
         </section>
     );
 }
@@ -143,7 +154,7 @@ const Auth = ({ location, isLogged, onAuthTry, onSignUp }) => {
 Auth.propTypes = {
     location: PropTypes.object,
     isLogged: PropTypes.bool.isRequired,
-    onAuthTry: PropTypes.func.isRequired,
+    onSignIn: PropTypes.func.isRequired,
     onSignUp: PropTypes.func.isRequired
 }
 

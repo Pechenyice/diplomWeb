@@ -1,0 +1,60 @@
+.profileWrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding-top: 50px;
+}
+
+.profileDataWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    margin-top: 60px;
+    margin-bottom: 150px;
+}
+
+.inputsWrapper {
+    width: 360px;
+    height: max-content;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 15px;
+}
+
+.profileDummy {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-image: url(./profiler.png);
+}
+
+.plansPartitionsWrapper {
+    display: flex;
+    gap: 60px;
+}
+
+.profileLink {
+    padding: 5px 0px;
+    line-height: 19px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+}
+
+.activeProfileLink {
+    border-bottom: 1px solid var(--dark);
+}
+
+.profileLinkCount {
+    color: #A5A5A5;
+    height: 100%;
+    line-height: 120%;
+}
+
+.plansWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 60px;
+    gap: 60px;
+}

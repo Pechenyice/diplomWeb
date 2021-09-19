@@ -12,8 +12,91 @@ code {
     monospace;
 }
 
+@font-face {
+  font-family: "PP Neue Machina Light";
+  src: url("./fonts/ppNeue/PPNeueMachina-Light.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "PP Neue Machina Regular";
+  src: url("./fonts/ppNeue/PPNeueMachina-Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "PP Neue Machina Ultrabold";
+  src: url("./fonts/ppNeue/PPNeueMachina-Ultrabold.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Gilroy Medium";
+  src: url("./fonts/gilroy/Gilroy-Medium.ttf");
+}
+
+@font-face {
+  font-family: "Gilroy Regular";
+  src: url("./fonts/gilroy/Gilroy-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Gilroy SemiBold";
+  src: url("./fonts/gilroy/Gilroy-SemiBold.ttf");
+}
+
+:root {
+  --dark: #101010;
+  --light: #fff;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  color: var(--dark);
+  font-family: "Gilroy Regular";
+  font-size: 16px;
+  line-height: 22px;
+  color: var(--dark);
+}
+
+h1 {
+  font-family: "PP Neue Machina Regular";
+  font-style: normal;
+  font-weight: normal;
+  font-size: 55px;
+  line-height: 53px;
+  color: var(--dark);
+}
+
+span {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+a {
+  color: unset;
+  text-decoration: none;
+}
+
+button {
+  padding: 0;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+input {
+  font-family: "Gilroy Regular";
+  font-size: 16px;
+  line-height: 22px;
+  color: var(--dark);
+  border: unset;
+  outline: none;
+}
+
+input::placeholder {
+  font-family: "Gilroy Regular";
+  font-size: 16px;
+  line-height: 22px;
+  color: var(--dark);
+  opacity: .5;
 }

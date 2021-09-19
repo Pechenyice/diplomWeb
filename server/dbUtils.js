@@ -22,21 +22,42 @@ const dbUtils = {
             WHERE NOT EXISTS (
                 SELECT login FROM User WHERE login = ? or nickname = ?
             ) LIMIT 1;`,
-            [id, 'root1', 'root', 'admin', 'root1', 'admin']
+            [id, 'root', 'root', 'admin', 'root1', 'admin']
         );
 
-        return {id, answer}
+        return { id, answer }
+    },
+
+    getUser: async ({login, password}) => {
+        return await connection.execute(
+            `Select * from User where login = ? and password = ?`,
+            [login, password]
+        );
     },
 
     setToken: async (id, deathDate, ip) => {
         let token = uuid.v4();
         let answer = await connection.execute(
-            `INSERT INTO Token (body, user_id, death_date, ip) values (?, ?, ?, ?);`,
+            `Replace into Token (body, user_id, death_date, ip) values (?, ?, ?, ?);`,
             [token, id, deathDate, ip]
         );
 
         return token;
     },
+
+    getUserByToken: async (token) => {
+        return await connection.execute(
+            `Select * from Token where body = ?;`,
+            [token]
+        );
+    },
+
+    dropToken: async (token) => {
+        return await connection.execute(
+            `delete from Token where body = ?;`,
+            [token]
+        );
+    }
 }
 
 // const connection = await dbCon.getConnection();

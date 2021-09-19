@@ -13,8 +13,8 @@ function mapPropsToState(state) {
 
 function mapDispatchToState(dispatch) {
     return {
-        onAuthTry: () => {
-            dispatch(actions.fetchAuth())
+        onSignIn: ({login, pass}) => {
+            dispatch(actions.fetchAuth(login, pass))
         },
         onSignUp: ({login, nick, pass}) => {
             dispatch(actions.fetchSignUp(login, nick, pass));

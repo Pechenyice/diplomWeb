@@ -1,0 +1,17 @@
+.tag {
+    width: max-content;
+    height: max-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 15px;
+    background: var(--dark);
+    color: var(--light);
+    border-radius: 100px;
+    font-family: "Gilroy Medium";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    text-transform: uppercase;
+}

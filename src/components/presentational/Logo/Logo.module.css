@@ -1,0 +1,37 @@
+.linkWrapper {
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+    font-family: "PP Neue Machina Ultrabold";
+    font-style: normal;
+    font-weight: 800;
+    font-size: 32px;
+    line-height: 31px;
+    text-transform: uppercase;
+    color: var(--dark);
+    text-align: center;
+    gap: 6px;
+}
+
+.linkHint {
+    font-family: "PP Neue Machina Regular";
+    font-style: normal;
+    font-weight: normal;
+    text-transform: none;
+    font-size: 15px;
+    line-height: 14px;
+    text-align: left;
+    border-left: .5px solid #878787;
+    padding-left: 6px;
+    opacity: 0;
+    transition: .2s;
+}
+
+.linkWrapper:hover .linkHint {
+    opacity: 1;
+    transition: .2s;
+}
+
+.linkHintHelper {
+    color: #878787;
+}

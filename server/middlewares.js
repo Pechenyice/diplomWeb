@@ -5,10 +5,11 @@ const middlewares = {
     },
 
     bindAuth: function(req, res, next) {
-        res.send(JSON.stringify({AUTH: 'FAIL'}));
-        return;
+        if (!req.cookies.authToken) {
+            res.send(JSON.stringify({AUTH: 'FAIL'}));
+            return;
+        }
 
-        console.log(`Cookies: ${req.cookies}\nSignedCookies: ${req.signedCookies}\n\n`)
         next();
     }
 };

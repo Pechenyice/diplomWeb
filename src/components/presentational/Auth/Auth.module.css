@@ -34,3 +34,8 @@
     flex-wrap: wrap;
     row-gap: 15px;
 }
+
+.agreementLink {
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--dark);
+}

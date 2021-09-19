@@ -42,7 +42,7 @@ const actions = {
         SIGN_UP_REQUEST_FAILED: 'SIGN_UP_REQUEST_FAILED'
     },
 
-    findPlan: function({planId, edId}) {
+    findPlan: function ({ planId, edId }) {
         return {
             type: this.types.FIND_ACTIVE_PLAN,
             q: {
@@ -52,7 +52,7 @@ const actions = {
         }
     },
 
-    clearPlanInfo: function() {
+    clearPlanInfo: function () {
         return {
             type: this.types.NULLIFY_ACTIVE_PLAN
         }
@@ -68,7 +68,7 @@ const actions = {
         return {
             type: this.types.PLAN_REQUEST_SUCCESSED,
             plan,
-            planId, 
+            planId,
             edId
         }
     },
@@ -79,7 +79,7 @@ const actions = {
         }
     },
 
-    fetchPlan: function ({planId, edId}) {
+    fetchPlan: function ({ planId, edId }) {
         return (dispatch) => {
             dispatch(this.fetchPlanRequest());
             Client.loadPlan(planId, edId)
@@ -96,21 +96,21 @@ const actions = {
         }
     },
 
-    applyFilters: function(filters) {
+    applyFilters: function (filters) {
         return {
             type: this.types.APPLY_FILTERS,
             filters
         }
     },
 
-    removeError: function(id) {
+    removeError: function (id) {
         return {
             type: this.types.REMOVE_ERROR,
             id
         }
     },
 
-    addError: function(text) {
+    addError: function (text) {
         return {
             type: this.types.ADD_ERROR,
             text
@@ -172,7 +172,7 @@ const actions = {
         }
     },
 
-    fetchBusinesses: function(offset, count, filters) {
+    fetchBusinesses: function (offset, count, filters) {
         return (dispatch) => {
             dispatch(this.fetchBusinessesRequest());
             Client.loadBusinesses(offset, count, filters)
@@ -222,7 +222,7 @@ const actions = {
     //     }
     // },
 
-    fetchComments: function(businessId, edId, offset, count) {
+    fetchComments: function (businessId, edId, offset, count) {
         return (dispatch) => {
             dispatch(this.fetchCommentsRequest());
             Client.loadComments(businessId, edId, offset, count)
@@ -245,10 +245,10 @@ const actions = {
         }
     },
 
-    fetchAuthSuccess: function (user) {
+    fetchAuthSuccess: function (result) {
         return {
             type: this.types.AUTH_REQUEST_SUCCESSED,
-            user
+            result
         }
     },
 
@@ -258,12 +258,14 @@ const actions = {
         }
     },
 
-    fetchAuth: function() {
+    fetchAuth: function (login, pass) {
         return (dispatch) => {
             dispatch(this.fetchAuthRequest());
-            Client.loadAuthData()
-                .then((user) => {
-                    dispatch(this.fetchAuthSuccess(user));
+            Client.loadAuthData(login, pass)
+                .then((result) => {
+                    result.success ?
+                        dispatch(this.fetchAuthSuccess(result)) :
+                        dispatch(this.addError(result.cause));
                 })
                 .catch((e) => {
                     if (e.name === 'AbortError') {
@@ -294,14 +296,14 @@ const actions = {
         }
     },
 
-    fetchSignUp: function(login, nickname, pass) {
+    fetchSignUp: function (login, nickname, pass) {
         return (dispatch) => {
             dispatch(this.fetchSignUpRequest());
             Client.sendSignUpRequest(login, nickname, pass)
                 .then((result) => {
-                    result.success ? 
-                    dispatch(this.fetchSignUpSuccess(result)) :
-                    dispatch(this.addError(result.cause));
+                    result.success ?
+                        dispatch(this.fetchSignUpSuccess(result)) :
+                        dispatch(this.addError(result.cause));
                 })
                 .catch((e) => {
                     if (e.name === 'AbortError') {
@@ -333,7 +335,7 @@ const actions = {
         }
     },
 
-    fetchOwnPlans: function(userId) {
+    fetchOwnPlans: function (userId) {
         return (dispatch) => {
             dispatch(this.fetchOwnPlansRequest());
             Client.loadOwnPlans(userId)
@@ -370,7 +372,7 @@ const actions = {
         }
     },
 
-    fetchLikedPlans: function(userId) {
+    fetchLikedPlans: function (userId) {
         return (dispatch) => {
             dispatch(this.fetchLikedPlansRequest());
             Client.loadLikedPlans(userId)
@@ -407,7 +409,7 @@ const actions = {
         }
     },
 
-    fetchDislikedPlans: function(userId) {
+    fetchDislikedPlans: function (userId) {
         return (dispatch) => {
             dispatch(this.fetchDislikedPlansRequest());
             Client.loadDislikedPlans(userId)
@@ -430,10 +432,10 @@ const actions = {
         }
     },
 
-    fetchUserAuthCheckSuccess: function (user) {
+    fetchUserAuthCheckSuccess: function (result) {
         return {
             type: this.types.USER_AUTH_CHECK_REQUEST_SUCCESSED,
-            user
+            result
         }
     },
 
@@ -443,12 +445,14 @@ const actions = {
         }
     },
 
-    fetchUserAuthCheck: function() {
+    fetchUserAuthCheck: function () {
         return (dispatch) => {
             dispatch(this.fetchUserAuthCheckRequest());
             Client.loadUserAuthCheckData()
-                .then((user) => {
-                    dispatch(this.fetchUserAuthCheckSuccess(user));
+                .then((result) => {
+                    result.success ?
+                        dispatch(this.fetchUserAuthCheckSuccess(result)) :
+                        dispatch(this.fetchUserAuthCheckFail());
                 })
                 .catch((e) => {
                     if (e.name === 'AbortError') {
@@ -460,7 +464,7 @@ const actions = {
         }
     },
 
-    fetchEditionDataForPlanView: function(planId, edId) {
+    fetchEditionDataForPlanView: function (planId, edId) {
         return (dispatch) => {
             dispatch(this.fetchEditionDataForPlanViewRequest());
             Client.loadEditionForPlanView(planId, edId)

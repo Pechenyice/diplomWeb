@@ -6,3 +6,4 @@
 6. Finish Auth.js handlers
 7. Create loading for auth tryes
 8. Create auth on server
+9. Check token in auth middleware

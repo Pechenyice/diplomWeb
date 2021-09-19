@@ -102,7 +102,8 @@ function reducer(state = initialState, action) {
         case actions.types.USER_AUTH_CHECK_REQUEST_STARTED:
         case actions.types.USER_AUTH_CHECK_REQUEST_SUCCESSED:
         case actions.types.USER_AUTH_CHECK_REQUEST_FAILED: {
-            if (action?.user?.AUTH === 'FAIL') return Object.assign({}, state, toInitialState(state));
+            console.log('action.type', action.type)
+            if (action?.result?.AUTH === 'FAIL') return Object.assign({}, state, toInitialState(state));
 
             return Object.assign({}, state, { user: userReducer(state.user, action) });
         }
@@ -307,8 +308,8 @@ function userReducer(state, action) {
         }
 
         case actions.types.USER_AUTH_CHECK_REQUEST_SUCCESSED: {
-            console.log('auth check completed', action.user.id)
-            return Object.assign({}, state, { id: action.user.id, auth: { isChecking: false } });
+            console.log('auth check completed', action.result.id)
+            return Object.assign({}, state, { id: action.result.id, auth: { isChecking: false } });
         }
 
         case actions.types.USER_AUTH_CHECK_REQUEST_FAILED: {
@@ -327,8 +328,8 @@ function userReducer(state, action) {
         }
 
         case actions.types.AUTH_REQUEST_SUCCESSED: {
-            console.log('auth successed', action.user.id)
-            return Object.assign({}, state, { id: action.user.id, isLoading: false });
+            console.log('auth successed', action.result.id)
+            return Object.assign({}, state, { id: action.result.id, isLoading: false });
         }
     }
 }

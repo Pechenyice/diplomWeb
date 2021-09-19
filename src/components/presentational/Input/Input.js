@@ -9,8 +9,6 @@ const Input = ({ id, label, isEmpty, onChange }) => {
     const labelClasses = [styles.inputLabel];
     if (!isEmpty) labelClasses.push(styles.notEmptyinputLabel);
 
-    console.log(labelClasses, isEmpty)
-
     return (
         <div className={classes.join(' ')}>
             <input className={styles.input} id={id} onChange={onChange} />

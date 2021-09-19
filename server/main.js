@@ -1,12 +1,13 @@
 const express = require('express');
 const app = express();
 require('dotenv').config();
-const port = process.env.PORT || 8888;
+const port = process.env.PORT || 3001;
 const fs = require('fs');
 const chalk = require('chalk');
 const uuid = require('uuid');
 const middlewares = require('./middlewares');
 const cookieParser = require('cookie-parser');
+const dbUtils = require('./dbUtils');
 
 app.use(express.json());
 app.use(cookieParser());
@@ -15,6 +16,7 @@ if (process.env.ENV === 'DEV') app.use(middlewares.bindLogs);
 // app.use(middlewares.bindAuth);
 
 const API_ANSWER_DELAY = 1000;
+const TOKEN_LIFETIME = 60 * 5;
 
 let businesses = [];
 let comments = [];
@@ -92,6 +94,29 @@ for (let i = 0; i < 22; i++) {
 app.post('/api/checkToken', middlewares.bindAuth, (req, res) => {
     setTimeout(() => {
         res.send(user);
+    }, API_ANSWER_DELAY);
+});
+
+app.post('/api/addUser', async (req, res) => {
+    let { id, answer } = await dbUtils.addUser();
+    let [result, fields] = answer;
+
+    if (result.affectedRows) {
+        let token = await dbUtils.setToken(id, TOKEN_LIFETIME, req.ip);
+        console.log(token)
+        res.cookie('authToken', token, {maxAge: TOKEN_LIFETIME * 1000});
+    }
+
+    setTimeout(() => {
+        result.affectedRows ?
+            res.send(JSON.stringify({
+                success: true,
+                id
+            })) :
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Duplicate login or nickname, change it please!'
+            }));
     }, API_ANSWER_DELAY);
 });
 

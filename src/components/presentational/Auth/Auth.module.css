@@ -1,0 +1,36 @@
+.authWrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding-top: 50px;
+}
+
+.authSignIn {
+    transition: .2s; 
+}
+
+.authSignUp {
+    opacity: .5;
+    transition: .2s;
+}
+
+.authHint {
+    margin-top: 40px;
+    margin-bottom: 60px;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.inputsBlock {
+    width: 990px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.inputsWrapper {
+    width: 360px;
+    height: max-content;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 15px;
+}

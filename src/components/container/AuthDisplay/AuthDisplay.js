@@ -15,6 +15,9 @@ function mapDispatchToState(dispatch) {
     return {
         onAuthTry: () => {
             dispatch(actions.fetchAuth())
+        },
+        onSignUp: ({login, nick, pass}) => {
+            dispatch(actions.fetchSignUp(login, nick, pass));
         }
     };
 }

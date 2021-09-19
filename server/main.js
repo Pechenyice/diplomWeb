@@ -91,9 +91,21 @@ for (let i = 0; i < 22; i++) {
     });
 }
 
-app.post('/api/checkToken', middlewares.bindAuth, (req, res) => {
+app.post('/api/checkToken', middlewares.bindAuth, async (req, res) => {
+    let answer = await dbUtils.getUserByToken(req.cookies.authToken);
+    let [result, fields] = answer;
+
     setTimeout(() => {
-        res.send(user);
+        result.length == 1 ?
+            res.send(JSON.stringify({
+                success: true,
+                id: result[0].user_id
+            })) : {};
+            // :
+            // res.send(JSON.stringify({
+            //     success: false,
+            //     cause: 'No such user, please check login or password!'
+            // }));
     }, API_ANSWER_DELAY);
 });
 
@@ -102,9 +114,8 @@ app.post('/api/addUser', async (req, res) => {
     let [result, fields] = answer;
 
     if (result.affectedRows) {
-        let token = await dbUtils.setToken(id, TOKEN_LIFETIME, req.ip);
-        console.log(token)
-        res.cookie('authToken', token, {maxAge: TOKEN_LIFETIME * 1000});
+        let token = await dbUtils.setToken(id, Date.now() + TOKEN_LIFETIME * 1000, req.ip);
+        res.cookie('authToken', token, { maxAge: TOKEN_LIFETIME * 1000 });
     }
 
     setTimeout(() => {
@@ -120,9 +131,25 @@ app.post('/api/addUser', async (req, res) => {
     }, API_ANSWER_DELAY);
 });
 
-app.post('/api/auth', (req, res) => {
+app.post('/api/auth', async (req, res) => {
+    let answer = await dbUtils.getUser(req.body);
+    let [result, fields] = answer;
+
+    if (result.length == 1) {
+        let token = await dbUtils.setToken(result[0]._id, Date.now() + TOKEN_LIFETIME * 1000, req.ip);
+        res.cookie('authToken', token, { maxAge: TOKEN_LIFETIME * 1000 });
+    }
+
     setTimeout(() => {
-        res.send(user);
+        result.length == 1 ?
+            res.send(JSON.stringify({
+                success: true,
+                id: result[0]._id
+            })) :
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'No such user, please check login or password!'
+            }));
     }, API_ANSWER_DELAY);
 });
 

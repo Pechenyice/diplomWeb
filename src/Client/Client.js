@@ -98,8 +98,8 @@ const Client = {
         this.aborts.LOAD_PLAN_CONTROLLER = new AbortController();
     },
 
-    loadAuthData: function () {
-        return this.safeFetch(this.constructUrl(`/auth`), 'POST', this.aborts.LOAD_AUTH_DATA_CONTROLLER);
+    loadAuthData: function (login, password) {
+        return this.safeFetch(this.constructUrl(`/auth`), 'POST', this.aborts.LOAD_AUTH_DATA_CONTROLLER, {login, password});
     },
 
     abortLoadAuthDataFetch: function () {

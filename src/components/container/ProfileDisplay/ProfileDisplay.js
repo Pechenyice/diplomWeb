@@ -9,7 +9,8 @@ function mapStateToProps(state, ownProps) {
     return {
         userId: ownProps.match.params.userId,
         cachedLoadedForUser: state.profilePlans.forUser,
-        profilePlans: state.profilePlans
+        profilePlans: state.profilePlans,
+        location: ownProps.location
     };
 }
 

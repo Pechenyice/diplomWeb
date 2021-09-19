@@ -36,7 +36,10 @@ const actions = {
         LIKED_PLANS_REQUEST_FAILED: 'LIKED_PLANS_REQUEST_FAILED',
         DISLIKED_PLANS_REQUEST_STARTED: 'DISLIKED_PLANS_REQUEST_STARTED',
         DISLIKED_PLANS_REQUEST_SUCCESSED: 'DISLIKED_PLANS_REQUEST_SUCCESSED',
-        DISLIKED_PLANS_REQUEST_FAILED: 'DISLIKED_PLANS_REQUEST_FAILED'
+        DISLIKED_PLANS_REQUEST_FAILED: 'DISLIKED_PLANS_REQUEST_FAILED',
+        SIGN_UP_REQUEST_STARTED: 'SIGN_UP_REQUEST_STARTED',
+        SIGN_UP_REQUEST_SUCCESSED: 'SIGN_UP_REQUEST_SUCCESSED',
+        SIGN_UP_REQUEST_FAILED: 'SIGN_UP_REQUEST_FAILED'
     },
 
     findPlan: function({planId, edId}) {
@@ -268,6 +271,44 @@ const actions = {
                     }
                     dispatch(this.fetchAuthFail());
                     dispatch(this.addError('Failed load account data: something went wrong!'));
+                })
+        }
+    },
+
+    fetchSignUpRequest: function () {
+        return {
+            type: this.types.SIGN_UP_REQUEST_STARTED
+        }
+    },
+
+    fetchSignUpSuccess: function (result) {
+        return {
+            type: this.types.SIGN_UP_REQUEST_SUCCESSED,
+            result
+        }
+    },
+
+    fetchSignUpFail: function () {
+        return {
+            type: this.types.SIGN_UP_REQUEST_FAILED
+        }
+    },
+
+    fetchSignUp: function(login, nickname, pass) {
+        return (dispatch) => {
+            dispatch(this.fetchSignUpRequest());
+            Client.sendSignUpRequest(login, nickname, pass)
+                .then((result) => {
+                    result.success ? 
+                    dispatch(this.fetchSignUpSuccess(result)) :
+                    dispatch(this.addError(result.cause));
+                })
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
+                    dispatch(this.fetchSignUpFail());
+                    dispatch(this.addError('Failed register user, try later!'));
                 })
         }
     },

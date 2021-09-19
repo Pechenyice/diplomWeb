@@ -16,14 +16,19 @@ const Client = {
         }
     },
 
-    safeFetch: function (url, method, controller) {
-        return fetch(url, {
+    safeFetch: function (url, method, controller, body={}) {
+
+        let options = {
             method: method,
             headers: {
                 'Content-Type': 'application/json'
             },
             signal: controller.signal
-        })
+        }
+
+        if (method === 'POST') options['body'] = JSON.stringify(body);
+
+        return fetch(url, options)
             .then(this.checkStatus)
             .then((response) => {
                 return response.json();
@@ -40,7 +45,12 @@ const Client = {
         LOAD_USER_AUTH_CHECK_DATA_CONTROLLER: new AbortController(),
         LOAD_OWN_PLANS_CONTROLLER: new AbortController(),
         LOAD_LIKED_PLANS_CONTROLLER: new AbortController(),
-        LOAD_DISLIKED_PLANS_CONTROLLER: new AbortController()
+        LOAD_DISLIKED_PLANS_CONTROLLER: new AbortController(),
+        SEND_SIGN_UP_CONTROLLER: new AbortController()
+    },
+
+    sendSignUpRequest: function(login, nickname, password) {
+        return this.safeFetch(this.constructUrl('/addUser'), 'POST', this.aborts.SEND_SIGN_UP_CONTROLLER, {login, nickname, password});
     },
 
     loadCategories: function () {

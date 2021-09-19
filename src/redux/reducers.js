@@ -76,6 +76,12 @@ function reducer(state = initialState, action) {
             return state;
         }
 
+        case actions.types.SIGN_UP_REQUEST_STARTED:
+        case actions.types.SIGN_UP_REQUEST_SUCCESSED:
+        case actions.types.SIGN_UP_REQUEST_FAILED: {
+            return Object.assign({}, state, { user: signReducer(state.user, action) });
+        }
+
         case actions.types.OWN_PLANS_REQUEST_STARTED:
         case actions.types.OWN_PLANS_REQUEST_SUCCESSED:
         case actions.types.OWN_PLANS_REQUEST_FAILED:
@@ -277,6 +283,22 @@ function errorsReducer(state, action) {
     }
 }
 
+function signReducer(state, action) {
+    switch (action.type) {
+        case actions.types.SIGN_UP_REQUEST_STARTED: {
+            return Object.assign({}, state, { isLoading: true });
+        }
+
+        case actions.types.SIGN_UP_REQUEST_SUCCESSED: {
+            return Object.assign({}, state, { id: action.result.id, isLoading: false });
+        }
+
+        case actions.types.SIGN_UP_REQUEST_FAILED: {
+            return Object.assign({}, state, { isLoading: false });
+        }
+    }
+}
+
 function userReducer(state, action) {
     switch (action.type) {
         case actions.types.USER_AUTH_CHECK_REQUEST_STARTED: {
@@ -291,7 +313,7 @@ function userReducer(state, action) {
 
         case actions.types.USER_AUTH_CHECK_REQUEST_FAILED: {
             console.log('auth check failed')
-            return Object.assign({}, state, { id: null, auth: { isChecking: false }});
+            return Object.assign({}, state, { id: null, auth: { isChecking: false } });
         }
 
         case actions.types.AUTH_REQUEST_STARTED: {
@@ -314,39 +336,39 @@ function userReducer(state, action) {
 function profilePlansReducer(state, action) {
     switch (action.type) {
         case actions.types.OWN_PLANS_REQUEST_STARTED: {
-            return Object.assign({}, state, { forUser: action.userId, own: Object.assign({}, state.own, {isLoading: true}) });
+            return Object.assign({}, state, { forUser: action.userId, own: Object.assign({}, state.own, { isLoading: true }) });
         }
 
         case actions.types.OWN_PLANS_REQUEST_SUCCESSED: {
-            return Object.assign({}, state, { forUser: action.userId, own: Object.assign({}, state.own, {isLoading: false, isFetched: true, content: action.result}) });
+            return Object.assign({}, state, { forUser: action.userId, own: Object.assign({}, state.own, { isLoading: false, isFetched: true, content: action.result }) });
         }
 
         case actions.types.OWN_PLANS_REQUEST_FAILED: {
-            return Object.assign({}, state, { forUser: action.userId, own: Object.assign({}, state.own, {isLoading: false, isFetched: true}) });
+            return Object.assign({}, state, { forUser: action.userId, own: Object.assign({}, state.own, { isLoading: false, isFetched: true }) });
         }
 
         case actions.types.LIKED_PLANS_REQUEST_STARTED: {
-            return Object.assign({}, state, { forUser: action.userId, liked: Object.assign({}, state.liked, {isLoading: true}) });
+            return Object.assign({}, state, { forUser: action.userId, liked: Object.assign({}, state.liked, { isLoading: true }) });
         }
 
         case actions.types.LIKED_PLANS_REQUEST_SUCCESSED: {
-            return Object.assign({}, state, { forUser: action.userId, liked: Object.assign({}, state.liked, {isLoading: false, isFetched: true, content: action.result}) });
+            return Object.assign({}, state, { forUser: action.userId, liked: Object.assign({}, state.liked, { isLoading: false, isFetched: true, content: action.result }) });
         }
 
         case actions.types.LIKED_PLANS_REQUEST_FAILED: {
-            return Object.assign({}, state, { forUser: action.userId, liked: Object.assign({}, state.liked, {isLoading: false, isFetched: true}) });
+            return Object.assign({}, state, { forUser: action.userId, liked: Object.assign({}, state.liked, { isLoading: false, isFetched: true }) });
         }
 
         case actions.types.DISLIKED_PLANS_REQUEST_STARTED: {
-            return Object.assign({}, state, { forUser: action.userId, disliked: Object.assign({}, state.disliked, {isLoading: true}) });
+            return Object.assign({}, state, { forUser: action.userId, disliked: Object.assign({}, state.disliked, { isLoading: true }) });
         }
 
         case actions.types.DISLIKED_PLANS_REQUEST_SUCCESSED: {
-            return Object.assign({}, state, { forUser: action.userId, disliked: Object.assign({}, state.disliked, {isLoading: false, isFetched: true, content: action.result}) });
+            return Object.assign({}, state, { forUser: action.userId, disliked: Object.assign({}, state.disliked, { isLoading: false, isFetched: true, content: action.result }) });
         }
 
         case actions.types.DISLIKED_PLANS_REQUEST_FAILED: {
-            return Object.assign({}, state, { forUser: action.userId, disliked: Object.assign({}, state.disliked, {isLoading: false, isFetched: true}) });
+            return Object.assign({}, state, { forUser: action.userId, disliked: Object.assign({}, state.disliked, { isLoading: false, isFetched: true }) });
         }
     }
 }

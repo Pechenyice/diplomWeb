@@ -18,6 +18,9 @@ function mapDispatchToState(dispatch) {
         },
         onSignUp: ({login, nick, pass}) => {
             dispatch(actions.fetchSignUp(login, nick, pass));
+        },
+        onError: (text) => {
+            dispatch(actions.addError(text));
         }
     };
 }

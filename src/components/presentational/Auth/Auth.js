@@ -1,161 +1,270 @@
 import React, { useEffect, useState } from "react";
 import { Redirect } from "react-router";
-import styles from './Auth.module.css';
-import PropTypes from 'prop-types';
+import styles from "./Auth.module.css";
+import PropTypes from "prop-types";
 import Client from "../../../Client/Client";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
 
-const Auth = ({ location, isLogged, onSignIn, onSignUp }) => {
-    useEffect(() => {
-        return () => {
-            Client.abortLoadAuthDataFetch();
-        }
-    }, []);
+const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
+	useEffect(() => {
+		return () => {
+			Client.abortLoadAuthDataFetch();
+		};
+	}, []);
 
-    const [state, setState] = useState({
-        signIn: {
-            login: '',
-            pass: ''
-        },
-        signUp: {
-            login: '',
-            nick: '',
-            pass: '',
-            rePass: '',
-            agreement: false
-        }
-    });
+	const [state, setState] = useState({
+		signIn: {
+			login: "",
+			loginError: "",
+			pass: "",
+			passError: "",
+		},
+		signUp: {
+			login: "",
+			loginError: "",
+			nick: "",
+			nickError: "",
+			pass: "",
+			passError: "",
+			rePass: "",
+			rePassError: "",
+			agreement: false,
+		},
+	});
 
-    const redirectPath = () => {
-        const locationState = location.state;
-        const pathname = (
-            locationState && locationState.from && locationState.from.pathname
-        );
-        return pathname || '/profile';
-    };
+	const redirectPath = () => {
+		const locationState = location.state;
+		const pathname =
+			locationState && locationState.from && locationState.from.pathname;
+		return pathname || "/profile";
+	};
 
-    function handleSignInLoginChange(e) {
-        setState(
-            Object.assign(
-                {},
-                state,
-                {
-                    signIn: Object.assign({}, state.signIn, { login: e.target.value })
-                }
-            )
-        );
-    }
+	function validate(action, value) {
+		switch (action) {
+			case "signInLogin":
+			case "signInPassword":
+			case "signUpLogin":
+			case "signUpPassword":
+			case "signUpRePassword": {
+				if (!value) return "Enter value";
+				if (value.length >= 64) return "Need < 64 symbols";
+				return "";
+			}
 
-    function handleSignInPasswordChange(e) {
-        setState(
-            Object.assign(
-                {},
-                state,
-                {
-                    signIn: Object.assign({}, state.signIn, { pass: e.target.value })
-                }
-            )
-        );
-    }
+			case "signUpNickname": {
+				if (!value) return "Enter value";
+				if (value.length >= 32) return "Need < 32 symbols";
+				return "";
+			}
 
-    function handleSignUpLoginChange(e) {
-        setState(
-            Object.assign(
-                {},
-                state,
-                {
-                    signUp: Object.assign({}, state.signUp, { login: e.target.value })
-                }
-            )
-        );
-    }
+			case "signIn": {
+				return state.signIn.loginError ||
+					state.signIn.passError ||
+					!state.signIn.login ||
+					!state.signIn.pass
+					? "Need to correct fields!"
+					: "";
+			}
 
-    function handleSignUpNicknameChange(e) {
-        setState(
-            Object.assign(
-                {},
-                state,
-                {
-                    signUp: Object.assign({}, state.signUp, { nick: e.target.value })
-                }
-            )
-        );
-    }
+			case "signUp": {
+				if (!state.signUp.agreement) return "Please, accept the terms!";
+				return state.signUp.loginError ||
+					state.signUp.nickError ||
+					state.signUp.passError ||
+					state.signUp.rePassError ||
+					!state.signUp.login ||
+					!state.signUp.nick ||
+					!state.signUp.pass ||
+					!state.signUp.rePass
+					? "Need to correct fields!"
+					: "";
+			}
+		}
+	}
 
-    function handleSignUpPasswordChange(e) {
-        setState(
-            Object.assign(
-                {},
-                state,
-                {
-                    signUp: Object.assign({}, state.signUp, { pass: e.target.value })
-                }
-            )
-        );
-    }
+	function handleSignInLoginChange(e) {
+		setState(
+			Object.assign({}, state, {
+				signIn: Object.assign({}, state.signIn, {
+					login: e.target.value,
+					loginError: validate("signInLogin", e.target.value),
+				}),
+			})
+		);
+	}
 
-    function handleSignUpRePasswordChange(e) {
-        setState(
-            Object.assign(
-                {},
-                state,
-                {
-                    signUp: Object.assign({}, state.signUp, { rePass: e.target.value })
-                }
-            )
-        );
-    }
+	function handleSignInPasswordChange(e) {
+		setState(
+			Object.assign({}, state, {
+				signIn: Object.assign({}, state.signIn, {
+					pass: e.target.value,
+					passError: validate("signInPassword", e.target.value),
+				}),
+			})
+		);
+	}
 
-    function handleAgreementClick() {
-        setState(
-            Object.assign(
-                {},
-                state,
-                {
-                    signUp: Object.assign({}, state.signUp, { agreement: !state.signUp.agreement })
-                }
-            )
-        );
-    }
+	function handleSignUpLoginChange(e) {
+		setState(
+			Object.assign({}, state, {
+				signUp: Object.assign({}, state.signUp, {
+					login: e.target.value,
+					loginError: validate("signUpLogin", e.target.value),
+				}),
+			})
+		);
+	}
 
-    return (
-        <section className={styles.authWrapper}>
-            {
-                isLogged ?
-                    <Redirect to={redirectPath()} /> :
-                    null
-            }
-            <h1><span className={styles.authSignIn}>SIGN IN</span> <span className={styles.authSignUp}>& CREATE ACCOUNT</span></h1>
-            <p className={styles.authHint}>We will redirect you to your target just in<br />a moment, introduce yourself please</p>
-            <div className={styles.inputsBlock} >
-                <div className={styles.inputsWrapper} >
-                    <Input id={'signInlogin'} label={'Login/Email'} isEmpty={!state.signIn.login} onChange={handleSignInLoginChange} />
-                    <Input id={'signInPassword'} label={'Password'} isEmpty={!state.signIn.pass} onChange={handleSignInPasswordChange} />
-                    <Button text={'Sign in'} onClick={() => {onSignIn(state.signIn)}} style={{marginTop: '15px'}} />
-                </div>
-                <div className={styles.inputsWrapper} >
-                    <Input id={'signUplogin'} label={'Login/Email'} isEmpty={!state.signUp.login} onChange={handleSignUpLoginChange} />
-                    <Input id={'signUpNickname'} label={'Nickname'} isEmpty={!state.signUp.nick} onChange={handleSignUpNicknameChange} />
-                    <Input id={'signUpPassword'} label={'Password'} isEmpty={!state.signUp.pass} onChange={handleSignUpPasswordChange} />
-                    <Input id={'signUpRePassword'} label={'Repeat password'} isEmpty={!state.signUp.rePass} onChange={handleSignUpRePasswordChange} />
-                    <div style={{margin: '15px 0'}}>
-                        <input type='checkbox' id='checkbox' checked={state.signUp.agreement} onChange={handleAgreementClick}/>
-                        <label style={{marginLeft: '10px'}} htmlFor='checkbox'>I agree <Link className={styles.agreementLink} to={'/terms'}>Terms & conditions</Link></label>
-                    </div>
-                    <Button text={'Create account'} onClick={() => {onSignUp(state.signUp)}} />
-                </div>
-            </div>
-        </section>
-    );
-}
+	function handleSignUpNicknameChange(e) {
+		setState(
+			Object.assign({}, state, {
+				signUp: Object.assign({}, state.signUp, {
+					nick: e.target.value,
+					nickError: validate("signUpNickname", e.target.value),
+				}),
+			})
+		);
+	}
+
+	function handleSignUpPasswordChange(e) {
+		setState(
+			Object.assign({}, state, {
+				signUp: Object.assign({}, state.signUp, {
+					pass: e.target.value,
+					passError: validate("signUpPassword", e.target.value),
+				}),
+			})
+		);
+	}
+
+	function handleSignUpRePasswordChange(e) {
+		setState(
+			Object.assign({}, state, {
+				signUp: Object.assign({}, state.signUp, {
+					rePass: e.target.value,
+					rePassError: validate("signUpRePassword", e.target.value),
+				}),
+			})
+		);
+	}
+
+	function handleAgreementClick() {
+		setState(
+			Object.assign({}, state, {
+				signUp: Object.assign({}, state.signUp, {
+					agreement: !state.signUp.agreement,
+				}),
+			})
+		);
+	}
+
+	function handleSignInTry() {
+		let notValid = validate("signIn");
+		!notValid ? onSignIn(state.signIn) : onError(notValid);
+	}
+
+	function handleSignUpTry() {
+		let notValid = validate("signUp");
+		!notValid ? onSignUp(state.signUp) : onError(notValid);
+	}
+
+	return (
+		<section className={styles.authWrapper}>
+			{isLogged ? <Redirect to={redirectPath()} /> : null}
+			<h1>
+				<span className={styles.authSignIn}>SIGN IN</span>{" "}
+				<span className={styles.authSignUp}>& CREATE ACCOUNT</span>
+			</h1>
+			<p className={styles.authHint}>
+				We will redirect you to your target just in
+				<br />a moment, introduce yourself please
+			</p>
+			<div className={styles.inputsBlock}>
+				<div className={styles.inputsWrapper}>
+					<Input
+						id={"signInlogin"}
+						error={state.signIn.loginError}
+						label={"Login/Email"}
+						isEmpty={!state.signIn.login}
+						onChange={handleSignInLoginChange}
+					/>
+					<Input
+						id={"signInPassword"}
+						error={state.signIn.passError}
+						label={"Password"}
+						isEmpty={!state.signIn.pass}
+						onChange={handleSignInPasswordChange}
+					/>
+					<Button
+						text={"Sign in"}
+						onClick={handleSignInTry}
+						style={{ marginTop: "15px" }}
+					/>
+				</div>
+				<div className={styles.inputsWrapper}>
+					<Input
+						id={"signUplogin"}
+						error={state.signUp.loginError}
+						label={"Login/Email"}
+						isEmpty={!state.signUp.login}
+						onChange={handleSignUpLoginChange}
+					/>
+					<Input
+						id={"signUpNickname"}
+						error={state.signUp.nickError}
+						label={"Nickname"}
+						isEmpty={!state.signUp.nick}
+						onChange={handleSignUpNicknameChange}
+					/>
+					<Input
+						id={"signUpPassword"}
+						error={state.signUp.passError}
+						label={"Password"}
+						isEmpty={!state.signUp.pass}
+						onChange={handleSignUpPasswordChange}
+					/>
+					<Input
+						id={"signUpRePassword"}
+						error={state.signUp.rePassError}
+						label={"Repeat password"}
+						isEmpty={!state.signUp.rePass}
+						onChange={handleSignUpRePasswordChange}
+					/>
+					<div style={{ margin: "15px 0" }}>
+						<input
+							type="checkbox"
+							id="checkbox"
+							checked={state.signUp.agreement}
+							onChange={handleAgreementClick}
+						/>
+						<label
+							style={{ marginLeft: "10px" }}
+							htmlFor="checkbox"
+						>
+							I agree{" "}
+							<Link
+								className={styles.agreementLink}
+								to={"/terms"}
+							>
+								Terms & conditions
+							</Link>
+						</label>
+					</div>
+					<Button text={"Create account"} onClick={handleSignUpTry} />
+				</div>
+			</div>
+		</section>
+	);
+};
 
 Auth.propTypes = {
-    location: PropTypes.object,
-    isLogged: PropTypes.bool.isRequired,
-    onSignIn: PropTypes.func.isRequired,
-    onSignUp: PropTypes.func.isRequired
-}
+	location: PropTypes.object,
+	isLogged: PropTypes.bool.isRequired,
+	onSignIn: PropTypes.func.isRequired,
+	onSignUp: PropTypes.func.isRequired,
+	onError: PropTypes.func.isRequired,
+};
 
 export default Auth;

@@ -14,7 +14,7 @@ let connection = null;
 })();
 
 const dbUtils = {
-    addUser: async () => {
+    addUser: async ({login, nickname, password}) => {
         let id = uuid.v4();
         let answer = await connection.execute(
             `INSERT INTO User (_id, login, password, photo_path, nickname)
@@ -22,16 +22,23 @@ const dbUtils = {
             WHERE NOT EXISTS (
                 SELECT login FROM User WHERE login = ? or nickname = ?
             ) LIMIT 1;`,
-            [id, 'root', 'root', 'admin', 'root1', 'admin']
+            [id, login, password, nickname, login, nickname]
         );
 
-        return { id, answer }
+        return { id, answer, login, nickname }
     },
 
     getUser: async ({login, password}) => {
         return await connection.execute(
             `Select * from User where login = ? and password = ?`,
             [login, password]
+        );
+    },
+
+    getUserNickname: async (id) => {
+        return await connection.execute(
+            `Select (nickname) from User where _id = ?`,
+            [id]
         );
     },
 
@@ -47,7 +54,7 @@ const dbUtils = {
 
     getUserByToken: async (token) => {
         return await connection.execute(
-            `Select * from Token where body = ?;`,
+            `select * from token left join user on token.user_id = user._id where body = ?;`,
             [token]
         );
     },

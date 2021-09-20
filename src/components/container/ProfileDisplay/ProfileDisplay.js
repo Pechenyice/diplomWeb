@@ -8,6 +8,10 @@ const ProfileDisplay = connect(mapStateToProps, mapDispatchToProps, mergePropsWi
 function mapStateToProps(state, ownProps) {
     return {
         userId: ownProps.match.params.userId,
+        businessman: state.user.id,
+        login: null,
+        nickname: state.guest.nickname,
+        userDataIsLoading: state.guest.isLoading,
         cachedLoadedForUser: state.profilePlans.forUser,
         profilePlans: state.profilePlans,
         location: ownProps.location
@@ -32,6 +36,9 @@ function mergePropsWithDispatch(stateProps, dispatchProps) {
         }, 
         onNeedLoadDislikedPlans: () => {
             dispatchProps.dispatch(actions.fetchDislikedPlans(stateProps.userId))
+        },
+        onNeedUserNickname: () => {
+            dispatchProps.dispatch(actions.fetchUserNickname(stateProps.userId))
         }
     };
 }

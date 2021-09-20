@@ -99,7 +99,9 @@ app.post('/api/checkToken', middlewares.bindAuth, async (req, res) => {
         result.length == 1 ?
             res.send(JSON.stringify({
                 success: true,
-                id: result[0].user_id
+                id: result[0]._id,
+                login: result[0].login,
+                nickname: result[0].nickname
             })) : {};
             // :
             // res.send(JSON.stringify({
@@ -110,7 +112,7 @@ app.post('/api/checkToken', middlewares.bindAuth, async (req, res) => {
 });
 
 app.post('/api/addUser', async (req, res) => {
-    let { id, answer } = await dbUtils.addUser();
+    let { id, answer, login, nickname } = await dbUtils.addUser(req.body);
     let [result, fields] = answer;
 
     if (result.affectedRows) {
@@ -122,7 +124,9 @@ app.post('/api/addUser', async (req, res) => {
         result.affectedRows ?
             res.send(JSON.stringify({
                 success: true,
-                id
+                id,
+                login,
+                nickname
             })) :
             res.send(JSON.stringify({
                 success: false,
@@ -144,11 +148,30 @@ app.post('/api/auth', async (req, res) => {
         result.length == 1 ?
             res.send(JSON.stringify({
                 success: true,
-                id: result[0]._id
+                id: result[0]._id,
+                login: result[0].login,
+                nickname: result[0].nickname
             })) :
             res.send(JSON.stringify({
                 success: false,
                 cause: 'No such user, please check login or password!'
+            }));
+    }, API_ANSWER_DELAY);
+});
+
+app.get('/api/getUserNickname', async (req, res) => {
+    console.log(req.query.id);
+    let [result, fields] = await dbUtils.getUserNickname(req.query.id);
+
+    setTimeout(() => {
+        result.length == 1 ?
+            res.send(JSON.stringify({
+                success: true,
+                nickname: result[0].nickname
+            })) :
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'No such user, cannot get nickname!'
             }));
     }, API_ANSWER_DELAY);
 });

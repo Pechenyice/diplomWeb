@@ -9,6 +9,10 @@ const ProfileRedirect = connect(mapStateToProps, mapDispatchToProps, mergePropsW
 function mapStateToProps(state, ownProps) {
     return {
         userId: state.user.id,
+        businessman: state.user.id,
+        login: state.user.login,
+        nickname: state.user.nickname,
+        userDataIsLoading: false,
         cachedForUser: state.profilePlans.forUser,
         profilePlans: state.profilePlans,
         location: ownProps.location
@@ -33,6 +37,9 @@ function mergePropsWithDispatch(stateProps, dispatchProps) {
         }, 
         onNeedLoadDislikedPlans: () => {
             dispatchProps.dispatch(actions.fetchDislikedPlans(stateProps.userId))
+        },
+        onNeedUserNickname: () => {
+            dispatchProps.dispatch(actions.fetchUserNickname(stateProps.userId))
         }
     };
 }

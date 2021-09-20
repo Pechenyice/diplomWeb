@@ -24,7 +24,7 @@ const Header = () => (
                 catalog
             </NavLink>
             <NavLink
-                to={'/profile'}
+                to={'/profile/own'}
                 className={styles.headerLink}
                 activeClassName={styles.activeHeaderLink}
             >

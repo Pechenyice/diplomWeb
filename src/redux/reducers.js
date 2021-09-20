@@ -4,9 +4,15 @@ import { v4 as uuidv4 } from 'uuid';
 const initialState = {
     user: {
         id: null,
+        login: null,
+        nickname: null,
         auth: {
             isChecking: false
         },
+        isLoading: false
+    },
+    guest: {
+        nickname: null,
         isLoading: false
     },
     filters: {
@@ -82,6 +88,12 @@ function reducer(state = initialState, action) {
             return Object.assign({}, state, { user: signReducer(state.user, action) });
         }
 
+        case actions.types.USER_NICKNAME_REQUEST_STARTED:
+        case actions.types.USER_NICKNAME_REQUEST_SUCCESSED:
+        case actions.types.USER_NICKNAME_REQUEST_FAILED: {
+            return Object.assign({}, state, { guest: guestReducer(state.guest, action) });
+        }
+
         case actions.types.OWN_PLANS_REQUEST_STARTED:
         case actions.types.OWN_PLANS_REQUEST_SUCCESSED:
         case actions.types.OWN_PLANS_REQUEST_FAILED:
@@ -102,7 +114,6 @@ function reducer(state = initialState, action) {
         case actions.types.USER_AUTH_CHECK_REQUEST_STARTED:
         case actions.types.USER_AUTH_CHECK_REQUEST_SUCCESSED:
         case actions.types.USER_AUTH_CHECK_REQUEST_FAILED: {
-            console.log('action.type', action.type)
             if (action?.result?.AUTH === 'FAIL') return Object.assign({}, state, toInitialState(state));
 
             return Object.assign({}, state, { user: userReducer(state.user, action) });
@@ -154,6 +165,8 @@ function toInitialState(state) {
     return {
         user: {
             id: null,
+            login: null,
+            nickname: null,
             auth: {
                 isChecking: false
             },
@@ -284,6 +297,22 @@ function errorsReducer(state, action) {
     }
 }
 
+function guestReducer(state, action) {
+    switch (action.type) {
+        case actions.types.USER_NICKNAME_REQUEST_STARTED: {
+            return Object.assign({}, state, { isLoading: true });
+        }
+
+        case actions.types.USER_NICKNAME_REQUEST_SUCCESSED: {
+            return Object.assign({}, state, { isLoading: false, nickname: action.result.nickname });
+        }
+
+        case actions.types.USER_NICKNAME_REQUEST_FAILED: {
+            return Object.assign({}, state, { isLoading: false });
+        }
+    }
+}
+
 function signReducer(state, action) {
     switch (action.type) {
         case actions.types.SIGN_UP_REQUEST_STARTED: {
@@ -291,7 +320,7 @@ function signReducer(state, action) {
         }
 
         case actions.types.SIGN_UP_REQUEST_SUCCESSED: {
-            return Object.assign({}, state, { id: action.result.id, isLoading: false });
+            return Object.assign({}, state, { id: action.result.id, login: action.result.login, nickname: action.result.nickname, isLoading: false });
         }
 
         case actions.types.SIGN_UP_REQUEST_FAILED: {
@@ -309,7 +338,7 @@ function userReducer(state, action) {
 
         case actions.types.USER_AUTH_CHECK_REQUEST_SUCCESSED: {
             console.log('auth check completed', action.result.id)
-            return Object.assign({}, state, { id: action.result.id, auth: { isChecking: false } });
+            return Object.assign({}, state, { id: action.result.id, login: action.result.login, nickname: action.result.nickname, auth: { isChecking: false } });
         }
 
         case actions.types.USER_AUTH_CHECK_REQUEST_FAILED: {
@@ -329,7 +358,7 @@ function userReducer(state, action) {
 
         case actions.types.AUTH_REQUEST_SUCCESSED: {
             console.log('auth successed', action.result.id)
-            return Object.assign({}, state, { id: action.result.id, isLoading: false });
+            return Object.assign({}, state, { id: action.result.id, login: action.result.login, nickname: action.result.nickname, isLoading: false });
         }
     }
 }

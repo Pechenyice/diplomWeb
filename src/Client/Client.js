@@ -46,7 +46,8 @@ const Client = {
         LOAD_OWN_PLANS_CONTROLLER: new AbortController(),
         LOAD_LIKED_PLANS_CONTROLLER: new AbortController(),
         LOAD_DISLIKED_PLANS_CONTROLLER: new AbortController(),
-        SEND_SIGN_UP_CONTROLLER: new AbortController()
+        SEND_SIGN_UP_CONTROLLER: new AbortController(),
+        LOAD_USER_NICKNAME_CONTROLLER: new AbortController()
     },
 
     sendSignUpRequest: function(login, nickname, password) {
@@ -60,6 +61,15 @@ const Client = {
     abortloadCategoriesFetch: function () {
         this.aborts.LOAD_CATEGORIES_CONTROLLER.abort();
         this.aborts.LOAD_CATEGORIES_CONTROLLER = new AbortController();
+    },
+
+    loadUserNickname: function(id) {
+        return this.safeFetch(this.constructUrl(`/getUserNickname?id=${id}`), 'GET', this.aborts.LOAD_USER_NICKNAME_CONTROLLER);
+    },
+
+    abortLoadUserNickname: function () {
+        this.aborts.LOAD_USER_NICKNAME_CONTROLLER.abort();
+        this.aborts.LOAD_USER_NICKNAME_CONTROLLER = new AbortController();
     },
 
     loadTypes: function () {

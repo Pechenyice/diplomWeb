@@ -250,7 +250,7 @@ CREATE TABLE `token` (
   `death_date` varchar(32) DEFAULT NULL,
   `ip` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`body`),
-  KEY `user_id` (`user_id`),
+  UNIQUE KEY `user_id` (`user_id`),
   CONSTRAINT `token_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -261,6 +261,7 @@ CREATE TABLE `token` (
 
 LOCK TABLES `token` WRITE;
 /*!40000 ALTER TABLE `token` DISABLE KEYS */;
+INSERT INTO `token` VALUES ('b3b0e5b9-134b-483e-a8c7-931037f259e1','c6aa4b0e-6ff8-4d59-8fc5-db66f95f8b49','1632259567829','::ffff:127.0.0.1'),('ba4d66c3-1004-428c-8e26-c953f92f212d','bf010189-2e20-419c-9409-5534fcf7f0e1','1632261966359','::ffff:127.0.0.1');
 /*!40000 ALTER TABLE `token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -310,6 +311,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES ('6c298ee2-07e5-48ca-81af-84b41836e725','maryana','maryana',NULL,'maryana'),('bf010189-2e20-419c-9409-5534fcf7f0e1','test','test',NULL,'test'),('c6aa4b0e-6ff8-4d59-8fc5-db66f95f8b49','root','root',NULL,'admin');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -322,4 +324,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-18 23:49:18
+-- Dump completed on 2021-09-22  1:15:37

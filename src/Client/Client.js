@@ -47,18 +47,33 @@ const Client = {
         LOAD_LIKED_PLANS_CONTROLLER: new AbortController(),
         LOAD_DISLIKED_PLANS_CONTROLLER: new AbortController(),
         SEND_SIGN_UP_CONTROLLER: new AbortController(),
-        LOAD_USER_NICKNAME_CONTROLLER: new AbortController()
+        LOAD_USER_NICKNAME_CONTROLLER: new AbortController(),
+        LOGOUT_CONTROLLER: new AbortController()
+    },
+
+    logout: function () {
+        return this.safeFetch(this.constructUrl('/logout'), 'GET', this.aborts.LOGOUT_CONTROLLER);
+    },
+
+    abortLogout: function () {
+        this.aborts.LOGOUT_CONTROLLER.abort();
+        this.aborts.LOGOUT_CONTROLLER = new AbortController();
     },
 
     sendSignUpRequest: function(login, nickname, password) {
         return this.safeFetch(this.constructUrl('/addUser'), 'POST', this.aborts.SEND_SIGN_UP_CONTROLLER, {login, nickname, password});
     },
 
+    abortSendSignUpRequest: function () {
+        this.aborts.SEND_SIGN_UP_CONTROLLER.abort();
+        this.aborts.SEND_SIGN_UP_CONTROLLER = new AbortController();
+    },
+
     loadCategories: function () {
         return this.safeFetch(this.constructUrl('/getFiltersCategories'), 'GET', this.aborts.LOAD_CATEGORIES_CONTROLLER);
     },
 
-    abortloadCategoriesFetch: function () {
+    abortLoadCategoriesFetch: function () {
         this.aborts.LOAD_CATEGORIES_CONTROLLER.abort();
         this.aborts.LOAD_CATEGORIES_CONTROLLER = new AbortController();
     },

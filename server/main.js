@@ -91,11 +91,77 @@ for (let i = 0; i < 22; i++) {
     });
 }
 
-app.get('/api/logout', middlewares.bindAuth, (req, res) => {
-    setTimeout(() => {
-        res.send('test');
-        // res.send(JSON.stringify([]));
-    }, API_ANSWER_DELAY);
+app.get('/api/logout', middlewares.bindAuth, async (req, res) => {
+    let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
+
+    if (result.length == 1) {
+        dbUtils.dropToken(result[0].body);
+        res.cookie('authToken', '', { maxAge: Date.now() });
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: true
+            }));
+        }, API_ANSWER_DELAY);
+    } else {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Something went wrong, we do not know yoy, looo-o-ol!'
+            }));
+        }, API_ANSWER_DELAY);  
+    }
+});
+
+app.put('/api/updateProfilePassword', middlewares.bindAuth, async (req, res) => {
+    let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
+
+    if (result.length != 1) {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Something went wrong, we do not know yoy, looo-o-ol!'
+            }));
+        }, API_ANSWER_DELAY); 
+    } else {
+        let [answer, moreInfo] = await dbUtils.updatePassword(result[0].user_id, req.body.oldPassword, req.body.password);
+        console.log(answer)
+        if (answer.affectedRows == 1) {
+            res.send(JSON.stringify({
+                success: true
+            }));
+        } else {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Cannot update password!'
+            }));
+        }
+    }
+});
+
+app.put('/api/updateProfileData', middlewares.bindAuth, async (req, res) => {
+    let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
+
+    if (result.length != 1) {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Something went wrong, we do not know yoy, looo-o-ol!'
+            }));
+        }, API_ANSWER_DELAY); 
+    } else {
+        let [answer, moreInfo] = await dbUtils.updateNickname(result[0].user_id, req.body.nickname);
+        if (answer.affectedRows == 1) {
+            res.send(JSON.stringify({
+                success: true,
+                nickname: req.body.nickname
+            }));
+        } else {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Cannot update nickname!'
+            }));
+        }
+    }
 });
 
 app.post('/api/checkToken', middlewares.bindAuth, async (req, res) => {
@@ -256,6 +322,9 @@ app.get('/api/getFiltersCategories', (req, res) => {
         res.send(JSON.stringify([
             { id: 0, name: 'Franchise' },
             { id: 1, name: 'Startup' },
+            { id: 1, name: 'Small business' },
+            { id: 1, name: 'Big business' },
+            { id: 1, name: 'We will do business, we will do money' }
         ]));
     }, API_ANSWER_DELAY);
 });

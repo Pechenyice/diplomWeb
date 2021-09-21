@@ -39,7 +39,14 @@ function mergePropsWithDispatch(stateProps, dispatchProps) {
         },
         onNeedUserNickname: () => {
             dispatchProps.dispatch(actions.fetchUserNickname(stateProps.userId))
-        }
+        },
+        onClear: () => {
+            dispatchProps.dispatch(actions.clearGuest())
+        },
+        onLogout: () => {},
+        onError: () => {},
+        onSaveProfileData: () => {},
+        onSaveProfilePassword: () => {}
     };
 }
 

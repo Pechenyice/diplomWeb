@@ -13,6 +13,20 @@
     transition: .2s;
 }
 
+.icon {
+	position: absolute;
+	height: 100%;
+	width: max-content;
+	display: flex;
+	align-items: center;
+	top: 0;
+	right: 20px;
+}
+
+.iconDePass {
+    cursor: pointer;
+}
+
 .inputLabel {
     position: absolute;
     top: 0;

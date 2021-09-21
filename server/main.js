@@ -91,6 +91,13 @@ for (let i = 0; i < 22; i++) {
     });
 }
 
+app.get('/api/logout', middlewares.bindAuth, (req, res) => {
+    setTimeout(() => {
+        res.send('test');
+        // res.send(JSON.stringify([]));
+    }, API_ANSWER_DELAY);
+});
+
 app.post('/api/checkToken', middlewares.bindAuth, async (req, res) => {
     let answer = await dbUtils.getUserByToken(req.cookies.authToken);
     let [result, fields] = answer;
@@ -255,7 +262,7 @@ app.get('/api/getFiltersCategories', (req, res) => {
 
 app.get('/api/getOwnPlans', middlewares.bindAuth, (req, res) => {
     setTimeout(() => {
-        res.send(JSON.stringify(businesses));
+        res.send(JSON.stringify([]));
     }, API_ANSWER_DELAY);
 });
 

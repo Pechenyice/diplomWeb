@@ -49,6 +49,7 @@ code {
 :root {
   --dark: #101010;
   --light: #fff;
+  --accent: #02FCDE;
 }
 
 * {

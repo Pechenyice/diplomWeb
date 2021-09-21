@@ -30,15 +30,29 @@ const dbUtils = {
 
     getUser: async ({login, password}) => {
         return await connection.execute(
-            `Select * from User where login = ? and password = ?`,
+            `Select * from User where login = ? and password = ?;`,
             [login, password]
         );
     },
 
     getUserNickname: async (id) => {
         return await connection.execute(
-            `Select (nickname) from User where _id = ?`,
+            `Select (nickname) from User where _id = ?;`,
             [id]
+        );
+    },
+
+    updateNickname: async (id, nickname) => {
+        return await connection.execute(
+            `update user set nickname = ? where _id = ?;`,
+            [nickname, id]
+        );
+    },
+
+    updatePassword: async (id, oldPass, pass) => {
+        return await connection.execute(
+            `update user set password = ? where _id in (select _id from (select * from user) as tmp where tmp._id = ? and tmp.password = ?);`,
+            [pass, id, oldPass]
         );
     },
 

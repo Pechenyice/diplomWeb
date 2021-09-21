@@ -4,7 +4,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 100px;
     padding: 0 120px;
     background-color: var(--dark);
     color: var(--light);

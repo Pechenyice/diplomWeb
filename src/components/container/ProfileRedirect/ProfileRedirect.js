@@ -50,8 +50,12 @@ function mergePropsWithDispatch(stateProps, dispatchProps) {
         onError: (text) => {
             dispatchProps.dispatch(actions.addError(text))
         },
-        onSaveProfileData: () => {},
-        onSaveProfilePassword: () => {}
+        onSaveProfileData: (nickname) => {
+            dispatchProps.dispatch(actions.updateProfileData(nickname))
+        },
+        onSaveProfilePassword: (oldPass, pass) => {
+            dispatchProps.dispatch(actions.updateProfilePassword(oldPass, pass))
+        }
     };
 }
 

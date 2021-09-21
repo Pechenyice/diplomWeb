@@ -27,6 +27,7 @@ const Client = {
         }
 
         if (method === 'POST') options['body'] = JSON.stringify(body);
+        if (method === 'PUT') options['body'] = JSON.stringify(body);
 
         return fetch(url, options)
             .then(this.checkStatus)
@@ -48,7 +49,27 @@ const Client = {
         LOAD_DISLIKED_PLANS_CONTROLLER: new AbortController(),
         SEND_SIGN_UP_CONTROLLER: new AbortController(),
         LOAD_USER_NICKNAME_CONTROLLER: new AbortController(),
-        LOGOUT_CONTROLLER: new AbortController()
+        LOGOUT_CONTROLLER: new AbortController(),
+        UPDATE_PROFILE_DATA_CONTROLLER: new AbortController(),
+        UPDATE_PROFILE_PASSWORD_CONTROLLER: new AbortController()
+    },
+
+    updateProfilePassword: function(oldPassword, password) {
+        return this.safeFetch(this.constructUrl('/updateProfilePassword'), 'PUT', this.aborts.UPDATE_PROFILE_PASSWORD_CONTROLLER, {oldPassword, password});
+    }, 
+
+    abortUpdateProfilePassword: function () {
+        this.aborts.UPDATE_PROFILE_PASSWORD_CONTROLLER.abort();
+        this.aborts.UPDATE_PROFILE_PASSWORD_CONTROLLER = new AbortController();
+    },
+
+    updateProfileData: function(nickname) {
+        return this.safeFetch(this.constructUrl('/updateProfileData'), 'PUT', this.aborts.UPDATE_PROFILE_DATA_CONTROLLER, {nickname});
+    }, 
+
+    abortUpdateProfileData: function () {
+        this.aborts.UPDATE_PROFILE_DATA_CONTROLLER.abort();
+        this.aborts.UPDATE_PROFILE_DATA_CONTROLLER = new AbortController();
     },
 
     logout: function () {

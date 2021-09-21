@@ -72,6 +72,9 @@ const initialState = {
 	errors: {
 		content: [],
 	},
+	successes: {
+		content: [],
+	}
 };
 
 function reducer(state = initialState, action) {
@@ -86,7 +89,7 @@ function reducer(state = initialState, action) {
 		case actions.types.LOGOUT_REQUEST_FAILED: {
             if (action?.result?.AUTH === "FAIL")
 				return Object.assign({}, state, toInitialState(state));
-                
+
 			if (action?.result?.success)
 				return Object.assign({}, state, toInitialState(state));
 
@@ -102,6 +105,26 @@ function reducer(state = initialState, action) {
 					isLoading: false,
 				}
 			});
+		}
+
+		case actions.types.UPDATE_PROFILE_DATA_REQUEST_STARTED:
+		case actions.types.UPDATE_PROFILE_DATA_REQUEST_SUCCESSED:
+		case actions.types.UPDATE_PROFILE_DATA_REQUEST_FAILED: {
+			if (action?.result?.AUTH === "FAIL")
+				return Object.assign({}, state, toInitialState(state));
+
+			return Object.assign({}, state, {
+				user: updateProfileDataReducer(state.user, action),
+			});
+		}
+
+		case actions.types.UPDATE_PROFILE_PASSWORD_REQUEST_STARTED:
+		case actions.types.UPDATE_PROFILE_PASSWORD_REQUEST_STARTED:
+		case actions.types.UPDATE_PROFILE_PASSWORD_REQUEST_STARTED: {
+			if (action?.result?.AUTH === "FAIL")
+				return Object.assign({}, state, toInitialState(state));
+
+			return state;
 		}
 
 		case actions.types.SIGN_UP_REQUEST_STARTED:
@@ -165,6 +188,13 @@ function reducer(state = initialState, action) {
 		case actions.types.ADD_ERROR: {
 			return Object.assign({}, state, {
 				errors: errorsReducer(state.errors, action),
+			});
+		}
+
+		case actions.types.REMOVE_SUCCESS:
+		case actions.types.ADD_SUCCESS: {
+			return Object.assign({}, state, {
+				successes: successesReducer(state.successes, action),
 			});
 		}
 
@@ -338,6 +368,33 @@ function planReducer(state, action, businesses) {
 	}
 }
 
+function successesReducer(state, action) {
+	switch (action.type) {
+		case actions.types.REMOVE_SUCCESS: {
+			let ind = state.content.findIndex((e) => e.id === action.id);
+
+			return {
+				content: [
+					...state.content.slice(0, ind),
+					...state.content.slice(ind + 1, state.content.length),
+				],
+			};
+		}
+
+		case actions.types.ADD_SUCCESS: {
+			console.log(action.text);
+			return {
+				content: state.content.concat({
+					id: uuidv4(),
+					text: action.text,
+					type: 'success',
+					created: Date.now()
+				}),
+			};
+		}
+	}
+}
+
 function errorsReducer(state, action) {
 	switch (action.type) {
 		case actions.types.REMOVE_ERROR: {
@@ -357,6 +414,8 @@ function errorsReducer(state, action) {
 				content: state.content.concat({
 					id: uuidv4(),
 					text: action.text,
+					type: 'error',
+					created: Date.now()
 				}),
 			};
 		}
@@ -382,17 +441,33 @@ function guestReducer(state, action) {
 	}
 }
 
-function logoutReducer(state, action) {
+function updateProfileDataReducer(state, action) {
 	switch (action.type) {
-		case actions.types.USER_NICKNAME_REQUEST_STARTED: {
+		case actions.types.UPDATE_PROFILE_DATA_REQUEST_STARTED: {
 			return state;
 		}
 
-		case actions.types.USER_NICKNAME_REQUEST_SUCCESSED: {
+		case actions.types.UPDATE_PROFILE_DATA_REQUEST_SUCCESSED: {
+			return Object.assign({}, state, { nickname: action.result.nickname });
+		}
+
+		case actions.types.UPDATE_PROFILE_DATA_REQUEST_FAILED: {
+			return state;
+		}
+	}
+}
+
+function logoutReducer(state, action) {
+	switch (action.type) {
+		case actions.types.LOGOUT_REQUEST_STARTED: {
+			return state;
+		}
+
+		case actions.types.LOGOUT_REQUEST_SUCCESSED: {
 			return Object.assign({}, state, { id: null });
 		}
 
-		case actions.types.USER_NICKNAME_REQUEST_FAILED: {
+		case actions.types.LOGOUT_REQUEST_FAILED: {
 			return state;
 		}
 	}

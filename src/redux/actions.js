@@ -42,7 +42,11 @@ const actions = {
         SIGN_UP_REQUEST_FAILED: 'SIGN_UP_REQUEST_FAILED',
         USER_NICKNAME_REQUEST_STARTED: 'USER_NICKNAME_REQUEST_STARTED',
         USER_NICKNAME_REQUEST_SUCCESSED: 'USER_NICKNAME_REQUEST_SUCCESSED',
-        USER_NICKNAME_REQUEST_FAILED: 'USER_NICKNAME_REQUEST_FAILED'
+        USER_NICKNAME_REQUEST_FAILED: 'USER_NICKNAME_REQUEST_FAILED',
+        LOGOUT_REQUEST_STARTED: 'LOGOUT_REQUEST_STARTED',
+        LOGOUT_REQUEST_SUCCESSED: 'LOGOUT_REQUEST_SUCCESSED',
+        LOGOUT_REQUEST_FAILED: 'LOGOUT_REQUEST_FAILED',
+        NULLIFY_GUEST: 'NULLIFY_GUEST'
     },
 
     findPlan: function ({ planId, edId }) {
@@ -58,6 +62,12 @@ const actions = {
     clearPlanInfo: function () {
         return {
             type: this.types.NULLIFY_ACTIVE_PLAN
+        }
+    },
+
+    clearGuest: function() {
+        return {
+            type: this.types.NULLIFY_GUEST
         }
     },
 
@@ -314,6 +324,44 @@ const actions = {
                     }
                     dispatch(this.fetchSignUpFail());
                     dispatch(this.addError('Failed register user, try later!'));
+                })
+        }
+    },
+
+    fetchLogoutRequest: function () {
+        return {
+            type: this.types.LOGOUT_REQUEST_STARTED
+        }
+    },
+
+    fetchLogoutSuccess: function (result) {
+        return {
+            type: this.types.LOGOUT_REQUEST_SUCCESSED,
+            result
+        }
+    },
+
+    fetchLogoutFail: function () {
+        return {
+            type: this.types.LOGOUT_REQUEST_FAILED
+        }
+    },
+
+    fetchLogout: function() {
+        return (dispatch) => {
+            dispatch(this.fetchLogoutRequest());
+            Client.logout()
+                .then((result) => {
+                    result.success ?
+                        dispatch(this.fetchLogoutSuccess(result)) :
+                        dispatch(this.addError(result.cause));
+                })
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
+                    dispatch(this.fetchLogoutFail());
+                    dispatch(this.addError('Failed logout!'));
                 })
         }
     },

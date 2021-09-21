@@ -4,7 +4,7 @@ import Header from './components/presentational/Header/Header';
 import Landing from './components/presentational/Landing/Landing';
 import AuthorizedRouteManager from './components/container/AuthorizedRouteManager/AuthorizedRouteManager';
 import CatalogComponent from './components/container/CatalogComponent/CatalogComponent';
-import ErrorsDisplay from './components/container/ErrorsDisplay/ErrorsDisplay';
+import EventsDisplay from './components/container/EventsDisplay/EventsDisplay';
 import InvalidRoute from './components/presentational/404/404';
 import BusinessPlanDisplay from './components/container/BusinessPlanDisplay/BusinessPlanDisplay';
 import AuthDisplay from './components/container/AuthDisplay/AuthDisplay';
@@ -19,7 +19,6 @@ function App() {
   return (
     <section className="App">
       <Header />
-      <ErrorsDisplay />
       <PreloaderDisplay />
 
       <Switch>
@@ -37,6 +36,7 @@ function App() {
       </Switch>
 
       <Footer />
+      <EventsDisplay />
     </section>
   );
 }

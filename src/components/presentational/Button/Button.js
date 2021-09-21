@@ -2,8 +2,8 @@ import React from "react";
 import styles from './Button.module.css';
 import PropTypes from 'prop-types';
 
-const Button = ({text, onClick, style={}}) => (
-    <button style={style} className={styles.button} onClick={onClick}>
+const Button = ({text, onClick, theme='light', style={}}) => (
+    <button style={style} className={theme === 'dark' ? styles.darkButton : styles.button} onClick={onClick}>
         {text}
     </button>
 );
@@ -11,6 +11,7 @@ const Button = ({text, onClick, style={}}) => (
 Button.propTypes = {
     text: PropTypes.string,
     onClick: PropTypes.func,
+    theme: PropTypes.string,
     style: PropTypes.object
 }
 

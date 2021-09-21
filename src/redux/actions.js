@@ -5,6 +5,8 @@ const actions = {
         APPLY_FILTERS: 'APPLY_FILTERS',
         REMOVE_ERROR: 'REMOVE_ERROR',
         ADD_ERROR: 'ADD_ERROR',
+        REMOVE_SUCCESS: 'REMOVE_SUCCESS',
+        ADD_SUCCESS: 'ADD_SUCCESS',
         CATEGORIES_REQUEST_STARTED: 'CATEGORIES_REQUEST_STARTED',
         CATEGORIES_REQUEST_FAILED: 'CATEGORIES_REQUEST_FAILED',
         CATEGORIES_REQUEST_SUCCESSED: 'CATEGORIES_REQUEST_SUCCESSED',
@@ -46,7 +48,13 @@ const actions = {
         LOGOUT_REQUEST_STARTED: 'LOGOUT_REQUEST_STARTED',
         LOGOUT_REQUEST_SUCCESSED: 'LOGOUT_REQUEST_SUCCESSED',
         LOGOUT_REQUEST_FAILED: 'LOGOUT_REQUEST_FAILED',
-        NULLIFY_GUEST: 'NULLIFY_GUEST'
+        NULLIFY_GUEST: 'NULLIFY_GUEST',
+        UPDATE_PROFILE_DATA_REQUEST_STARTED: 'UPDATE_PROFILE_DATA_REQUEST_STARTED',
+        UPDATE_PROFILE_DATA_REQUEST_SUCCESSED: 'UPDATE_PROFILE_DATA_REQUEST_SUCCESSED',
+        UPDATE_PROFILE_DATA_REQUEST_FAILED: 'UPDATE_PROFILE_DATA_REQUEST_FAILED',
+        UPDATE_PROFILE_PASSWORD_REQUEST_STARTED: 'UPDATE_PROFILE_PASSWORD_REQUEST_STARTED',
+        UPDATE_PROFILE_PASSWORD_REQUEST_SUCCESSED: 'UPDATE_PROFILE_PASSWORD_REQUEST_SUCCESSED',
+        UPDATE_PROFILE_PASSWORD_REQUEST_FAILED: 'UPDATE_PROFILE_PASSWORD_REQUEST_FAILED'
     },
 
     findPlan: function ({ planId, edId }) {
@@ -65,7 +73,7 @@ const actions = {
         }
     },
 
-    clearGuest: function() {
+    clearGuest: function () {
         return {
             type: this.types.NULLIFY_GUEST
         }
@@ -126,6 +134,20 @@ const actions = {
     addError: function (text) {
         return {
             type: this.types.ADD_ERROR,
+            text
+        }
+    },
+
+    removeSuccess: function (id) {
+        return {
+            type: this.types.REMOVE_SUCCESS,
+            id
+        }
+    },
+
+    addSuccess: function (text) {
+        return {
+            type: this.types.ADD_SUCCESS,
             text
         }
     },
@@ -347,7 +369,7 @@ const actions = {
         }
     },
 
-    fetchLogout: function() {
+    fetchLogout: function () {
         return (dispatch) => {
             dispatch(this.fetchLogoutRequest());
             Client.logout()
@@ -362,6 +384,94 @@ const actions = {
                     }
                     dispatch(this.fetchLogoutFail());
                     dispatch(this.addError('Failed logout!'));
+                })
+        }
+    },
+
+    fetchUpdateProfileDataRequest: function () {
+        return {
+            type: this.types.UPDATE_PROFILE_DATA_REQUEST_STARTED
+        }
+    },
+
+    fetchUpdateProfileDataSuccess: function (result) {
+        return {
+            type: this.types.UPDATE_PROFILE_DATA_REQUEST_SUCCESSED,
+            result
+        }
+    },
+
+    fetchUpdateProfileDataFail: function (result) {
+        return {
+            type: this.types.UPDATE_PROFILE_DATA_REQUEST_FAILED,
+            result
+        }
+    },
+
+    updateProfileData: function (nickname) {
+        return (dispatch) => {
+            dispatch(this.fetchUpdateProfileDataRequest());
+            Client.updateProfileData(nickname)
+                .then((result) => {
+                    if (result.success) {
+                        dispatch(this.fetchUpdateProfileDataSuccess(result));
+                        dispatch(this.addSuccess('Nickname changed succesfully!'))
+                    } else {
+                        dispatch(this.fetchUpdateProfileDataFail({AUTH: 'FAIL'}));
+                        dispatch(this.addError(result.cause))
+                    }
+                })
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
+                    console.log('e', e)
+                    dispatch(this.fetchUpdateProfileDataFail());
+                    dispatch(this.addError('Failed update profile data!'));
+                })
+        }
+    },
+
+    fetchUpdateProfilePasswordRequest: function () {
+        return {
+            type: this.types.UPDATE_PROFILE_PASSWORD_REQUEST_STARTED
+        }
+    },
+
+    fetchUpdateProfilePasswordSuccess: function (result) {
+        return {
+            type: this.types.UPDATE_PROFILE_PASSWORD_REQUEST_SUCCESSED,
+            result
+        }
+    },
+
+    fetchUpdateProfilePasswordFail: function (result) {
+        return {
+            type: this.types.UPDATE_PROFILE_PASSWORD_REQUEST_FAILED,
+            result
+        }
+    },
+
+    updateProfilePassword: function(oldPass, pass) {
+        return (dispatch) => {
+            dispatch(this.fetchUpdateProfilePasswordRequest());
+            Client.updateProfilePassword(oldPass, pass)
+                .then((result) => {
+                    if (result.success) {
+                        dispatch(this.fetchUpdateProfilePasswordSuccess(result));
+                        dispatch(this.addSuccess('Password changed succesfully!'))
+                    } else {
+                        dispatch(this.fetchUpdateProfilePasswordFail({AUTH: 'FAIL'}));
+                        dispatch(this.addError(result.cause))
+                    }
+                })
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
+                    console.log('e', e)
+                    dispatch(this.fetchUpdateProfilePasswordFail());
+                    dispatch(this.addError('Failed update profile password!'));
                 })
         }
     },
@@ -385,7 +495,7 @@ const actions = {
         }
     },
 
-    fetchUserNickname: function(id) {
+    fetchUserNickname: function (id) {
         return (dispatch) => {
             dispatch(this.fetchUserNicknameRequest());
             Client.loadUserNickname(id)

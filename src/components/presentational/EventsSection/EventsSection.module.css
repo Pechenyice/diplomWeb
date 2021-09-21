@@ -1,0 +1,29 @@
+.errorsSection {
+    padding: 30px 0;
+    position: fixed;
+    bottom: 0;
+    right: 30px;
+    width: 300px;
+    height: max-content;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    justify-content: right;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+
+.event {
+    width: 100%;
+    padding: 20px;
+    color: var(--light);
+    cursor: pointer;
+}
+
+.error {
+    background-color: rgb(238, 65, 65);
+}
+
+.success {
+    background-color: rgb(67, 167, 80);
+}

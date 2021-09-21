@@ -38,6 +38,7 @@ const Input = ({
 				onChange={onChange}
 				readOnly={readonly}
 				type={hideSymbols ? "password" : "text"}
+				style={{paddingRight: '50px'}}
 			/>
 			<label className={labelClasses.join(" ")} htmlFor={id}>
 				{label}

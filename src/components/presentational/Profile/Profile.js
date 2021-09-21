@@ -144,6 +144,25 @@ const Profile = ({
 			}
 
 			case "profilePassword": {
+				if (!state.pass.oldPass || !state.pass.pass || !state.pass.rePass) {
+					onError("Cannot use empty passwords!");
+					return false;
+				}
+				if (state.pass.pass === state.pass.oldPass) {
+					onError("New password should not be the same!");
+					return false;
+				}
+				if (state.pass.pass !== state.pass.rePass) {
+					onError("New passwords are not equal!");
+					return false;
+				}
+				if (state.pass.pass.length >= 64 || state.pass.rePass.length >= 64 || state.pass.oldPass.length >= 64) {
+					onError(
+						"Cannot use such a long password, need < 64 symbols!"
+					);
+					return false;
+				}
+				return true;
 			}
 		}
 	}
@@ -151,6 +170,13 @@ const Profile = ({
 	function handleSaveProfileData() {
 		if (validate('profileData', state.data.nick)) {
 			onSaveProfileData(state.data.nick);
+		}
+	}
+
+	function handleSaveProfilePassword() {
+		if (validate('profilePassword')) {
+			onSaveProfilePassword(state.pass.oldPass, state.pass.pass, state.pass.rePass);
+			setState(Object.assign({}, state, {pass: Object.assign({}, state.pass, {oldPass: '', pass: '', rePass: ''})}))
 		}
 	}
 
@@ -216,6 +242,7 @@ const Profile = ({
 								id={"oldPassPass"}
 								label={"Old password"}
 								isEmpty={!state.pass.oldPass}
+								value={state.pass.oldPass}
 								onChange={handleOldPassPasswordChange}
 								password
 							/>
@@ -223,6 +250,7 @@ const Profile = ({
 								id={"passPass"}
 								label={"New password"}
 								isEmpty={!state.pass.pass}
+								value={state.pass.pass}
 								onChange={handlePassPasswordChange}
 								password
 							/>
@@ -230,12 +258,13 @@ const Profile = ({
 								id={"passRePass"}
 								label={"Repeat password"}
 								isEmpty={!state.pass.rePass}
+								value={state.pass.rePass}
 								onChange={handlePassRePasswordChange}
 								password
 							/>
 							<Button
 								text={"Change password"}
-								onClick={() => {}}
+								onClick={handleSaveProfilePassword}
 								style={{ marginTop: "15px" }}
 							/>
 						</div>

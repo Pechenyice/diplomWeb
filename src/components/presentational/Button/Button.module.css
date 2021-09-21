@@ -10,7 +10,25 @@
     transition: .2s;
 }
 
-/* .button:hover {
-    border-bottom: 1px solid var(--dark);
+.button:hover {
+    background-color: var(--accent);
+    color: var(--dark);
     transition: .2s;
-} */
+}
+
+.darkButton {
+    width: 100%;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--accent);
+    text-transform: uppercase;
+    color: var(--dark);
+    transition: .2s;
+}
+
+.darkButton:hover {
+    background-color: var(--light);
+    transition: .2s;
+}

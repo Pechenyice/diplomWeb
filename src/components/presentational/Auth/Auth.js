@@ -43,6 +43,13 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 
 	function validate(action, value) {
 		switch (action) {
+			case "signUpRePassword": {
+				if (state.signUp.pass !== value) return "Not even close";
+				if (!value) return "Enter value";
+				if (value.length >= 64) return "Need < 64 symbols";
+				return "";
+			}
+
 			case "signInLogin":
 			case "signInPassword":
 			case "signUpLogin":
@@ -196,6 +203,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 						label={"Password"}
 						isEmpty={!state.signIn.pass}
 						onChange={handleSignInPasswordChange}
+						password
 					/>
 					<Button
 						text={"Sign in"}
@@ -224,6 +232,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 						label={"Password"}
 						isEmpty={!state.signUp.pass}
 						onChange={handleSignUpPasswordChange}
+						password
 					/>
 					<Input
 						id={"signUpRePassword"}
@@ -231,6 +240,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 						label={"Repeat password"}
 						isEmpty={!state.signUp.rePass}
 						onChange={handleSignUpRePasswordChange}
+						password
 					/>
 					<div style={{ margin: "15px 0" }}>
 						<input

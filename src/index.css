@@ -104,3 +104,31 @@ input::placeholder {
   color: var(--dark);
   opacity: .5;
 }
+
+/* min height for page-section is height of screen - header - footer */
+
+.sectionDimensioned {
+  min-height: calc(100vh - 90px - 72px);
+}
+
+/* CSS TRANSITIONS FROM REACT TRANSITIONS GROUP */
+
+/* plan animation fro profile, catalog */
+
+.planAnimation-enter {
+  opacity: 0;
+}
+
+.planAnimation-enter-active {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+
+.planAnimation-exit {
+  opacity: 1;
+}
+
+.planAnimation-exit-active {
+  opacity: 0;
+  transition: opacity 200ms;
+}

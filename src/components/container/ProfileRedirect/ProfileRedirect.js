@@ -15,6 +15,8 @@ function mapStateToProps(state, ownProps) {
         userDataIsLoading: false,
         cachedForUser: state.profilePlans.forUser,
         profilePlans: state.profilePlans,
+        categories: state.categories,
+        types: state.types,
         location: ownProps.location
     };
 }
@@ -40,6 +42,12 @@ function mergePropsWithDispatch(stateProps, dispatchProps) {
         },
         onNeedUserNickname: () => {
             dispatchProps.dispatch(actions.fetchUserNickname(stateProps.userId))
+        },
+        onNeedCategories: () => {
+            dispatchProps.dispatch(actions.fetchCategories());
+        },
+        onNeedTypes: () => {
+            dispatchProps.dispatch(actions.fetchTypes());
         },
         onClear: () => {
             dispatchProps.dispatch(actions.clearGuest())

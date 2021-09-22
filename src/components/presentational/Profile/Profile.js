@@ -8,6 +8,7 @@ import { NavLink, Redirect, Switch, Route, Link } from "react-router-dom";
 import InvalidRoute from "../404/404";
 import BusinessCard from "../BusinessCard/BusinessCard";
 import Typed from "typed.js";
+import { CSSTransition } from "react-transition-group";
 
 const Profile = ({
 	userId,
@@ -17,12 +18,16 @@ const Profile = ({
 	userDataIsLoading,
 	cachedForUser,
 	profilePlans,
+	types,
+	categories,
 	onNeedUserNickname,
 	onNeedLoadOwnPlans,
 	onNeedLoadLikedPlans,
 	onNeedLoadDislikedPlans,
 	onSaveProfileData,
 	onSaveProfilePassword,
+	onNeedCategories,
+	onNeedTypes,
 	onLogout,
 	onError,
 	onClear,
@@ -32,6 +37,9 @@ const Profile = ({
 	const typed = useRef(null);
 
 	useEffect(() => {
+		if (!categories.content.length && !categories.isLoading) onNeedCategories();
+		if (!types.content.length && !types.isLoading) onNeedTypes();
+
 		if (
 			cachedForUser !== userId &&
 			!profilePlans.own.isFetched &&
@@ -80,6 +88,11 @@ const Profile = ({
 			rePass: "",
 		},
 	});
+
+	const [showPlans, setShowPlans] = useState(false);
+	useEffect(() => {
+		if (profilePlans.own.content.length || profilePlans.liked.content.length || profilePlans.disliked.content.length) setTimeout(() => { setShowPlans(true) }, 20);
+	}, [profilePlans]);
 
 	// function handleDataLoginChange(e) {
 	// 	setState(
@@ -176,13 +189,14 @@ const Profile = ({
 	function handleSaveProfilePassword() {
 		if (validate('profilePassword')) {
 			onSaveProfilePassword(state.pass.oldPass, state.pass.pass, state.pass.rePass);
-			setState(Object.assign({}, state, {pass: Object.assign({}, state.pass, {oldPass: '', pass: '', rePass: ''})}))
+			setState(Object.assign({}, state, { pass: Object.assign({}, state.pass, { oldPass: '', pass: '', rePass: '' }) }))
 		}
 	}
 
 	return (
 		<section
 			className={[
+				'sectionDimensioned',
 				styles.profileWrapperDark,
 				styles.profileWrapperMain,
 			].join(" ")}
@@ -197,7 +211,7 @@ const Profile = ({
 						<Redirect to={"/profile/own"} />
 					) : null}
 					{location.pathname.split("/profile")[1] === "" ||
-					location.pathname.split("/profile")[1] === "/" ? (
+						location.pathname.split("/profile")[1] === "/" ? (
 						<Redirect
 							to={`${location.pathname}/own`.replace(/\/\//, "/")}
 						/>
@@ -220,7 +234,7 @@ const Profile = ({
 								label={"Login/Email"}
 								isEmpty={!state.data.login}
 								value={state.data.login}
-								onChange={() => {}}
+								onChange={() => { }}
 								readonly
 							/>
 							<Input
@@ -285,12 +299,11 @@ const Profile = ({
 					<div className={styles.plansMainWrapper}>
 						<div className={styles.plansPartitionsWrapper}>
 							<NavLink
-								to={`${
-									location.pathname
-										.split("/own")[0]
-										.split("/liked")[0]
-										.split("/disliked")[0]
-								}/own`.replace(/\/\//, "/")}
+								to={`${location.pathname
+									.split("/own")[0]
+									.split("/liked")[0]
+									.split("/disliked")[0]
+									}/own`.replace(/\/\//, "/")}
 								className={styles.profileLink}
 								activeClassName={styles.activeProfileLink}
 							>
@@ -301,12 +314,11 @@ const Profile = ({
 								</span>
 							</NavLink>
 							<NavLink
-								to={`${
-									location.pathname
-										.split("/own")[0]
-										.split("/liked")[0]
-										.split("/disliked")[0]
-								}/liked`.replace(/\/\//, "/")}
+								to={`${location.pathname
+									.split("/own")[0]
+									.split("/liked")[0]
+									.split("/disliked")[0]
+									}/liked`.replace(/\/\//, "/")}
 								className={styles.profileLink}
 								activeClassName={styles.activeProfileLink}
 							>
@@ -318,12 +330,11 @@ const Profile = ({
 								</span>
 							</NavLink>
 							<NavLink
-								to={`${
-									location.pathname
-										.split("/own")[0]
-										.split("/liked")[0]
-										.split("/disliked")[0]
-								}/disliked`.replace(/\/\//, "/")}
+								to={`${location.pathname
+									.split("/own")[0]
+									.split("/liked")[0]
+									.split("/disliked")[0]
+									}/disliked`.replace(/\/\//, "/")}
 								className={styles.profileLink}
 								activeClassName={styles.activeProfileLink}
 							>
@@ -351,12 +362,11 @@ const Profile = ({
 						<Route
 							path={
 								`${location.pathname}`.split("/profile")[0] +
-								`/profile${
-									`${location.pathname}`
-										.split("/profile")[1]
-										.split("/own")[0]
-										.split("/liked")[0]
-										.split("/disliked")[0]
+								`/profile${`${location.pathname}`
+									.split("/profile")[1]
+									.split("/own")[0]
+									.split("/liked")[0]
+									.split("/disliked")[0]
 								}/own`
 							}
 							render={() => (
@@ -365,13 +375,22 @@ const Profile = ({
 										<p className={styles.plansHint}>
 											Loading own plans...
 										</p>
-									) : profilePlans.own.content.length ? (
+									) : profilePlans.own.content.length && categories.content.length && types.content.length ? (
 										profilePlans.own.content.map((e) => (
-											<BusinessCard
-												theme={"dark"}
-												data={e}
+											<CSSTransition
+												in={showPlans}
+												timeout={500}
+												classNames="planAnimation"
 												key={e.id}
-											/>
+												unmountOnExit
+											>
+												<BusinessCard
+													theme={"dark"}
+													data={e}
+													categories={categories}
+													types={types}
+												/>
+											</CSSTransition>
 										))
 									) : (
 										<p className={styles.plansHint}>
@@ -384,12 +403,11 @@ const Profile = ({
 						<Route
 							path={
 								`${location.pathname}`.split("/profile")[0] +
-								`/profile${
-									`${location.pathname}`
-										.split("/profile")[1]
-										.split("/own")[0]
-										.split("/liked")[0]
-										.split("/disliked")[0]
+								`/profile${`${location.pathname}`
+									.split("/profile")[1]
+									.split("/own")[0]
+									.split("/liked")[0]
+									.split("/disliked")[0]
 								}/liked`
 							}
 							render={() => (
@@ -398,13 +416,23 @@ const Profile = ({
 										<p className={styles.plansHint}>
 											Loading liked plans...
 										</p>
-									) : profilePlans.liked.content.length ? (
+									) : profilePlans.liked.content.length && categories.content.length && types.content.length ? (
 										profilePlans.liked.content.map((e) => (
-											<BusinessCard
-												theme={"dark"}
-												data={e}
+											<CSSTransition
+												in={showPlans}
+												timeout={500}
+												classNames="planAnimation"
 												key={e.id}
-											/>
+												unmountOnExit
+											>
+												<BusinessCard
+													theme={"dark"}
+													data={e}
+													key={e.id}
+													categories={categories}
+													types={types}
+												/>
+											</CSSTransition>
 										))
 									) : (
 										<p className={styles.plansHint}>
@@ -417,12 +445,11 @@ const Profile = ({
 						<Route
 							path={
 								`${location.pathname}`.split("/profile")[0] +
-								`/profile${
-									`${location.pathname}`
-										.split("/profile")[1]
-										.split("/own")[0]
-										.split("/liked")[0]
-										.split("/disliked")[0]
+								`/profile${`${location.pathname}`
+									.split("/profile")[1]
+									.split("/own")[0]
+									.split("/liked")[0]
+									.split("/disliked")[0]
 								}/disliked`
 							}
 							render={() => (
@@ -431,14 +458,24 @@ const Profile = ({
 										<p className={styles.plansHint}>
 											Loading diliked plans...
 										</p>
-									) : profilePlans.disliked.content.length ? (
+									) : profilePlans.disliked.content.length && categories.content.length && types.content.length ? (
 										profilePlans.disliked.content.map(
 											(e) => (
-												<BusinessCard
-													theme={"dark"}
-													data={e}
+												<CSSTransition
+													in={showPlans}
+													timeout={500}
+													classNames="planAnimation"
 													key={e.id}
-												/>
+													unmountOnExit
+												>
+													<BusinessCard
+														theme={"dark"}
+														data={e}
+														key={e.id}
+														categories={categories}
+														types={types}
+													/>
+												</CSSTransition>
 											)
 										)
 									) : (
@@ -464,10 +501,14 @@ Profile.propTypes = {
 	nickname: PropTypes.any,
 	userDataIsLoading: PropTypes.bool,
 	profilePlans: PropTypes.object,
+	types: PropTypes.object,
+	categories: PropTypes.object,
 	onNeedLoadOwnPlans: PropTypes.func,
 	onNeedLoadLikedPlans: PropTypes.func,
 	onNeedLoadDislikedPlans: PropTypes.func,
 	onNeedUserNickname: PropTypes.func,
+	onNeedCategories: PropTypes.func,
+	onNeedTypes: PropTypes.func,
 	onSaveProfileData: PropTypes.func,
 	onSaveProfilePassword: PropTypes.func,
 	onLogout: PropTypes.func,

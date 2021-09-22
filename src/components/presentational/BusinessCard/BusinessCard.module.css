@@ -71,3 +71,11 @@ p {
 	display: flex;
 	gap: 8px;
 }
+
+/* .visibleWrapper {
+	opacity: 1;
+}
+
+.invisibleWrapper {
+	opacity: 0;
+} */

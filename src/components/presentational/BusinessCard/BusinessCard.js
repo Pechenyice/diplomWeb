@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import BusinessTag from "../BusinessTag/BusinessTag";
 
-const BusinessCard = ({ data, theme = "light" }) => (
+const BusinessCard = ({ data, theme = "light", categories, types }) => (
 	<div
 		className={
 			theme === "dark" ? styles.darkCardWrapper : styles.cardWrapper
@@ -98,8 +98,12 @@ const BusinessCard = ({ data, theme = "light" }) => (
 					{data.editions[0].content.description}
 				</p>
 				<div className={styles.planTagsWrapper}>
-					<BusinessTag theme={theme} text={data.editions[0].content.category} />
-					<BusinessTag theme={theme} text={data.editions[0].content.type} />
+					<BusinessTag theme={theme} text={categories.content.find(e => {
+						return e.id === data.editions[0].content.category;
+					}).name} />
+					<BusinessTag theme={theme} text={types.content.find(e => {
+						return e.id === data.editions[0].content.category;
+					}).name} />
 				</div>
 
 				{/* <p>
@@ -128,6 +132,8 @@ const BusinessCard = ({ data, theme = "light" }) => (
 BusinessCard.propTypes = {
 	data: PropTypes.objectOf(PropTypes.any).isRequired,
 	theme: PropTypes.string,
+	categories: PropTypes.object,
+	types: PropTypes.object
 };
 
 export default BusinessCard;

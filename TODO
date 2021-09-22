@@ -2,8 +2,5 @@
 2. Clear fetches in return of useEffect (if see error)
 3. All errors with handling plans editions and creations should find in PlanEditor.js (Now is not realised onNeedFetchEdition)
 4. Possible errors: fetchPlan and fetchBusinesses return different edition value (owner:) check if errors
-5. Check AUTH: FALSE answer from server in all authentificated actions (as in checkAuth of preloader case)
-6. Finish Auth.js handlers
-7. Create loading for auth tryes
-8. Create auth on server
-9. Check token in auth middleware
+5. Create loading for auth tryes
+6. Finish Catalog selects

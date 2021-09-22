@@ -322,16 +322,16 @@ app.get('/api/getFiltersCategories', (req, res) => {
         res.send(JSON.stringify([
             { id: 0, name: 'Franchise' },
             { id: 1, name: 'Startup' },
-            { id: 1, name: 'Small business' },
-            { id: 1, name: 'Big business' },
-            { id: 1, name: 'We will do business, we will do money' }
+            { id: 2, name: 'Small business' },
+            { id: 3, name: 'Big business' },
+            { id: 4, name: 'We will do business, we will do money' }
         ]));
     }, API_ANSWER_DELAY);
 });
 
 app.get('/api/getOwnPlans', middlewares.bindAuth, (req, res) => {
     setTimeout(() => {
-        res.send(JSON.stringify([]));
+        res.send(JSON.stringify(businesses));
     }, API_ANSWER_DELAY);
 });
 
@@ -343,7 +343,7 @@ app.get('/api/getLikedPlans', middlewares.bindAuth, (req, res) => {
 
 app.get('/api/getDislikedPlans', middlewares.bindAuth, (req, res) => {
     setTimeout(() => {
-        res.send(JSON.stringify(businesses));
+        res.send(JSON.stringify([]));
     }, API_ANSWER_DELAY);
 });
 

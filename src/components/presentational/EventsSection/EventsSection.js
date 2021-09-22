@@ -18,7 +18,7 @@ const EventsSection = ({ errors, successes, onRemoveSuccess, onRemoveError }) =>
     all.sort(compare);
 
     return (
-        <section className={styles.errorsSection}>
+        <section className={styles.eventsSection}>
             {
                 all.map(e => (
                     <div key={e.id} className={[styles.event, styles[e.type]].join(' ')} onClick={() => {e.type === 'error' ? onRemoveError(e.id) : onRemoveSuccess(e.id) }}>{e.text}</div>

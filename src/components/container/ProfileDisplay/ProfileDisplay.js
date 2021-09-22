@@ -14,6 +14,8 @@ function mapStateToProps(state, ownProps) {
         userDataIsLoading: state.guest.isLoading,
         cachedLoadedForUser: state.profilePlans.forUser,
         profilePlans: state.profilePlans,
+        categories: state.categories,
+        types: state.types,
         location: ownProps.location
     };
 }
@@ -42,6 +44,12 @@ function mergePropsWithDispatch(stateProps, dispatchProps) {
         },
         onClear: () => {
             dispatchProps.dispatch(actions.clearGuest())
+        },
+        onNeedCategories: () => {
+            dispatchProps.dispatch(actions.fetchCategories());
+        },
+        onNeedTypes: () => {
+            dispatchProps.dispatch(actions.fetchTypes());
         },
         onLogout: () => {},
         onError: () => {},

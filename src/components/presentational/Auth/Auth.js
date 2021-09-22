@@ -178,7 +178,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 	}
 
 	return (
-		<section className={styles.authWrapper}>
+		<section className={['sectionDimensioned', styles.authWrapper].join(' ')}>
 			{isLogged ? <Redirect to={redirectPath()} /> : null}
 			<h1>
 				<span className={styles.authSignIn}>SIGN IN</span>{" "}

@@ -9,7 +9,9 @@ function mapStateToProps(state) {
     return {
         shouldDisplayFilters: !state.categories.isLoading && !state.types.isLoading,
         filters: state.filters,
-        businesses: state.businesses
+        businesses: state.businesses,
+        categories: state.categories,
+        types: state.types,
     };
 }
 

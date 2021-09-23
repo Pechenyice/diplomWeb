@@ -5,13 +5,47 @@ import BusinessCard from "../BusinessCard/BusinessCard";
 import styles from './Catalog.module.css';
 import Select from "../Select/Select";
 import Button from "../Button/Button";
+import { useState } from "react";
 
 const Catalog = ({ onFiltersSelected, onNeedMoreBusinesses, onInit, filters, categories, types, shouldDisplayFilters, businesses }) => {
 
     useEffect(() => {
         if ((!categories.content.length && !categories.isLoading) || (!types.content.length && !types.isLoading)) onInit();
         if (businesses.content.length < businesses.count) onNeedMoreBusinesses();
-    }, []);
+    }, [filters]);
+
+    let [state, setState] = useState({
+        category: -1,
+        type: -1,
+        sort: 0,
+        pattern: ''
+    });
+
+    console.log('filters', filters);
+
+    function handleFiltersSubmitClick() {
+        if (JSON.stringify(filters) === JSON.stringify(state)) {
+            return;
+        }
+        console.log(state);
+        onFiltersSelected(state);
+    }
+
+    function handlePatternChange(e) {
+        setState(Object.assign({}, state, {pattern: e.target.value}));
+    }
+
+    function handleCategorySelected(id) {
+        setState(Object.assign({}, state, {category: id}));
+    }
+
+    function handleTypeSelected(id) {
+        setState(Object.assign({}, state, {type: id}));
+    }
+    
+    function handleSortSelected(id) {
+        setState(Object.assign({}, state, {sort: id}));
+    }
 
     return (
         <section className={['sectionDimensioned', styles.catalogWrapper].join(' ')}>
@@ -22,7 +56,7 @@ const Catalog = ({ onFiltersSelected, onNeedMoreBusinesses, onInit, filters, cat
                     <div className={styles.filtersWrapper}>
                         <div className={styles.filtersSection}>
                             <div className={styles.searchInputWrapper}>
-                                <input placeholder={'Search...'} type={'text'} className={styles.searchInput} />
+                                <input placeholder={'Search...'} type={'text'} className={styles.searchInput} onChange={handlePatternChange} />
                                 <svg className={styles.searchInputIcon} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M9.16667 15.8333C12.8486 15.8333 15.8333 12.8486 15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333Z" stroke="#7D7D7D" strokeLinecap="round" strokeLinejoin="round" />
                                     <path d="M17.5 17.5L13.875 13.875" stroke="#7D7D7D" strokeLinecap="square" strokeLinejoin="round" />
@@ -32,19 +66,25 @@ const Catalog = ({ onFiltersSelected, onNeedMoreBusinesses, onInit, filters, cat
                                 <Select 
                                     content={'Category'}
                                     propsValues={categories.content.concat({id: -1, name: 'All'})}
+                                    onSelect={handleCategorySelected}
                                 />
                             </div>
                             <div className={styles.filtersElement}>
                                 <Select 
                                 content={'Type'}
                                 propsValues={types.content.concat({id: -1, name: 'All'})}
+                                onSelect={handleTypeSelected}
                                 />
                             </div>
-                            {/* <div className={styles.filtersElement}>
-                                <Select />
-                            </div> */}
                             <div className={styles.filtersElement}>
-                                <Button text={'Search'} />
+                                <Select 
+                                content={'Sort by'}
+                                propsValues={[{id: 0, name: 'Popular'}, {id: 1, name: 'New first'}, {id: 2, name: 'Old first'}]}
+                                onSelect={handleSortSelected}
+                                />
+                            </div>
+                            <div className={styles.filtersElement}>
+                                <Button text={'Search'} onClick={handleFiltersSubmitClick}/>
                             </div>
                         </div>
                     </div> :

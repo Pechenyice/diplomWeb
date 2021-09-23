@@ -7,7 +7,9 @@ const NewPlanDisplay = connect(mapStateToProps, mapDispatchToProps)(PlanEditor);
 
 function mapStateToProps(state) {
     return {
-        planData: null
+        planData: null,
+        categories: state.categories,
+        types: state.types
     };
 }
 
@@ -16,6 +18,18 @@ function mapDispatchToProps(dispatch) {
         onClear: () => {
             dispatch(actions.clearPlanInfo());
         },
+        onNeedCategories: () => {
+            dispatch(actions.fetchCategories());
+        },
+        onNeedTypes: () => {
+            dispatch(actions.fetchTypes());
+        },
+        onError: (text) => {
+            dispatch(actions.addError(text))
+        },
+        onSubmit: (state) => {
+            dispatch(actions.addSuccess('Here will be success!'))
+        }
     };
 }
 

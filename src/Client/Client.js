@@ -118,7 +118,8 @@ const Client = {
     },
 
     loadBusinesses: function (offset, count, filters) {
-        return this.safeFetch(this.constructUrl(`/getBusinesses?offset=${offset}&count=${count}&f_category=${filters.category}&f_type=${filters.type}&f_pattern=${filters.pattern}`), 'GET', this.aborts.LOAD_BUSINESSES_CONTROLLER);
+        console.log('filters FETCH', filters)
+        return this.safeFetch(this.constructUrl(`/getBusinesses?offset=${offset}&count=${count}&f_category=${filters.category}&f_type=${filters.type}&f_pattern=${filters.pattern}&f_sort=${filters.sort}`), 'GET', this.aborts.LOAD_BUSINESSES_CONTROLLER);
     },
 
     abortLoadBusinessesFetch: function () {

@@ -1,5 +1,6 @@
 
 .selectWrapper {
+    position: relative;
     width: 100%;
     height: 100%;
     background-color: var(--light);
@@ -7,6 +8,11 @@
     align-items: center;
     padding: 0 20px;
     cursor: pointer;
+    border: 1px solid var(--light);
+}
+
+.selectWrapperActive {
+    border: 1px solid var(--dark);
 }
 
 .selectContent {
@@ -37,8 +43,111 @@
     font-size: 16px;
     line-height: 19px;
     align-self: center;
+    width: 40px;
+    height: 19px;
+    overflow: hidden;
+    white-space: nowrap;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+}
+
+.selectBigContentValue {
+    width: 200px;
 }
 
 .selectContentIcon {
     align-self: center;
+    transition: .2s;
+}
+
+.selectContentIconReverted {
+    transform: rotateZ(180deg);
+    transition: .2s;
+}
+
+.selectHidable {
+    position: absolute;
+    z-index: 2;
+    top: calc(60px - 2px);
+    left: calc(0px - 1px);
+    width: calc(100% + 2px);
+    height: max-content;
+    max-height: 0px;
+    background-color: var(--light);
+    overflow: hidden;
+    transition: .2s;
+}
+
+.selectHidableOpened {
+    max-height: 190px;
+    transition: .2s;
+}
+
+.selectHidableContent {
+    position: relative;
+    width: 100%;
+    height: max-content;
+    max-height: 190px;
+    border: 1px solid var(--dark);
+    overflow-y: auto;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.selectHidableContent::-webkit-scrollbar {
+    width: 6px;
+}
+
+.selectHidableContent::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
+    transition: .2s;
+    border-radius: 3px;
+}
+  
+.selectHidableContent::-webkit-scrollbar-thumb:hover {
+    background: #707070;
+    transition: .2s;
+}
+
+.selectElement {
+    position: relative;
+    width: 100%;
+    display: flex;
+}
+
+.elementName {
+    width: 80%;
+}
+
+.elementTriggerWrapper {
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+.elementTrigger {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.elementTriggerActive .elementTriggerValue {
+    width: 10px;
+    height: 10px;
+    background-color: var(--dark);
+    transition: .2s;
+}
+
+.elementTriggerValue {
+    width: 0px;
+    height: 0px;
+    background-color: var(--dark);
+    transition: .2s;
 }

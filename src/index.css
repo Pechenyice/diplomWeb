@@ -113,7 +113,7 @@ input::placeholder {
 
 /* CSS TRANSITIONS FROM REACT TRANSITIONS GROUP */
 
-/* plan animation fro profile, catalog */
+/* plan animation for profile, catalog */
 
 .planAnimation-enter {
   opacity: 0;
@@ -131,4 +131,25 @@ input::placeholder {
 .planAnimation-exit-active {
   opacity: 0;
   transition: opacity 200ms;
+}
+
+/* plan animation for create/redact plan */
+
+.planStep-enter {
+  opacity: 0;
+}
+
+.planStep-enter-active {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+.planStep-exit {
+  opacity: 1;
+  display: none;
+}
+
+.planStep-exit-active {
+  opacity: 0;
+  transition: opacity 0ms;
 }

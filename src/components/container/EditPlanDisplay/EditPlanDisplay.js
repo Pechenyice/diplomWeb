@@ -10,7 +10,9 @@ function mapStateToProps(state, ownProps) {
         edition: true,
         planData: ownProps.location.state?.plan,
         plan: state.plan,
-        user: state.user.id
+        user: state.user.id,
+        categories: state.categories,
+        types: state.types
     };
 }
 
@@ -33,6 +35,18 @@ function mapDispatchToProps(dispatch, ownProps) {
         },
         onNeedFetchEdition: () => {
             dispatch(actions.fetchEditionDataForPlanView(ownProps.match.params.planId, ownProps.match.params.edId))
+        },
+        onNeedCategories: () => {
+            dispatch(actions.fetchCategories());
+        },
+        onNeedTypes: () => {
+            dispatch(actions.fetchTypes());
+        },
+        onError: (text) => {
+            dispatch(actions.addError(text))
+        },
+        onSubmit: (state) => {
+            dispatch(actions.addSuccess('Here will be success!'))
         }
     };
 }

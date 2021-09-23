@@ -1,0 +1,26 @@
+
+.area {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    height: 100%;
+    resize: none;
+    border: 1px solid #c2c2c2;
+    outline: none;
+    padding: 20px;
+}
+
+.area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.area::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
+    transition: .2s;
+    border-radius: 3px;
+}
+  
+.area::-webkit-scrollbar-thumb:hover {
+    background: #707070;
+    transition: .2s;
+}

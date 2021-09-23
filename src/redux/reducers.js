@@ -16,8 +16,9 @@ const initialState = {
 		isLoading: false,
 	},
 	filters: {
-		category: null,
-		type: null,
+		category: -1,
+		type: -1,
+		sort: 0,
 		pattern: "",
 	},
 	plan: {
@@ -32,7 +33,7 @@ const initialState = {
 			isLoading: false,
 			needMore: true,
 			offset: 0,
-			count: 20,
+			count: 21,
 			content: [],
 		},
 	},
@@ -47,7 +48,7 @@ const initialState = {
 	businesses: {
 		isLoading: false,
 		offset: 0,
-		count: 20,
+		count: 21,
 		needMore: true,
 		content: [],
 	},
@@ -74,20 +75,29 @@ const initialState = {
 	},
 	successes: {
 		content: [],
-	}
+	},
 };
 
 function reducer(state = initialState, action) {
 	switch (action.type) {
 		case actions.types.APPLY_FILTERS: {
 			console.log("dispatched " + JSON.stringify(action.filters));
-			return state;
+			return Object.assign({}, state, {
+				filters: action.filters,
+				businesses: {
+					isLoading: false,
+					offset: 0,
+					count: 21,
+					needMore: true,
+					content: [],
+				},
+			});
 		}
 
 		case actions.types.LOGOUT_REQUEST_STARTED:
 		case actions.types.LOGOUT_REQUEST_SUCCESSED:
 		case actions.types.LOGOUT_REQUEST_FAILED: {
-            if (action?.result?.AUTH === "FAIL")
+			if (action?.result?.AUTH === "FAIL")
 				return Object.assign({}, state, toInitialState(state));
 
 			if (action?.result?.success)
@@ -103,7 +113,7 @@ function reducer(state = initialState, action) {
 				guest: {
 					nickname: null,
 					isLoading: false,
-				}
+				},
 			});
 		}
 
@@ -285,7 +295,7 @@ function toInitialState(state) {
 				isLoading: false,
 				needMore: true,
 				offset: 0,
-				count: 20,
+				count: 21,
 				content: [],
 			},
 		},
@@ -316,7 +326,7 @@ function planReducer(state, action, businesses) {
 							isLoading: false,
 							needMore: true,
 							offset: 0,
-							count: 20,
+							count: 21,
 							content: [],
 						},
 				  }
@@ -338,7 +348,7 @@ function planReducer(state, action, businesses) {
 					isLoading: false,
 					needMore: true,
 					offset: 0,
-					count: 20,
+					count: 21,
 					content: [],
 				},
 			});
@@ -387,8 +397,8 @@ function successesReducer(state, action) {
 				content: state.content.concat({
 					id: uuidv4(),
 					text: action.text,
-					type: 'success',
-					created: Date.now()
+					type: "success",
+					created: Date.now(),
 				}),
 			};
 		}
@@ -414,8 +424,8 @@ function errorsReducer(state, action) {
 				content: state.content.concat({
 					id: uuidv4(),
 					text: action.text,
-					type: 'error',
-					created: Date.now()
+					type: "error",
+					created: Date.now(),
 				}),
 			};
 		}
@@ -448,7 +458,9 @@ function updateProfileDataReducer(state, action) {
 		}
 
 		case actions.types.UPDATE_PROFILE_DATA_REQUEST_SUCCESSED: {
-			return Object.assign({}, state, { nickname: action.result.nickname });
+			return Object.assign({}, state, {
+				nickname: action.result.nickname,
+			});
 		}
 
 		case actions.types.UPDATE_PROFILE_DATA_REQUEST_FAILED: {

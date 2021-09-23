@@ -3,9 +3,13 @@ import styles from './PlanEditor.module.css';
 import PropTypes from 'prop-types';
 import { Redirect } from "react-router";
 import Client from "../../../Client/Client";
+import PlanCreation from "./PlanCreation";
 
-const PlanEditor = ({ planData, plan, user, edition, onClear, onInit, onNullPlan, onNeedFetchEdition, match }) => {
+const PlanEditor = ({ planData, plan, user, edition, onClear, onInit, onNullPlan, onNeedFetchEdition, match, categories, types, onNeedCategories, onNeedTypes, onSubmit, onError }) => {
     useEffect(() => {
+        if (!categories.content.length && !categories.isLoading) onNeedCategories();
+		if (!types.content.length && !types.isLoading) onNeedTypes();
+
         return () => {
             Client.abortLoadPlanFetch();
             // Client.abort
@@ -22,7 +26,7 @@ const PlanEditor = ({ planData, plan, user, edition, onClear, onInit, onNullPlan
             {
                 !edition ?
                     // creation of plan
-                    <div>Creation of plan</div> :
+                    <PlanCreation categories={categories} types={types} onSubmit={onSubmit} onError={onError}/> :
                     //  edition of plan from plan edit button
                     planData ?
                         <div>
@@ -82,7 +86,13 @@ PlanEditor.propTypes = {
     onNeedFetchEdition: PropTypes.func,
     onInit: PropTypes.func,
     onNullPlan: PropTypes.func,
-    match: PropTypes.object
+    match: PropTypes.object,
+    categories: PropTypes.object, 
+    types: PropTypes.object, 
+    onNeedCategories: PropTypes.func, 
+    onNeedTypes: PropTypes.func,
+    onSubmit: PropTypes.func,
+	onError: PropTypes.func,
 }
 
 export default PlanEditor;

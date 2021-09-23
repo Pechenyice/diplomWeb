@@ -51,8 +51,8 @@ for (let i = 0; i < 22; i++) {
                 content: {
                     name: `name${i}`,
                     description: `desc${i}`,
-                    category: 0,
-                    type: 0,
+                    category: 1,
+                    type: 1,
                     created: 1631638551000,
                     income: {
                         sum: 100,
@@ -71,8 +71,8 @@ for (let i = 0; i < 22; i++) {
                 content: {
                     name: `name${i}`,
                     description: `test desc${i}`,
-                    category: 0,
-                    type: 0,
+                    category: 1,
+                    type: 1,
                     created: 1631638551000,
                     income: {
                         sum: 100,

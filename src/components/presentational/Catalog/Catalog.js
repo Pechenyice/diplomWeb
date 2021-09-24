@@ -93,7 +93,7 @@ const Catalog = ({ onFiltersSelected, onNeedMoreBusinesses, onInit, filters, cat
             <div className={styles.catalogContent}>
                 <div className={styles.catalogBusinesses}>
                     {
-                        businesses.content.length >= businesses.count && categories.content.length && types.content.length ? businesses.content.map(e => (<BusinessCard key={e.id} data={e} categories={categories} types={types} />)) : 'loading animation'
+                        (businesses.content.length >= businesses.count || !businesses.needMore) && categories.content.length && types.content.length ? businesses.content.map(e => (<BusinessCard key={e.id} data={e} categories={categories} types={types} />)) : 'loading animation'
                     }
                 </div>
                 {

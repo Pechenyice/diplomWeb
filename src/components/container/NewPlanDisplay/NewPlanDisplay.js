@@ -25,10 +25,10 @@ function mapDispatchToProps(dispatch) {
             dispatch(actions.fetchTypes());
         },
         onError: (text) => {
-            dispatch(actions.addError(text))
+            dispatch(actions.addError(text));
         },
         onSubmit: (state) => {
-            dispatch(actions.addSuccess('Here will be success!'))
+            dispatch(actions.fetchNewPlanCreated(state));
         }
     };
 }

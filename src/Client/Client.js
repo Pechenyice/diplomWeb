@@ -51,7 +51,17 @@ const Client = {
         LOAD_USER_NICKNAME_CONTROLLER: new AbortController(),
         LOGOUT_CONTROLLER: new AbortController(),
         UPDATE_PROFILE_DATA_CONTROLLER: new AbortController(),
-        UPDATE_PROFILE_PASSWORD_CONTROLLER: new AbortController()
+        UPDATE_PROFILE_PASSWORD_CONTROLLER: new AbortController(),
+        CREATE_NEW_PLAN_CONTROLLER: new AbortController()
+    },
+
+    createNewPlan: function(data) {
+        return this.safeFetch(this.constructUrl('/createNewPlan'), 'POST', this.aborts.CREATE_NEW_PLAN_CONTROLLER, {data});
+    },
+
+    abortCreateNewPlan: function () {
+        this.aborts.CREATE_NEW_PLAN_CONTROLLER.abort();
+        this.aborts.CREATE_NEW_PLAN_CONTROLLER = new AbortController();
     },
 
     updateProfilePassword: function(oldPassword, password) {

@@ -137,6 +137,17 @@ function reducer(state = initialState, action) {
 			return state;
 		}
 
+		case actions.types.NEW_PLAN_CREATED_REQUEST_STARTED:
+		case actions.types.NEW_PLAN_CREATED_REQUEST_SUCCESSED:
+		case actions.types.NEW_PLAN_CREATED_REQUEST_FAILED: {
+			if (action?.result?.AUTH === "FAIL")
+				return Object.assign({}, state, toInitialState(state));
+
+			return Object.assign({}, state, {
+				profilePlans: newPlanReducer(state.profilePlans, action),
+			});
+		}
+
 		case actions.types.SIGN_UP_REQUEST_STARTED:
 		case actions.types.SIGN_UP_REQUEST_SUCCESSED:
 		case actions.types.SIGN_UP_REQUEST_FAILED: {
@@ -469,6 +480,29 @@ function updateProfileDataReducer(state, action) {
 	}
 }
 
+function newPlanReducer(state, action) {
+	switch (action.type) {
+		case actions.types.NEW_PLAN_CREATED_REQUEST_STARTED: {
+			return state;
+		}
+
+		case actions.types.NEW_PLAN_CREATED_REQUEST_SUCCESSED: {
+
+			console.log('state', state)
+			console.log('state concat', [].concat([...state.own.content, action.result.data]))
+			console.log('state.own.content.concat([action.result.data])', state.own.content.concat([action.result.data]))
+
+			return Object.assign({}, state, {
+				own: Object.assign({}, state.own, {content: state.own.content.concat([action.result.data])})
+			});
+		}
+
+		case actions.types.NEW_PLAN_CREATED_REQUEST_FAILED: {
+			return state;
+		}
+	}
+}
+
 function logoutReducer(state, action) {
 	switch (action.type) {
 		case actions.types.LOGOUT_REQUEST_STARTED: {
@@ -568,7 +602,7 @@ function profilePlansReducer(state, action) {
 				own: Object.assign({}, state.own, {
 					isLoading: false,
 					isFetched: true,
-					content: action.result,
+					content: action.result.businesses,
 				}),
 			});
 		}

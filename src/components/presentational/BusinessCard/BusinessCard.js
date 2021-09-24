@@ -102,7 +102,7 @@ const BusinessCard = ({ data, theme = "light", categories, types }) => (
 						return e.id === data.editions[0].content.category;
 					}).name} />
 					<BusinessTag theme={theme} text={types.content.find(e => {
-						return e.id === data.editions[0].content.category;
+						return e.id === data.editions[0].content.type;
 					}).name} />
 				</div>
 

@@ -17,6 +17,17 @@ if (process.env.ENV === 'DEV') app.use(middlewares.bindLogs);
 
 const API_ANSWER_DELAY = 1000;
 const TOKEN_LIFETIME = 60 * 5;
+const CATEGORIES = [
+    { id: 0, name: 'Franchise' },
+    { id: 1, name: 'Startup' },
+    { id: 2, name: 'Small business' },
+    { id: 3, name: 'Big business' },
+    { id: 4, name: 'We will do business, we will do money' }
+];
+const TYPES = [
+    { id: 0, name: 'Food' },
+    { id: 1, name: 'IT' },
+];
 
 let businesses = [];
 let comments = [];
@@ -44,7 +55,6 @@ for (let i = 0; i < 22; i++) {
     businesses.push({
         id: !i ? tmp : uuid.v4(),
         owner: !i ? tmp : uuid.v4(),
-        created: 1631638551000,
         editions: [
             {
                 id: uuid.v4(),
@@ -90,6 +100,53 @@ for (let i = 0; i < 22; i++) {
 
     });
 }
+
+app.post('/api/createNewPlan', middlewares.bindAuth, async (req, res) => {
+    let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
+
+    console.log(req.body);
+    console.log(result);
+
+    if (result.length == 1) {
+        let bId = await dbUtils.createBusiness(result[0].user_id);
+
+        if (bId) {
+            let eId = await dbUtils.createEdition(bId, req.body);
+
+            let sendContent = await dbUtils.getBusinessById(bId);
+
+            if (eId) {
+                setTimeout(() => {
+                    res.send(JSON.stringify({
+                        success: true,
+                        data: sendContent
+                    }));
+                }, API_ANSWER_DELAY); 
+            } else {
+                setTimeout(() => {
+                    res.send(JSON.stringify({
+                        success: false,
+                        cause: 'Something went wrong, we cannot create business for you!'
+                    }));
+                }, API_ANSWER_DELAY);  
+            }
+        } else {
+            setTimeout(() => {
+                res.send(JSON.stringify({
+                    success: false,
+                    cause: 'Something went wrong, we cannot create business for you!'
+                }));
+            }, API_ANSWER_DELAY);  
+        }
+    } else {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Something went wrong, we do not know yoy, looo-o-ol!'
+            }));
+        }, API_ANSWER_DELAY);  
+    }
+});
 
 app.get('/api/logout', middlewares.bindAuth, async (req, res) => {
     let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
@@ -267,16 +324,18 @@ app.get('/api/getComments', (req, res) => {
     }, API_ANSWER_DELAY);
 });
 
-app.get('/api/getBusinesses', (req, res) => {
+app.get('/api/getBusinesses', async (req, res) => {
     let analysed = {
         offset: +req.query.offset + +req.query.count
     };
 
-    let min = businesses.length < analysed.offset ? businesses.length : analysed.offset;
+    // let min = businesses.length < analysed.offset ? businesses.length : analysed.offset;
 
-    let ans = businesses.slice(+req.query.offset, min);
+    // let ans = businesses.slice(+req.query.offset, min);
 
-    analysed['needMore'] = min == ans.length;
+    let ans = await dbUtils.getBusinessesWithFilters(req.query);
+
+    analysed['needMore'] = req.query.count == ans.length;
 
     analysed['content'] = ans;
 
@@ -310,29 +369,35 @@ app.get('/api/getPlan', (req, res) => {
 
 app.get('/api/getFiltersTypes', (req, res) => {
     setTimeout(() => {
-        res.send(JSON.stringify([
-            { id: 0, name: 'Food' },
-            { id: 1, name: 'IT' },
-        ]));
+        res.send(JSON.stringify(TYPES));
     }, API_ANSWER_DELAY);
 });
 
 app.get('/api/getFiltersCategories', (req, res) => {
     setTimeout(() => {
-        res.send(JSON.stringify([
-            { id: 0, name: 'Franchise' },
-            { id: 1, name: 'Startup' },
-            { id: 2, name: 'Small business' },
-            { id: 3, name: 'Big business' },
-            { id: 4, name: 'We will do business, we will do money' }
-        ]));
+        res.send(JSON.stringify(CATEGORIES));
     }, API_ANSWER_DELAY);
 });
 
-app.get('/api/getOwnPlans', middlewares.bindAuth, (req, res) => {
-    setTimeout(() => {
-        res.send(JSON.stringify(businesses));
-    }, API_ANSWER_DELAY);
+app.get('/api/getOwnPlans', middlewares.bindAuth, async (req, res) => {
+    // let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
+
+    // if (result.length == 1) {
+        let businesses = await dbUtils.getOwnerBusinesses(req.query.userId);
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: true,
+                businesses
+            }));
+        }, API_ANSWER_DELAY); 
+    // } else {
+    //     setTimeout(() => {
+    //         res.send(JSON.stringify({
+    //             success: false,
+    //             cause: 'Something went wrong, we do not know yoy, looo-o-ol!'
+    //         }));
+    //     }, API_ANSWER_DELAY);  
+    // }
 });
 
 app.get('/api/getLikedPlans', middlewares.bindAuth, (req, res) => {
@@ -352,5 +417,12 @@ fs.readFile('./../TODO', (_, content) => {
         console.log(`Listening at http://localhost:${port}`);
         console.log(chalk.bgYellow.whiteBright.bold(`\nTODO:\n`));
         console.log(chalk.yellowBright(content) + '\n\n');
+
+        function onServerStart() {
+            dbUtils.initTypes(TYPES);
+            dbUtils.initCategories(CATEGORIES);
+        }
+        
+        // onServerStart();
     })
 });

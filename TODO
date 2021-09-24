@@ -4,3 +4,4 @@
 4. Possible errors: fetchPlan and fetchBusinesses return different edition value (owner:) check if errors
 5. Create loading for auth tryes
 6. Finish Catalog selects
+7. Add created plan to CATALOG component (later - updated plan)

@@ -54,7 +54,10 @@ const actions = {
         UPDATE_PROFILE_DATA_REQUEST_FAILED: 'UPDATE_PROFILE_DATA_REQUEST_FAILED',
         UPDATE_PROFILE_PASSWORD_REQUEST_STARTED: 'UPDATE_PROFILE_PASSWORD_REQUEST_STARTED',
         UPDATE_PROFILE_PASSWORD_REQUEST_SUCCESSED: 'UPDATE_PROFILE_PASSWORD_REQUEST_SUCCESSED',
-        UPDATE_PROFILE_PASSWORD_REQUEST_FAILED: 'UPDATE_PROFILE_PASSWORD_REQUEST_FAILED'
+        UPDATE_PROFILE_PASSWORD_REQUEST_FAILED: 'UPDATE_PROFILE_PASSWORD_REQUEST_FAILED',
+        NEW_PLAN_CREATED_REQUEST_STARTED: 'NEW_PLAN_CREATED_REQUEST_STARTED',
+        NEW_PLAN_CREATED_REQUEST_SUCCESSED: 'NEW_PLAN_CREATED_REQUEST_SUCCESSED',
+        NEW_PLAN_CREATED_REQUEST_FAILED: 'NEW_PLAN_CREATED_REQUEST_FAILED'
     },
 
     findPlan: function ({ planId, edId }) {
@@ -472,6 +475,50 @@ const actions = {
                     console.log('e', e)
                     dispatch(this.fetchUpdateProfilePasswordFail());
                     dispatch(this.addError('Failed update profile password!'));
+                })
+        }
+    },
+
+    fetchNewPlanCreatedRequest: function () {
+        return {
+            type: this.types.NEW_PLAN_CREATED_REQUEST_STARTED
+        }
+    },
+
+    fetchNewPlanCreatedSuccess: function (result) {
+        return {
+            type: this.types.NEW_PLAN_CREATED_REQUEST_SUCCESSED,
+            result
+        }
+    },
+
+    fetchNewPlanCreatedFail: function (result) {
+        return {
+            type: this.types.NEW_PLAN_CREATED_REQUEST_FAILED,
+            result
+        }
+    },
+
+    fetchNewPlanCreated: function(data) {
+        return (dispatch) => {
+            dispatch(this.fetchNewPlanCreatedRequest());
+            Client.createNewPlan(data)
+                .then((result) => {
+                    if (result.success) {
+                        dispatch(this.fetchNewPlanCreatedSuccess(result));
+                        dispatch(this.addSuccess('Plan created succesfully!'))
+                    } else {
+                        dispatch(this.fetchNewPlanCreatedFail({AUTH: 'FAIL'}));
+                        dispatch(this.addError(result.cause))
+                    }
+                })
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
+                    console.log('e', e)
+                    dispatch(this.fetchNewPlanCreatedFail());
+                    dispatch(this.addError('Failed create new plan!'));
                 })
         }
     },

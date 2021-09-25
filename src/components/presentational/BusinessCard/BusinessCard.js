@@ -10,6 +10,9 @@ const BusinessCard = ({ data, theme = "light", categories, types }) => (
 			theme === "dark" ? styles.darkCardWrapper : styles.cardWrapper
 		}
 	>
+		{
+			console.log('data', data)
+		}
 		<Link to={`/plan/${data.id}/ed/${data.editions[0].id}`}>
 			<div className={styles.cardContent}>
 				<p className={styles.planName}>

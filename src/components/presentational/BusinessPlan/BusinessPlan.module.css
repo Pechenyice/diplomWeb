@@ -1,0 +1,205 @@
+.planWrapperMain {
+    width: 100%;
+	max-width: 1200px;
+	margin: auto;
+	padding-top: 50px;
+}
+
+.planWrapper {
+    width: 100%;
+	max-width: 1200px;
+	margin: auto;
+}
+
+.upperCase {
+    text-transform: uppercase;
+}
+
+.creationDate {
+    margin-top: 60px;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 22px;
+    color: rgba(16, 16, 16, 0.5);
+}
+
+.reactionsWrapper {
+    display: flex;
+	gap: 30px;
+	margin: 60px 0;
+}
+
+.reaction {
+    display: flex;
+	gap: 8px;
+}
+
+.emotions {
+    font-weight: normal;
+	font-size: 16px;
+	line-height: 22px;
+}
+
+.subTitle {
+	font-family: "PP Neue Machina Regular";
+	font-style: normal;
+	font-weight: normal;
+	font-size: 25px;
+	line-height: 24px;
+	text-transform: uppercase;
+	margin-bottom: 30px;
+}
+
+.textBlock {
+    margin-bottom: 60px;
+}
+
+.text {
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.darkSide {
+    background-color: var(--dark);
+    padding: 60px 0;
+}
+
+.summaryWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.summaryBlock {
+    position: relative;
+    max-width: 320px;
+}
+
+.summaryBlock .subTitle {
+    margin-bottom: 40px;
+}
+
+.light {
+    color: var(--light);
+}
+
+.summaryContent {
+    display: flex;
+    width: 100%;
+    column-gap: 20px;
+    row-gap: 40px;
+    flex-wrap: wrap;
+}
+
+.summaryHeader {
+    font-family: "Gilroy Regular";
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 15px;
+}
+
+.summaryText {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    color: var(--light);
+}
+
+.summaryFlexWrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.commentsWrapper {
+    margin: 100px 0;
+}
+
+.commentsBlockWrapper {
+    position: relative;
+    width: 570px;
+    margin: unset;
+}
+
+.commentsControls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 60px;
+}
+
+.commentsInput {
+    width: 495px;
+}
+
+.commentsButton {
+    width: 60px;
+    height: 60px;
+}
+
+.commentsContent {
+    position: relative;
+    width: 100%;
+    height: max-content;
+}
+
+.commentsContent::-webkit-scrollbar {
+    width: 6px;
+}
+
+.commentsContent::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
+    transition: .2s;
+    border-radius: 3px;
+}
+  
+.commentsContent::-webkit-scrollbar-thumb:hover {
+    background: #707070;
+    transition: .2s;
+}
+
+.commentElem {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.commentHeader {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.commentAuthor {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+}
+
+.commentDate {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 22px;
+    color: rgba(16, 16, 16, 0.5);
+}
+
+.commentText {
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 22px;
+    margin-top: 10px;
+}
+
+.commentsEvent {
+    width: max-content;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    text-transform: uppercase;
+    margin: auto;
+    cursor: pointer;
+}

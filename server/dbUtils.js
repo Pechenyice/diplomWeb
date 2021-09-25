@@ -99,17 +99,6 @@ const dbUtils = {
 
 	createEdition: async function (bId, { data }) {
 		let edId = uuid.v4();
-		console.log("data", data);
-		console.log(
-			"data",
-			edId,
-			bId,
-			data.category,
-			data.type,
-			data.name,
-			data.description,
-			Date.now()
-		);
 		let result = await connection.execute(
 			`insert into edition(_id, business_id, category_id, type_id, name, description, creation_date) values (?, ?, ?, ?, ?, ?, ?);`,
 			[
@@ -139,14 +128,14 @@ const dbUtils = {
                 from
                     likes 
                 where
-                    _id = ?) as likes,
+                    edition_id = ?) as likes,
                     (
                         select
                             count(_id) 
                         from
                             dislikes 
                         where
-                            _id = ?
+                            edition_id = ?
                     )
                     as dislikes,
                     e._id,
@@ -175,120 +164,179 @@ const dbUtils = {
                 where
                     e._id = ?;
             `,
-            [eId, eId, eId]
+			[eId, eId, eId]
 		);
 	},
 
-    getBusinessEditions: async (bId) => {
-        return await connection.execute(
-            `select _id from edition where business_id = ?;`,
-            [bId]
-        );
-    },
-
-    getBusinessOwner: async (bId) => {
-        return await connection.execute(
-            `select user_id from business where _id = ?;`,
-            [bId]
-        );
-    },
-
-	getBusinessById: async function(bId, owner=null) {
-
-        let ownerId = owner;
-
-        if (!ownerId) {
-            ownerId = await this.getBusinessOwner(bId);
-            ownerId= ownerId[0][0].user_id;
-        }
-
-        let answer = {
-            id: bId,
-            owner: ownerId
-        };
-
-        let [editions, eFields] = await this.getBusinessEditions(bId);
-
-        let editionsData = []
-
-        for (let e of editions) {
-            let currentEdition = await this.getEditionById(e._id);
-            let editionObject = currentEdition[0][0];
-            editionsData.push(
-                Object.assign({}, {
-                    id: editionObject._id,
-                    content: {
-                        name: editionObject.name,
-                        description: editionObject.description,
-                        category: parseInt(editionObject.category_id),
-                        type: parseInt(editionObject.type_id),
-                        likes: editionObject.likes,
-                        dislikes: editionObject.dislikes,
-                        created: editionObject.creation_date,
-                        income: {
-                            profit: editionObject.profit,
-                            description: editionObject.incomeDescription
-                        },
-                        expence: {
-                            description: editionObject.expenceDescription,
-                            salary: editionObject.salary,
-                            electricity: editionObject.electricity,
-                            amortization:  editionObject.amortization,
-                            materials:  editionObject.materials,
-                            maintenance:  editionObject.maintenance,
-                        }
-                    }
-                })
-            );
-        }
-
-        answer['editions'] = editionsData;
-
-        console.log(JSON.stringify(answer))
-
-        return answer;
+	getBusinessEditions: async (bId) => {
+		return await connection.execute(
+			`select _id from edition where business_id = ? order by creation_date;`,
+			[bId]
+		);
 	},
 
-    getBusinessesByOwnerId: async (owner) => {
-        return await connection.execute(
-            `select _id from business where user_id = ?;`,
-            [owner]
-        );
-    }, 
+	getBusinessOwner: async (bId) => {
+		return await connection.execute(
+			`select user_id from business where _id = ?;`,
+			[bId]
+		);
+	},
 
-    getOwnerBusinesses: async function(owner) {
-        let [result, fields] = await this.getBusinessesByOwnerId(owner);
-        
+	getBusinessById: async function (bId, owner = null) {
+		let ownerId = owner;
 
-        let businesses = []
+		if (!ownerId) {
+			ownerId = await this.getBusinessOwner(bId);
+			ownerId = ownerId[0][0].user_id;
+		}
 
-        for (let r of result) {
-            let b = await this.getBusinessById(r._id);
-            businesses.push(b);
-        }
+		let answer = {
+			id: bId,
+			owner: ownerId,
+		};
 
-        return businesses;
-    }, 
+		let [editions, eFields] = await this.getBusinessEditions(bId);
 
-    getAllEditionsForBusinessesFiltration: async (offset, count) => {
-        return await connection.execute(
-            `select * from edition a where not exists (select * from edition b where a.business_id = b.business_id and b.creation_date > a.creation_date) limit ? offset ?;`,
-            [count, offset]
-        );
-    },
+		let editionsData = [];
 
-    getBusinessesWithFilters: async function(filters) {
-        let [result, fields] = await this.getAllEditionsForBusinessesFiltration(filters.offset, filters.count);
-        
-        let businesses = [];
+		for (let e of editions) {
+			let currentEdition = await this.getEditionById(e._id);
+			let editionObject = currentEdition[0][0];
+			editionsData.unshift(
+				Object.assign(
+					{},
+					{
+						id: editionObject._id,
+						content: {
+							name: editionObject.name,
+							description: editionObject.description,
+							category: parseInt(editionObject.category_id),
+							type: parseInt(editionObject.type_id),
+							likes: editionObject.likes,
+							dislikes: editionObject.dislikes,
+							created: editionObject.creation_date,
+							income: {
+								profit: editionObject.profit,
+								description: editionObject.incomeDescription,
+							},
+							expence: {
+								description: editionObject.expenceDescription,
+								salary: editionObject.salary,
+								electricity: editionObject.electricity,
+								amortization: editionObject.amortization,
+								materials: editionObject.materials,
+								maintenance: editionObject.maintenance,
+							},
+						},
+					}
+				)
+			);
+		}
 
-        for (let r of result) {
-            let b = await this.getBusinessById(r.business_id);
-            businesses.push(b);
-        }
-    
-        return businesses;
-    },
+		answer["editions"] = editionsData;
+
+		return answer;
+	},
+
+	getPlan: async (bId, eId) => {
+		let res = await connection.execute(
+			`SELECT e._id,
+                    (select count(_id) from likes where edition_id = ?) as likes, 
+                    (select count(_id) from dislikes where edition_id = ?) as dislikes,
+                    e.business_id,
+                    e.category_id,
+                    e.type_id,
+                    e.name,
+                    e.description,
+                    e.creation_date,
+                    i.profit AS profit,
+                    i.description AS incomeDescription,
+                    ex.salary AS salary,
+                    ex.electricity AS electricity,
+                    ex.amortization AS amortization,
+                    ex.materials AS materials,
+                    ex.maintenance AS maintenance,
+                    ex.description AS expenceDescription,
+                    b.user_id AS user_id
+            FROM edition e
+            LEFT JOIN income i ON e._id = i.edition_id
+            LEFT JOIN expence ex ON e._id = ex.edition_id
+            LEFT JOIN business b ON e.business_id = b._id
+            WHERE e._id = ?`,
+			[eId, eId, eId]
+		);
+
+        let editionObject = res[0][0];
+
+		return Object.assign(
+			{},
+			{
+				name: editionObject.name,
+                owner: editionObject.user_id,
+				description: editionObject.description,
+				category: parseInt(editionObject.category_id),
+				type: parseInt(editionObject.type_id),
+				likes: editionObject.likes,
+				dislikes: editionObject.dislikes,
+				created: editionObject.creation_date,
+				income: {
+					profit: editionObject.profit,
+					description: editionObject.incomeDescription,
+				},
+				expence: {
+					description: editionObject.expenceDescription,
+					salary: editionObject.salary,
+					electricity: editionObject.electricity,
+					amortization: editionObject.amortization,
+					materials: editionObject.materials,
+					maintenance: editionObject.maintenance,
+				}
+			}
+		);
+	},
+
+	getBusinessesByOwnerId: async (owner) => {
+		return await connection.execute(
+			`select _id from business where user_id = ?;`,
+			[owner]
+		);
+	},
+
+	getOwnerBusinesses: async function (owner) {
+		let [result, fields] = await this.getBusinessesByOwnerId(owner);
+
+		let businesses = [];
+
+		for (let r of result) {
+			let b = await this.getBusinessById(r._id);
+			businesses.push(b);
+		}
+
+		return businesses;
+	},
+
+	getAllEditionsForBusinessesFiltration: async (offset, count) => {
+		return await connection.execute(
+			`select * from edition a where not exists (select * from edition b where a.business_id = b.business_id and b.creation_date > a.creation_date) limit ? offset ?;`,
+			[count, offset]
+		);
+	},
+
+	getBusinessesWithFilters: async function (filters) {
+		let [result, fields] = await this.getAllEditionsForBusinessesFiltration(
+			filters.offset,
+			filters.count
+		);
+
+		let businesses = [];
+
+		for (let r of result) {
+			let b = await this.getBusinessById(r.business_id);
+			businesses.push(b);
+		}
+
+		return businesses;
+	},
 
 	updateNickname: async (id, nickname) => {
 		return await connection.execute(

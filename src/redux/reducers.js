@@ -79,9 +79,9 @@ const initialState = {
 };
 
 function reducer(state = initialState, action) {
+	console.log("ACTION", action);
 	switch (action.type) {
 		case actions.types.APPLY_FILTERS: {
-			console.log("dispatched " + JSON.stringify(action.filters));
 			return Object.assign({}, state, {
 				filters: action.filters,
 				businesses: {
@@ -334,8 +334,6 @@ function planReducer(state, action, businesses) {
 
 			let edition = plan?.editions.find((e) => e.id === eId);
 
-			console.log("FOUND ", edition?.content || null);
-
 			let newPlan = plan
 				? {
 						isLoading: false,
@@ -385,11 +383,12 @@ function planReducer(state, action, businesses) {
 
 		case actions.types.PLAN_REQUEST_SUCCESSED: {
 			console.log("action plan successed", action);
+			console.log('action.plan.owner', action.plan.owner)
 
 			return Object.assign({}, state, {
 				isLoading: false,
 				isFetched: true,
-				activeOwner: action.plan.owner,
+				activeOwner: action.plan.plan.owner,
 				activeBusiness: action.planId,
 				activeEdition: action.edId,
 				data: action.plan.plan,
@@ -416,7 +415,6 @@ function successesReducer(state, action) {
 		}
 
 		case actions.types.ADD_SUCCESS: {
-			console.log(action.text);
 			return {
 				content: state.content.concat({
 					id: uuidv4(),
@@ -443,7 +441,6 @@ function errorsReducer(state, action) {
 		}
 
 		case actions.types.ADD_ERROR: {
-			console.log(action.text);
 			return {
 				content: state.content.concat({
 					id: uuidv4(),
@@ -775,28 +772,16 @@ function businessesReducer(state, action) {
 }
 
 function planCommentsReducer(state, action) {
-	console.log(action);
 	switch (action.type) {
 		case actions.types.COMMENTS_REQUEST_STARTED: {
-			console.log("comments loading started");
 			return Object.assign({}, state, { isLoading: true });
 		}
 
 		case actions.types.COMMENTS_REQUEST_FAILED: {
-			console.log("comments loading failed");
 			return state;
 		}
 
 		case actions.types.COMMENTS_REQUEST_SUCCESSED: {
-			console.log("comments loading success");
-			console.log(
-				Object.assign({}, state, {
-					isLoading: false,
-					content: state.content.concat(action.result.content),
-					offset: action.result.offset,
-					needMore: action.result.needMore,
-				})
-			);
 			return Object.assign({}, state, {
 				isLoading: false,
 				content: state.content.concat(action.result.content),

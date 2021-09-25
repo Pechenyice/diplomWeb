@@ -24,10 +24,10 @@ const Catalog = ({ onFiltersSelected, onNeedMoreBusinesses, onInit, filters, cat
     console.log('filters', filters);
 
     function handleFiltersSubmitClick() {
-        if (JSON.stringify(filters) === JSON.stringify(state)) {
-            return;
-        }
-        console.log(state);
+        // if (JSON.stringify(filters) === JSON.stringify(state)) {
+        //     return;
+        // }
+        setState(Object.assign({}, state));
         onFiltersSelected(state);
     }
 

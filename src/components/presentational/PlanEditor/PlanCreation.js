@@ -31,8 +31,6 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 		},
 	});
 
-	console.log('plan', plan)
-
 	function handleNameInput(e) {
 		setState(Object.assign({}, state, { name: e.target.value }));
 	}
@@ -367,13 +365,6 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 			<h1>
 				CREATION: <span ref={el}></span>
 			</h1>
-
-			{console.log(
-				"categories.content && types.content",
-				categories.content && types.content,
-				types.content,
-				categories.content
-			)}
 
 			{categories.content.length && types.content.length ? (
 				<div className={styles.creationContent}>

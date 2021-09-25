@@ -57,7 +57,10 @@ const actions = {
         UPDATE_PROFILE_PASSWORD_REQUEST_FAILED: 'UPDATE_PROFILE_PASSWORD_REQUEST_FAILED',
         NEW_PLAN_CREATED_REQUEST_STARTED: 'NEW_PLAN_CREATED_REQUEST_STARTED',
         NEW_PLAN_CREATED_REQUEST_SUCCESSED: 'NEW_PLAN_CREATED_REQUEST_SUCCESSED',
-        NEW_PLAN_CREATED_REQUEST_FAILED: 'NEW_PLAN_CREATED_REQUEST_FAILED'
+        NEW_PLAN_CREATED_REQUEST_FAILED: 'NEW_PLAN_CREATED_REQUEST_FAILED',
+        PLAN_EDITION_CREATED_REQUEST_STARTED: 'PLAN_EDITION_CREATED_REQUEST_STARTED',
+        PLAN_EDITION_CREATED_REQUEST_SUCCESSED: 'PLAN_EDITION_CREATED_REQUEST_SUCCESSED',
+        PLAN_EDITION_CREATED_REQUEST_FAILED: 'PLAN_EDITION_CREATED_REQUEST_FAILED'
     },
 
     findPlan: function ({ planId, edId }) {
@@ -516,9 +519,51 @@ const actions = {
                     if (e.name === 'AbortError') {
                         console.warn(`Request aborted`);
                     }
-                    console.log('e', e)
                     dispatch(this.fetchNewPlanCreatedFail());
                     dispatch(this.addError('Failed create new plan!'));
+                })
+        }
+    },
+
+    fetchPlanEditionCreatedRequest: function () {
+        return {
+            type: this.types.PLAN_EDITION_CREATED_REQUEST_STARTED
+        }
+    },
+
+    fetchPlanEditionCreatedSuccess: function (result) {
+        return {
+            type: this.types.PLAN_EDITION_CREATED_REQUEST_SUCCESSED,
+            result
+        }
+    },
+
+    fetchPlanEditionCreatedFail: function (result) {
+        return {
+            type: this.types.PLAN_EDITION_CREATED_REQUEST_FAILED,
+            result
+        }
+    },
+
+    fetchPlanEditionCreated: function(data) {
+        return (dispatch) => {
+            dispatch(this.fetchPlanEditionCreatedRequest());
+            Client.createPlanEdition(data)
+                .then((result) => {
+                    if (result.success) {
+                        dispatch(this.fetchPlanEditionCreatedSuccess(result));
+                        dispatch(this.addSuccess('Plan edited succesfully!'))
+                    } else {
+                        dispatch(this.fetchPlanEditionCreatedFail({AUTH: 'FAIL'}));
+                        dispatch(this.addError(result.cause))
+                    }
+                })
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
+                    dispatch(this.fetchPlanEditionCreatedFail());
+                    dispatch(this.addError('Failed create new plan edition!'));
                 })
         }
     },

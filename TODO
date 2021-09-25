@@ -5,3 +5,5 @@
 5. Create loading for auth tryes
 6. Finish Catalog selects
 7. Add created plan to CATALOG component (later - updated plan)
+8. Refactor no data and loading scenarious to normal design
+9. End logic of creating edition on server, after that check catalog and profile behavior after creating edition

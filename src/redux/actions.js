@@ -273,6 +273,7 @@ const actions = {
                 .catch((e) => {
                     if (e.name === 'AbortError') {
                         console.warn(`Request aborted`);
+                        return;
                     }
                     dispatch(this.fetchCommentsFail());
                     dispatch(this.addError('Failed load comments!'));
@@ -431,7 +432,6 @@ const actions = {
                     if (e.name === 'AbortError') {
                         console.warn(`Request aborted`);
                     }
-                    console.log('e', e)
                     dispatch(this.fetchUpdateProfileDataFail());
                     dispatch(this.addError('Failed update profile data!'));
                 })
@@ -475,7 +475,6 @@ const actions = {
                     if (e.name === 'AbortError') {
                         console.warn(`Request aborted`);
                     }
-                    console.log('e', e)
                     dispatch(this.fetchUpdateProfilePasswordFail());
                     dispatch(this.addError('Failed update profile password!'));
                 })

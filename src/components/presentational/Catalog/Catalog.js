@@ -21,8 +21,6 @@ const Catalog = ({ onFiltersSelected, onNeedMoreBusinesses, onInit, filters, cat
         pattern: ''
     });
 
-    console.log('filters', filters);
-
     function handleFiltersSubmitClick() {
         // if (JSON.stringify(filters) === JSON.stringify(state)) {
         //     return;

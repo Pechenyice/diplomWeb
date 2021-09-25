@@ -11,25 +11,27 @@ import { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import PropTypes from "prop-types";
 
-const PlanCreation = ({ categories, types, onError, onSubmit }) => {
+const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 	let [state, setState] = useState({
-		name: "",
-		category: 0,
-		type: 0,
-		description: "",
+		name: plan?.data?.name || "",
+		category: plan?.data?.category || 0,
+		type: plan?.data?.type || 0,
+		description: plan?.data?.description || "",
 		spendings: {
-			salary: "",
-			electricity: "",
-			amortization: "",
-			materials: "",
-			maintenance: "",
-			description: "",
+			salary: plan?.data?.expence?.salary?.toString() || "",
+			electricity: plan?.data?.expence?.electricity?.toString() || "",
+			amortization: plan?.data?.expence?.amortization?.toString() || "",
+			materials: plan?.data?.expence?.materials?.toString() || "",
+			maintenance: plan?.data?.expence?.maintenance?.toString() || "",
+			description: plan?.data?.expence?.description || "",
 		},
 		incomings: {
-			profit: "",
-			description: "",
+			profit: plan?.data?.income?.profit?.toString() || "",
+			description: plan?.data?.income?.description || "",
 		},
 	});
+
+	console.log('plan', plan)
 
 	function handleNameInput(e) {
 		setState(Object.assign({}, state, { name: e.target.value }));
@@ -147,6 +149,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit }) => {
 								propsValues={categories.content}
 								onSelect={handleCategorySelect}
 								bigSize
+								wantToDisplayId={state.category}
 							/>
 						</div>
 						<div className={styles.selectWrapper}>
@@ -155,11 +158,13 @@ const PlanCreation = ({ categories, types, onError, onSubmit }) => {
 								propsValues={types.content}
 								onSelect={handleTypeSelect}
 								bigSize
+								wantToDisplayId={state.type}
 							/>
 						</div>
 					</div>
 					<div className={styles.inputsWrapper}>
 						<TextArea
+							value={state.description}
 							placeholder={"Project description"}
 							onChange={handleDescriptionInput}
 						/>
@@ -225,6 +230,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit }) => {
 					</div>
 					<div className={styles.inputsWrapper}>
 						<TextArea
+						value={state.spendings.description}
 							placeholder={"What is the money spent on?"}
 							onChange={handleSpendingsDescriptionInput}
 						/>
@@ -408,6 +414,7 @@ PlanCreation.propTypes = {
 	types: PropTypes.object,
 	onSubmit: PropTypes.func,
 	onError: PropTypes.func,
+	plan: PropTypes.object
 };
 
 export default PlanCreation;

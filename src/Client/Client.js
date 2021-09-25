@@ -52,7 +52,17 @@ const Client = {
         LOGOUT_CONTROLLER: new AbortController(),
         UPDATE_PROFILE_DATA_CONTROLLER: new AbortController(),
         UPDATE_PROFILE_PASSWORD_CONTROLLER: new AbortController(),
-        CREATE_NEW_PLAN_CONTROLLER: new AbortController()
+        CREATE_NEW_PLAN_CONTROLLER: new AbortController(),
+        CREATE_PLAN_EDITION_CONTROLLER: new AbortController()
+    },
+
+    createPlanEdition: function(data) {
+        return this.safeFetch(this.constructUrl('/createPlanEdition'), 'POST', this.aborts.CREATE_PLAN_EDITION_CONTROLLER, {data});
+    },
+
+    abortCreatePlanEdition: function () {
+        this.aborts.CREATE_PLAN_EDITION_CONTROLLER.abort();
+        this.aborts.CREATE_PLAN_EDITION_CONTROLLER = new AbortController();
     },
 
     createNewPlan: function(data) {

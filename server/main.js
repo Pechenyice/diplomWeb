@@ -101,11 +101,27 @@ for (let i = 0; i < 22; i++) {
     });
 }
 
+app.post('/api/createPlanEdition', middlewares.bindAuth, async (req, res) => {
+    let eId = await dbUtils.createEdition(req.body.data.businessId, req.body);
+
+    if (eId) {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: true,
+            }));
+        }, API_ANSWER_DELAY);
+    } else {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Cannot create new edition'
+            }));
+        }, API_ANSWER_DELAY); 
+    }
+});
+
 app.post('/api/createNewPlan', middlewares.bindAuth, async (req, res) => {
     let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
-
-    console.log(req.body);
-    console.log(result);
 
     if (result.length == 1) {
         let bId = await dbUtils.createBusiness(result[0].user_id);
@@ -181,7 +197,6 @@ app.put('/api/updateProfilePassword', middlewares.bindAuth, async (req, res) => 
         }, API_ANSWER_DELAY); 
     } else {
         let [answer, moreInfo] = await dbUtils.updatePassword(result[0].user_id, req.body.oldPassword, req.body.password);
-        console.log(answer)
         if (answer.affectedRows == 1) {
             res.send(JSON.stringify({
                 success: true
@@ -290,7 +305,6 @@ app.post('/api/auth', async (req, res) => {
 });
 
 app.get('/api/getUserNickname', async (req, res) => {
-    console.log(req.query.id);
     let [result, fields] = await dbUtils.getUserNickname(req.query.id);
 
     setTimeout(() => {
@@ -335,6 +349,8 @@ app.get('/api/getBusinesses', async (req, res) => {
 
     let ans = await dbUtils.getBusinessesWithFilters(req.query);
 
+    console.log(JSON.stringify(ans))
+
     analysed['needMore'] = req.query.count == ans.length;
 
     analysed['content'] = ans;
@@ -344,27 +360,49 @@ app.get('/api/getBusinesses', async (req, res) => {
     }, API_ANSWER_DELAY);
 });
 
-app.get('/api/getPlan', (req, res) => {
-    setTimeout(() => {
-        res.send(JSON.stringify({
-            name: `name test`,
-            owner: user.id,
-            description: `desc for non fetched test`,
-            category: 0,
-            type: 0,
-            created: 1631638551000,
-            income: {
-                sum: 100,
-                text: 'test'
-            },
-            expence: {
-                sum: 100,
-                text: 'test expence'
-            },
-            likes: 121,
-            dislikes: 300
-        }));
-    }, API_ANSWER_DELAY);
+app.get('/api/getPlan', async (req, res) => {
+
+    // setTimeout(() => {
+    //     res.send(JSON.stringify({
+    //         name: `name test`,
+    //         owner: user.id,
+    //         description: `desc for non fetched test`,
+    //         category: 0,
+    //         type: 0,
+    //         created: 1631638551000,
+    //         income: {
+    //             sum: 100,
+    //             text: 'test'
+    //         },
+    //         expence: {
+    //             sum: 100,
+    //             text: 'test expence'
+    //         },
+    //         likes: 121,
+    //         dislikes: 300
+    //     }));
+    // }, API_ANSWER_DELAY);
+
+    let result = await dbUtils.getPlan(req.query.planId, req.query.edId);
+
+    console.log(result);
+    
+    if (Object.keys(result).length) {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: true,
+                plan: result
+            }));
+        }, API_ANSWER_DELAY);
+    } else {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Cannot get such business plan'
+            }));
+        }, API_ANSWER_DELAY);
+    }
+    
 });
 
 app.get('/api/getFiltersTypes', (req, res) => {

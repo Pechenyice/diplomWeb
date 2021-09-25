@@ -36,6 +36,9 @@ const BusinessPlan = ({ plan, user, onInit, onNullPlan, onClear, onNeedMoreComme
                                     </Link> :
                                     <div>'not mine'</div>
                             }
+                            {
+                                console.log('plan', plan)
+                            }
                             <div>
                                 {plan.data.name}
                             </div>
@@ -54,12 +57,12 @@ const BusinessPlan = ({ plan, user, onInit, onNullPlan, onClear, onNeedMoreComme
                             <div>
                                 {plan.data.likes} {plan.data.dislikes}
                             </div>
-                            <div>
+                            {/* <div>
                                 income: {plan.data.income.sum} {plan.data.income.text}
                             </div>
                             <div>
                                 expence: {plan.data.expence.sum} {plan.data.expence.text}
-                            </div>
+                            </div> */}
                             {
                                 plan.comments.content.map(e => (<div key={e.id}>{e.text} {e.author.nickname}</div>))
                             }

@@ -148,6 +148,17 @@ function reducer(state = initialState, action) {
 			});
 		}
 
+		case actions.types.PLAN_EDITION_CREATED_REQUEST_STARTED:
+		case actions.types.PLAN_EDITION_CREATED_REQUEST_SUCCESSED:
+		case actions.types.PLAN_EDITION_CREATED_REQUEST_FAILED: {
+			if (action?.result?.AUTH === "FAIL")
+				return Object.assign({}, state, toInitialState(state));
+
+			return Object.assign({}, state, {
+				profilePlans: editPlanReducer(state.profilePlans, action),
+			});
+		}
+
 		case actions.types.SIGN_UP_REQUEST_STARTED:
 		case actions.types.SIGN_UP_REQUEST_SUCCESSED:
 		case actions.types.SIGN_UP_REQUEST_FAILED: {
@@ -373,13 +384,15 @@ function planReducer(state, action, businesses) {
 		}
 
 		case actions.types.PLAN_REQUEST_SUCCESSED: {
+			console.log("action plan successed", action);
+
 			return Object.assign({}, state, {
 				isLoading: false,
 				isFetched: true,
 				activeOwner: action.plan.owner,
 				activeBusiness: action.planId,
 				activeEdition: action.edId,
-				data: action.plan,
+				data: action.plan.plan,
 			});
 		}
 
@@ -487,17 +500,36 @@ function newPlanReducer(state, action) {
 		}
 
 		case actions.types.NEW_PLAN_CREATED_REQUEST_SUCCESSED: {
-
-			console.log('state', state)
-			console.log('state concat', [].concat([...state.own.content, action.result.data]))
-			console.log('state.own.content.concat([action.result.data])', state.own.content.concat([action.result.data]))
-
 			return Object.assign({}, state, {
-				own: Object.assign({}, state.own, {content: state.own.content.concat([action.result.data])})
+				own: Object.assign({}, state.own, {
+					content: state.own.content.concat([action.result.data]),
+				}),
 			});
 		}
 
 		case actions.types.NEW_PLAN_CREATED_REQUEST_FAILED: {
+			return state;
+		}
+	}
+}
+
+function editPlanReducer(state, action) {
+	switch (action.type) {
+		case actions.types.PLAN_EDITION_CREATED_REQUEST_STARTED: {
+			return state;
+		}
+
+		case actions.types.PLAN_EDITION_CREATED_REQUEST_SUCCESSED: {
+			return Object.assign({}, state, {
+				own: Object.assign({}, state.own, {
+					content: [],
+					isLoading: false,
+					isFetched: false
+				}),
+			});
+		}
+
+		case actions.types.PLAN_EDITION_CREATED_REQUEST_FAILED: {
 			return state;
 		}
 	}

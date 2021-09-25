@@ -46,7 +46,7 @@ function mapDispatchToProps(dispatch, ownProps) {
             dispatch(actions.addError(text))
         },
         onSubmit: (state) => {
-            dispatch(actions.addSuccess('Here will be success!'))
+            dispatch(actions.fetchPlanEditionCreated(Object.assign({}, state, {businessId: ownProps.match.params.planId})));
         }
     };
 }

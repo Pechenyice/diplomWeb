@@ -391,7 +391,7 @@ app.get('/api/getPlan', async (req, res) => {
         setTimeout(() => {
             res.send(JSON.stringify({
                 success: true,
-                plan: result
+                plan: {...result}
             }));
         }, API_ANSWER_DELAY);
     } else {
@@ -461,6 +461,6 @@ fs.readFile('./../TODO', (_, content) => {
             dbUtils.initCategories(CATEGORIES);
         }
         
-        // onServerStart();
+        onServerStart();
     })
 });

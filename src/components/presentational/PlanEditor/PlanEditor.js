@@ -34,9 +34,9 @@ const PlanEditor = ({ planData, plan, user, edition, onClear, onInit, onNullPlan
                                 user !== match.params.ownerId ? <Redirect to={'/catalog'} /> : null
                             }
                             {
-                                edition && !planData ? onNeedFetchEdition() : null
+                                edition && !planData ? onNeedFetchEdition() : <PlanCreation plan={planData} categories={categories} types={types} onSubmit={onSubmit} onError={onError}/> 
                             }
-                            <div>Edition of plan</div>
+                            
                         </div> :
                         // edition on load plan template
                         plan.isLoading ?
@@ -46,30 +46,7 @@ const PlanEditor = ({ planData, plan, user, edition, onClear, onInit, onNullPlan
                                     {
                                         user !== match.params.ownerId ? <Redirect to={'/catalog'} /> : null
                                     }
-                                    <div>
-                                        {plan.data.name}
-                                    </div>
-                                    <div>
-                                        {plan.data.category}
-                                    </div>
-                                    <div>
-                                        {plan.data.type}
-                                    </div>
-                                    <div>
-                                        {plan.data.description}
-                                    </div>
-                                    <div>
-                                        {plan.data.created}
-                                    </div>
-                                    <div>
-                                        {plan.data.likes} {plan.data.dislikes}
-                                    </div>
-                                    <div>
-                                        income: {plan.data.income.sum} {plan.data.income.text}
-                                    </div>
-                                    <div>
-                                        expence: {plan.data.expence.sum} {plan.data.expence.text}
-                                    </div>
+                                    <PlanCreation plan={Object.assign({}, {data: plan.data.plan})} categories={categories} types={types} onSubmit={onSubmit} onError={onError}/>
                                 </div> :
                                 <div>NO DATA</div>
             }

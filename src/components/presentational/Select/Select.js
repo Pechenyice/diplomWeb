@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import styles from './Select.module.css';
 import PropTypes from 'prop-types';
 
-const Select = ({ content, propsValues, onSelect, bigSize=false }) => {
+const Select = ({ content, propsValues, onSelect, bigSize=false, wantToDisplayId=null }) => {
 
     let sortedValues = propsValues.sort((a, b) => { return a.id - b.id });
-    let [activeValueId, setActiveValueId] = useState(sortedValues[0].id);
+    let [activeValueId, setActiveValueId] = useState(wantToDisplayId || sortedValues[0].id);
     let [opened, setOpened] = useState(false);
     let [values, setValues] = useState(sortedValues);
 
@@ -62,7 +62,8 @@ Select.propTypes = {
     content: PropTypes.string, 
     propsValues: PropTypes.array, 
     onSelect: PropTypes.func, 
-    bigSize: PropTypes.bool
+    bigSize: PropTypes.bool,
+    wantToDisplayId: PropTypes.number
 }
 
 export default Select;

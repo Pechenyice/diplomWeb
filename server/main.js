@@ -164,10 +164,10 @@ app.post('/api/createNewPlan', middlewares.bindAuth, async (req, res) => {
     }
 });
 
-app.get('/api/logout', middlewares.bindAuth, async (req, res) => {
-    let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
+app.get('/api/logout', async (req, res) => {
+    let [result, fields] = req.cookies.authToken ? await dbUtils.getUserByToken(req.cookies.authToken) : [null, null];
 
-    if (result.length == 1) {
+    if (result?.length == 1) {
         dbUtils.dropToken(result[0].body);
         res.cookie('authToken', '', { maxAge: Date.now() });
         setTimeout(() => {
@@ -178,8 +178,8 @@ app.get('/api/logout', middlewares.bindAuth, async (req, res) => {
     } else {
         setTimeout(() => {
             res.send(JSON.stringify({
-                success: false,
-                cause: 'Something went wrong, we do not know yoy, looo-o-ol!'
+                success: true,
+                // cause: 'Something went wrong, we do not know yoy, looo-o-ol!'
             }));
         }, API_ANSWER_DELAY);
     }
@@ -247,12 +247,53 @@ app.post('/api/checkToken', middlewares.bindAuth, async (req, res) => {
                 id: result[0]._id,
                 login: result[0].login,
                 nickname: result[0].nickname
-            })) : {};
-        // :
-        // res.send(JSON.stringify({
-        //     success: false,
-        //     cause: 'No such user, please check login or password!'
-        // }));
+            })) :
+            {};
+    }, API_ANSWER_DELAY);
+});
+
+app.post('/api/deletePlan', middlewares.bindAuth, async (req, res) => {
+    let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
+
+    if (result.length !== 1) {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Something went wrong, we do not know yoy, looo-o-ol!'
+            }));
+        }, API_ANSWER_DELAY);
+        return;
+    }
+
+    let [owner, _d] = await dbUtils.getBusinessOwner(req.body.bId);
+
+    if (owner[0].user_id !== result[0].user_id) {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'This is not your business!'
+            }));
+        }, API_ANSWER_DELAY);
+    }
+
+    let [deleted, _] = await dbUtils.deletePlan(req.body.bId);
+
+    console.log(deleted)
+
+    if (deleted.affectedRows !== 1) {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Something went wrong!'
+            }));
+        }, API_ANSWER_DELAY);
+        return;
+    }
+
+    setTimeout(() => {
+        res.send(JSON.stringify({
+            success: true,
+        }));
     }, API_ANSWER_DELAY);
 });
 
@@ -434,7 +475,9 @@ app.get('/api/getPlan', async (req, res) => {
 
     let result = await dbUtils.getPlan(req.query.planId, req.query.edId);
 
-    console.log(result);
+    let editions = await dbUtils.getAllBusinessEditions(req.query.planId); // return only common values for versions select in plan view
+
+    result = Object.assign({}, result, { editions: editions })
 
     if (Object.keys(result).length) {
         setTimeout(() => {

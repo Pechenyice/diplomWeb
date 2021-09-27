@@ -94,6 +94,17 @@ function reducer(state = initialState, action) {
 			});
 		}
 
+		case actions.types.PUBLISH_COMMENT_REQUEST_STARTED:
+		case actions.types.PUBLISH_COMMENT_REQUEST_SUCCESSED:
+		case actions.types.PUBLISH_COMMENT_REQUEST_FAILED: {
+			if (action?.result?.AUTH === "FAIL")
+				return Object.assign({}, state, toInitialState(state));
+
+			return Object.assign({}, state, {
+				plan: publishCommentReducer(state.plan, action),
+			});
+		}
+
 		case actions.types.LOGOUT_REQUEST_STARTED:
 		case actions.types.LOGOUT_REQUEST_SUCCESSED:
 		case actions.types.LOGOUT_REQUEST_FAILED: {
@@ -468,6 +479,24 @@ function guestReducer(state, action) {
 
 		case actions.types.USER_NICKNAME_REQUEST_FAILED: {
 			return Object.assign({}, state, { isLoading: false });
+		}
+	}
+}
+
+function publishCommentReducer(state, action) {
+	switch (action.type) {
+		case actions.types.PUBLISH_COMMENT_REQUEST_STARTED: {
+			return state;
+		}
+
+		case actions.types.PUBLISH_COMMENT_REQUEST_SUCCESSED: {
+			return Object.assign({}, state, {
+				comments: Object.assign({}, {content: state.comments.content.concat([action.result.comment])})
+			});
+		}
+
+		case actions.types.PUBLISH_COMMENT_REQUEST_FAILED: {
+			return state;
 		}
 	}
 }

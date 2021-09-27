@@ -53,7 +53,17 @@ const Client = {
         UPDATE_PROFILE_DATA_CONTROLLER: new AbortController(),
         UPDATE_PROFILE_PASSWORD_CONTROLLER: new AbortController(),
         CREATE_NEW_PLAN_CONTROLLER: new AbortController(),
-        CREATE_PLAN_EDITION_CONTROLLER: new AbortController()
+        CREATE_PLAN_EDITION_CONTROLLER: new AbortController(),
+        PUBLISH_COMMENT_CONTROLLER: new AbortController()
+    },
+
+    addComment: function(bId, eId, comment) {
+        return this.safeFetch(this.constructUrl('/publishComment'), 'POST', this.aborts.PUBLISH_COMMENT_CONTROLLER, {bId, eId, comment});
+    },
+
+    abortCreatePlanEdition: function () {
+        this.aborts.PUBLISH_COMMENT_CONTROLLER.abort();
+        this.aborts.PUBLISH_COMMENT_CONTROLLER = new AbortController();
     },
 
     createPlanEdition: function(data) {

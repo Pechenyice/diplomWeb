@@ -63,7 +63,10 @@ const actions = {
         PLAN_EDITION_CREATED_REQUEST_FAILED: 'PLAN_EDITION_CREATED_REQUEST_FAILED',
         PUBLISH_COMMENT_REQUEST_STARTED: 'PUBLISH_COMMENT_REQUEST_STARTED',
         PUBLISH_COMMENT_REQUEST_SUCCESSED: 'PUBLISH_COMMENT_REQUEST_SUCCESSED',
-        PUBLISH_COMMENT_REQUEST_FAILED: 'PUBLISH_COMMENT_REQUEST_FAILED'
+        PUBLISH_COMMENT_REQUEST_FAILED: 'PUBLISH_COMMENT_REQUEST_FAILED',
+        DELETE_PLAN_REQUEST_STARTED: 'DELETE_PLAN_REQUEST_STARTED',
+        DELETE_PLAN_REQUEST_SUCCESSED: 'DELETE_PLAN_REQUEST_SUCCESSED',
+        DELETE_PLAN_REQUEST_FAILED: 'DELETE_PLAN_REQUEST_FAILED'
     },
 
     findPlan: function ({ planId, edId }) {
@@ -482,6 +485,49 @@ const actions = {
                     }
                     dispatch(this.fetchUpdateProfileDataFail());
                     dispatch(this.addError('Failed update profile data!'));
+                })
+        }
+    },
+    
+    fetchDeletePlanRequest: function () {
+        return {
+            type: this.types.DELETE_PLAN_REQUEST_STARTED
+        }
+    },
+
+    fetchDeletePlanSuccess: function (result) {
+        return {
+            type: this.types.DELETE_PLAN_REQUEST_SUCCESSED,
+            result
+        }
+    },
+
+    fetchDeletePlanFail: function (result) {
+        return {
+            type: this.types.DELETE_PLAN_REQUEST_FAILED,
+            result
+        }
+    },
+
+    fetchDeletePlan: function(bId, eId) {
+        return (dispatch) => {
+            dispatch(this.fetchDeletePlanRequest());
+            Client.deletePlan(bId, eId)
+                .then((result) => {
+                    if (result.success) {
+                        dispatch(this.fetchDeletePlanSuccess(result));
+                        dispatch(this.addSuccess('Plan deleted succesfully!'))
+                    } else {
+                        dispatch(this.fetchDeletePlanFail({ AUTH: 'FAIL' }));
+                        dispatch(this.addError(result.cause))
+                    }
+                })
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
+                    dispatch(this.fetchDeletePlanFail());
+                    dispatch(this.addError('Failed delete plan!'));
                 })
         }
     },

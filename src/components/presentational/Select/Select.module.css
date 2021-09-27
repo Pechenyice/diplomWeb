@@ -12,7 +12,7 @@
 }
 
 .selectWrapperActive {
-    border: 1px solid var(--dark);
+    border: 1px solid var(--dark) !important;
 }
 
 .selectContent {

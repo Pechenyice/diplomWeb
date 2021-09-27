@@ -2,9 +2,23 @@ import React, { useState } from "react";
 import styles from './Select.module.css';
 import PropTypes from 'prop-types';
 
-const Select = ({ content, propsValues, onSelect, bigSize=false, wantToDisplayId=null }) => {
+const Select = ({ content, propsValues, onSelect, bigSize=false, wantToDisplayId=null, sortByDate=false , style=null }) => {
 
-    let sortedValues = propsValues.sort((a, b) => { return a.id - b.id });
+    function getHumanizedMonth(n) {
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        return monthNames[n]
+    }
+
+    function humanizeDate(ts) {
+        var dt = new Date(+ts);
+
+        return `${getHumanizedMonth(dt.getMonth())} ${dt.getDate()}, ${dt.getFullYear()} ${dt.getHours()}:${('0' + dt.getMinutes()).slice(-2)}`;
+    }
+
+    let sortedValues = !sortByDate ? propsValues.sort((a, b) => { return a.id - b.id }) : propsValues.sort((a, b) => { return +b.content.created - +a.content.created });
     let [activeValueId, setActiveValueId] = useState(wantToDisplayId || sortedValues[0].id);
     let [opened, setOpened] = useState(false);
     let [values, setValues] = useState(sortedValues);
@@ -21,13 +35,13 @@ const Select = ({ content, propsValues, onSelect, bigSize=false, wantToDisplayId
     }
 
     return (
-        <div className={[styles.selectWrapper, opened && styles.selectWrapperActive].join(' ')} onClick={handleSwitch}>
+        <div className={[styles.selectWrapper, opened && styles.selectWrapperActive].join(' ')} onClick={handleSwitch} style={style}>
             <div className={styles.selectContent}>
                 <div  className={styles.selectTextsWrapper}>
                 <p className={styles.selectContentText}>{content}: &nbsp;</p>
                 <p className={[styles.selectContentValue, bigSize && styles.selectBigContentValue].join(' ')}>
                     {
-                        values.map(e => e.id === activeValueId && e.name)
+                        values.map(e => !sortByDate ? e.id === activeValueId && e.name : e.id === activeValueId && humanizeDate(e.content.created))
                     }
                 </p>
                 </div>
@@ -39,13 +53,14 @@ const Select = ({ content, propsValues, onSelect, bigSize=false, wantToDisplayId
             <div className={[styles.selectHidable, opened && styles.selectHidableOpened].join(' ')}>
                     <div className={styles.selectHidableContent} onClick={(e) => {e.stopPropagation();}}>
                         {
-                            values.map(e => <div className={styles.selectElement} key={e.id} onClick={(ev) => {handleValueSelected(ev, e.id);}} >
+                            values.map(e => <div className={styles.selectElement} key={!sortByDate ? e.id : e.id} onClick={(ev) => {handleValueSelected(ev, !sortByDate ? e.id : e.id);}} >
                                 <div className={styles.elementName} >
-                                {e.name}
+                                {!sortByDate ? e.name : humanizeDate(e.content.created)}
                                 </div>
                                 <div className={styles.elementTriggerWrapper}>
                                     <div className={[styles.elementTrigger, values.filter(elem => {
-                                        return e.id === activeValueId;
+                                        let val = !sortByDate ? e.id : e.id;
+                                        return  val === activeValueId;
                                     }).length && styles.elementTriggerActive].join(' ')}>
                                         <div className={styles.elementTriggerValue}></div>
                                     </div>
@@ -63,7 +78,9 @@ Select.propTypes = {
     propsValues: PropTypes.array, 
     onSelect: PropTypes.func, 
     bigSize: PropTypes.bool,
-    wantToDisplayId: PropTypes.number
+    wantToDisplayId: PropTypes.number,
+    sortByDate: PropTypes.bool,
+    style: PropTypes.object
 }
 
 export default Select;

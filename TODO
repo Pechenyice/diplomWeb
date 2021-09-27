@@ -8,3 +8,6 @@
 8. Refactor no data and loading scenarious to normal design
 9. End logic of creating edition on server, after that check catalog and profile behavior after creating edition
 10. Add to plan categories, types, editions, owner, create normal post and get comments [IMPORTANT]
+11. Create try {} catch for sql queries with null return for error sending
+
+12. catalog is not updated after creation of plan, account is failing after edition

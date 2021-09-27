@@ -28,7 +28,9 @@ const initialState = {
 		activeBusiness: null,
 		activeEdition: null,
 		activeOwner: null,
+		activeOwnerNickname: null,
 		data: null,
+		editions: [],
 		comments: {
 			isLoading: false,
 			needMore: true,
@@ -105,6 +107,18 @@ function reducer(state = initialState, action) {
 			});
 		}
 
+		case actions.types.DELETE_PLAN_REQUEST_STARTED:
+		case actions.types.DELETE_PLAN_REQUEST_SUCCESSED:
+		case actions.types.DELETE_PLAN_REQUEST_FAILED: {
+
+			console.log('actions.types.DELETE_PLAN_REQUEST_SUCCESSED', action)
+
+			if (action?.result?.AUTH === "FAIL")
+				return Object.assign({}, state, toInitialState(state));
+
+			return Object.assign({}, state, { profilePlans: dropProfilePlans(state), businesses: dropBusinessses(state) });
+		}
+
 		case actions.types.LOGOUT_REQUEST_STARTED:
 		case actions.types.LOGOUT_REQUEST_SUCCESSED:
 		case actions.types.LOGOUT_REQUEST_FAILED: {
@@ -156,6 +170,7 @@ function reducer(state = initialState, action) {
 
 			return Object.assign({}, state, {
 				profilePlans: newPlanReducer(state.profilePlans, action),
+				businesses: dropBusinessses(state)
 			});
 		}
 
@@ -166,7 +181,8 @@ function reducer(state = initialState, action) {
 				return Object.assign({}, state, toInitialState(state));
 
 			return Object.assign({}, state, {
-				profilePlans: editPlanReducer(state.profilePlans, action),
+				profilePlans: dropProfilePlans(state),
+				businesses: dropBusinessses(state)
 			});
 		}
 
@@ -335,6 +351,37 @@ function toInitialState(state) {
 	};
 }
 
+function dropProfilePlans(state) {
+	return {
+		forUser: null,
+		own: {
+			isFetched: false,
+			isLoading: false,
+			content: [],
+		},
+		liked: {
+			isFetched: false,
+			isLoading: false,
+			content: [],
+		},
+		disliked: {
+			isFetched: false,
+			isLoading: false,
+			content: [],
+		},
+	};
+}
+
+function dropBusinessses(state) {
+	return {
+		isLoading: false,
+		offset: 0,
+		count: 21,
+		needMore: true,
+		content: [],
+	}
+}
+
 function planReducer(state, action, businesses) {
 	switch (action.type) {
 		case actions.types.FIND_ACTIVE_PLAN: {
@@ -347,20 +394,22 @@ function planReducer(state, action, businesses) {
 
 			let newPlan = plan
 				? {
+					isLoading: false,
+					isChecked: true,
+					activeBusiness: plan?.id,
+					activeEdition: edition?.id,
+					activeOwner: plan?.owner,
+					activeOwnerNickname: plan?.ownerNickname,
+					data: edition?.content || null,
+					editions: plan?.editions,
+					comments: {
 						isLoading: false,
-						isChecked: true,
-						activeBusiness: plan?.id,
-						activeEdition: edition?.id,
-						activeOwner: plan?.owner,
-						data: edition?.content || null,
-						comments: {
-							isLoading: false,
-							needMore: true,
-							offset: 0,
-							count: 21,
-							content: [],
-						},
-				  }
+						needMore: true,
+						offset: 0,
+						count: 21,
+						content: [],
+					},
+				}
 				: {};
 
 			return Object.assign({}, state, newPlan, { isChecked: true });
@@ -374,7 +423,9 @@ function planReducer(state, action, businesses) {
 				activeBusiness: null,
 				activeEdition: null,
 				activeOwner: null,
+				activeOwnerNickname: null,
 				data: null,
+				editions: [],
 				comments: {
 					isLoading: false,
 					needMore: true,
@@ -400,8 +451,10 @@ function planReducer(state, action, businesses) {
 				isLoading: false,
 				isFetched: true,
 				activeOwner: action.plan.plan.owner,
+				activeOwnerNickname: action.plan.plan.ownerNickname,
 				activeBusiness: action.planId,
 				activeEdition: action.edId,
+				editions: action.plan.plan.editions,
 				data: action.plan.plan,
 			});
 		}
@@ -491,7 +544,7 @@ function publishCommentReducer(state, action) {
 
 		case actions.types.PUBLISH_COMMENT_REQUEST_SUCCESSED: {
 			return Object.assign({}, state, {
-				comments: Object.assign({}, {content: state.comments.content.concat([action.result.comment])})
+				comments: Object.assign({}, { content: state.comments.content.concat([action.result.comment]) })
 			});
 		}
 

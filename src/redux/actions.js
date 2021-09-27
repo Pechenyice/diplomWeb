@@ -60,7 +60,10 @@ const actions = {
         NEW_PLAN_CREATED_REQUEST_FAILED: 'NEW_PLAN_CREATED_REQUEST_FAILED',
         PLAN_EDITION_CREATED_REQUEST_STARTED: 'PLAN_EDITION_CREATED_REQUEST_STARTED',
         PLAN_EDITION_CREATED_REQUEST_SUCCESSED: 'PLAN_EDITION_CREATED_REQUEST_SUCCESSED',
-        PLAN_EDITION_CREATED_REQUEST_FAILED: 'PLAN_EDITION_CREATED_REQUEST_FAILED'
+        PLAN_EDITION_CREATED_REQUEST_FAILED: 'PLAN_EDITION_CREATED_REQUEST_FAILED',
+        PUBLISH_COMMENT_REQUEST_STARTED: 'PUBLISH_COMMENT_REQUEST_STARTED',
+        PUBLISH_COMMENT_REQUEST_SUCCESSED: 'PUBLISH_COMMENT_REQUEST_SUCCESSED',
+        PUBLISH_COMMENT_REQUEST_FAILED: 'PUBLISH_COMMENT_REQUEST_FAILED'
     },
 
     findPlan: function ({ planId, edId }) {
@@ -268,7 +271,10 @@ const actions = {
             dispatch(this.fetchCommentsRequest());
             Client.loadComments(businessId, edId, offset, count)
                 .then((result) => {
-                    dispatch(this.fetchCommentsSuccess(result));
+                    result.success ?
+                        dispatch(this.fetchCommentsSuccess(result.comments)) :
+                        // this.fetchCommentsFail();
+                        dispatch(this.addError(result.cause));
                 })
                 .catch((e) => {
                     if (e.name === 'AbortError') {
@@ -277,6 +283,48 @@ const actions = {
                     }
                     dispatch(this.fetchCommentsFail());
                     dispatch(this.addError('Failed load comments!'));
+                })
+        }
+    },
+
+    fetchPublishCommentRequest: function () {
+        return {
+            type: this.types.PUBLISH_COMMENT_REQUEST_STARTED
+        }
+    },
+
+    fetchPublishCommentSuccess: function (result) {
+        return {
+            type: this.types.PUBLISH_COMMENT_REQUEST_SUCCESSED,
+            result
+        }
+    },
+
+    fetchPublishCommentFail: function () {
+        return {
+            type: this.types.PUBLISH_COMMENT_REQUEST_FAILED
+        }
+    },
+
+    fetchPublishComment: function(businessId, edId, comment) {
+        return (dispatch) => {
+            dispatch(this.fetchPublishCommentRequest());
+            Client.addComment(businessId, edId, comment)
+                .then((result) => {
+                    if (result.success) {
+                        dispatch(this.fetchPublishCommentSuccess(result))
+                    } else {
+                        this.fetchPublishCommentFail();
+                        dispatch(this.addError(result.cause));
+                    }                    
+                })
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                        return;
+                    }
+                    dispatch(this.fetchPublishCommentFail());
+                    dispatch(this.addError('Failed add comment!'));
                 })
         }
     },
@@ -424,7 +472,7 @@ const actions = {
                         dispatch(this.fetchUpdateProfileDataSuccess(result));
                         dispatch(this.addSuccess('Nickname changed succesfully!'))
                     } else {
-                        dispatch(this.fetchUpdateProfileDataFail({AUTH: 'FAIL'}));
+                        dispatch(this.fetchUpdateProfileDataFail({ AUTH: 'FAIL' }));
                         dispatch(this.addError(result.cause))
                     }
                 })
@@ -458,7 +506,7 @@ const actions = {
         }
     },
 
-    updateProfilePassword: function(oldPass, pass) {
+    updateProfilePassword: function (oldPass, pass) {
         return (dispatch) => {
             dispatch(this.fetchUpdateProfilePasswordRequest());
             Client.updateProfilePassword(oldPass, pass)
@@ -467,7 +515,7 @@ const actions = {
                         dispatch(this.fetchUpdateProfilePasswordSuccess(result));
                         dispatch(this.addSuccess('Password changed succesfully!'))
                     } else {
-                        dispatch(this.fetchUpdateProfilePasswordFail({AUTH: 'FAIL'}));
+                        dispatch(this.fetchUpdateProfilePasswordFail({ AUTH: 'FAIL' }));
                         dispatch(this.addError(result.cause))
                     }
                 })
@@ -501,7 +549,7 @@ const actions = {
         }
     },
 
-    fetchNewPlanCreated: function(data) {
+    fetchNewPlanCreated: function (data) {
         return (dispatch) => {
             dispatch(this.fetchNewPlanCreatedRequest());
             Client.createNewPlan(data)
@@ -510,7 +558,7 @@ const actions = {
                         dispatch(this.fetchNewPlanCreatedSuccess(result));
                         dispatch(this.addSuccess('Plan created succesfully!'))
                     } else {
-                        dispatch(this.fetchNewPlanCreatedFail({AUTH: 'FAIL'}));
+                        dispatch(this.fetchNewPlanCreatedFail({ AUTH: 'FAIL' }));
                         dispatch(this.addError(result.cause))
                     }
                 })
@@ -544,7 +592,7 @@ const actions = {
         }
     },
 
-    fetchPlanEditionCreated: function(data) {
+    fetchPlanEditionCreated: function (data) {
         return (dispatch) => {
             dispatch(this.fetchPlanEditionCreatedRequest());
             Client.createPlanEdition(data)
@@ -553,7 +601,7 @@ const actions = {
                         dispatch(this.fetchPlanEditionCreatedSuccess(result));
                         dispatch(this.addSuccess('Plan edited succesfully!'))
                     } else {
-                        dispatch(this.fetchPlanEditionCreatedFail({AUTH: 'FAIL'}));
+                        dispatch(this.fetchPlanEditionCreatedFail({ AUTH: 'FAIL' }));
                         dispatch(this.addError(result.cause))
                     }
                 })

@@ -5,6 +5,11 @@
 	padding-top: 50px;
 }
 
+.planWrapperFlex {
+    display: flex;
+    justify-content: space-between;
+}
+
 .planWrapper {
     width: 100%;
 	max-width: 1200px;
@@ -147,6 +152,15 @@
     height: max-content;
 }
 
+.commentsEventHint {
+    text-align: left;
+    cursor: unset;
+    font-size: 14px;
+    line-height: 16px;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.5);
+}
+
 .commentsContent::-webkit-scrollbar {
     width: 6px;
 }
@@ -202,4 +216,98 @@
     text-transform: uppercase;
     margin: auto;
     cursor: pointer;
+}
+
+.graphWrapper {
+    position: relative;
+    width: 400px;
+    padding-top: 120px;
+}
+
+.graphElem {
+    width: 100%;
+    margin-bottom: 100px;
+}
+
+.graphLegendsWrapper {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.graphLegend {
+    width: 50%;
+}
+
+.legendElem {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.legendColor {
+    height: 24px;
+    width: 24px;
+    border-radius: 20%;
+}
+
+.legendText {
+    width: max-content;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.graphElem .subTitle {
+    text-align: center;
+}
+
+.chartHint {
+    font-weight: normal;
+    text-align: center;
+    font-size: 14px;
+    line-height: 16px;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.5);
+    margin-bottom: 40px;
+    margin-top: -10px;
+}
+
+.graphElemBig {
+    width: 170%;
+    transform: translateX(-22%);
+}
+
+.grapghExplanationWrapper {
+    width: 100%;
+}
+
+.grapghExplanationMain {
+    font-family: "PP Neue Machina Regular";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 24px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.grapghExplanationHint {
+    font-size: 14px;
+    line-height: 16px;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.graphSad {
+    text-align: center;
+    font-size: 48px;
 }

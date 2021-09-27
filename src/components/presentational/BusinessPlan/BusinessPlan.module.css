@@ -311,3 +311,48 @@
     text-align: center;
     font-size: 48px;
 }
+
+.versionsWrapper {
+    height: 62px;
+    display: flex;
+    gap: 20px;
+}
+
+.planWrapperFlexMain {
+    width: 600px;
+}
+
+.controlsWrapper {
+    margin-top: 60px;
+    width: 500px;
+    display: flex;
+    gap: 20px;
+}
+
+.controlsControl {
+    width: 190px;
+}
+
+.controlsControlBig {
+    width: 290px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.deletion {
+    width: max-content;
+    margin: auto;
+    font-size: 22px;
+    color: red;
+    cursor: pointer;
+}
+
+.deletionHint {
+    width: max-content;
+    margin: auto;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 22px;
+    color: rgba(16, 16, 16, 0.5);
+}

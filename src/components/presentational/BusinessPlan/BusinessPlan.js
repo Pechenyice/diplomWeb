@@ -8,9 +8,10 @@ import SummaryStat from "./SummaryStat";
 import Comment from "./Comment";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
+import Select from "../Select/Select";
 import Graph from "../../helpers/AuthorizedRoute/Graph";
 
-const BusinessPlan = ({ plan, user, onInit, onNullPlan, onClear, onError, onPublishComment, onNeedMoreComments, categories, types, onNeedServerData }) => {
+const BusinessPlan = ({ plan, user, onInit, onNullPlan, onClear, onError, onPublishComment, onNeedMoreComments, categories, types, onNeedServerData, onPlanDeleted }) => {
 
     const IS_PROFITABLE = plan?.data?.expence?.salary + plan?.data?.expence?.electricity + plan?.data?.expence?.maintenance < plan?.data?.income?.profit;
 
@@ -145,6 +146,8 @@ const BusinessPlan = ({ plan, user, onInit, onNullPlan, onClear, onError, onPubl
         },
     }
 
+    let [needReRender, setNeedReRender] = useState(false);
+
     useEffect(() => {
         if ((!categories.content.length && !categories.isLoading) || (!types.content.length && !types.isLoading)) {
             onNeedServerData();
@@ -156,8 +159,9 @@ const BusinessPlan = ({ plan, user, onInit, onNullPlan, onClear, onError, onPubl
             Client.abortLoadPlanFetch();
             Client.abortLoadCommentsFetch();
             onClear();
+            setNeedReRender(false);
         }
-    }, []);
+    }, [needReRender]);
 
     if (plan.data === null && !plan.isChecked) onInit();
 
@@ -198,6 +202,30 @@ const BusinessPlan = ({ plan, user, onInit, onNullPlan, onClear, onError, onPubl
         return `${getHumanizedMonth(dt.getMonth())} ${dt.getDate()}, ${dt.getFullYear()} ${dt.getHours()}:${('0' + dt.getMinutes()).slice(-2)}`;
     }
 
+    let [activeEdition, setActiveEdition] = useState(plan.activeEdition);
+
+    function handleEditionsChange(id) {
+        setActiveEdition(id);
+    }
+
+    function handleReRenderEdition() {
+        if (!activeEdition) {
+            setActiveEdition(plan.activeEdition)
+        }
+        if (activeEdition !== plan.activeEdition) {
+            setNeedReRender(true);
+        } else {
+            onError('It is already this edition!');
+        }
+    }
+
+    let [planDeleted, setPlanDeleted] = useState(false);
+
+    function handleDeletePlan() {
+        onPlanDeleted(plan.activeBusiness, plan.activeEdition);
+        setPlanDeleted(true);
+    }
+
     return (
         <section className={[
             'sectionDimensioned',
@@ -213,18 +241,35 @@ const BusinessPlan = ({ plan, user, onInit, onNullPlan, onClear, onError, onPubl
                 !plan.isLoading && categories.content.length && types.content.length ?
                     plan.data ?
                         <section>
+                            {
+                                needReRender && <Redirect push to={`/plan/${plan.activeBusiness}/ed/${activeEdition}/`} />
+                            }
+                            {
+                                planDeleted && <Redirect push to={`/profile/${plan.activeOwner}/own`} />
+                            }
                             <section>
                                 <div className={[styles.planWrapperMain, styles.planWrapperFlex].join(' ')}>
-                                    <div>
+                                    <div className={styles.planWrapperFlexMain}>
                                         <h1 className={styles.upperCase}>{plan.data.name}</h1>
                                         {
                                             plan.activeOwner === user ?
-                                                <Link to={{
-                                                    pathname: `/editPlan/plan/${plan.activeBusiness}/ed/${plan.activeEdition}/owner/${plan.activeOwner}`,
-                                                    state: { plan }
-                                                }}>
-                                                    <div>'canEdit'</div>
-                                                </Link> :
+                                                <div className={styles.controlsWrapper}>
+                                                    <div className={styles.controlsControl}>
+                                                        <Link to={{
+                                                            pathname: `/editPlan/plan/${plan.activeBusiness}/ed/${plan.activeEdition}/owner/${plan.activeOwner}`,
+                                                            state: { plan }
+                                                        }}>
+                                                            <Button text={'Edit'} />
+                                                        </Link>
+                                                    </div>
+                                                    <div className={[styles.controlsControl, styles.controlsControlBig].join(' ')}>
+                                                        <div>
+                                                            <p className={styles.deletion} onClick={handleDeletePlan}>Delete</p>
+                                                            <p className={styles.deletionHint}>business and all it's editions</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                :
                                                 // <div>'not mine'</div>
                                                 null
                                         }
@@ -288,8 +333,13 @@ const BusinessPlan = ({ plan, user, onInit, onNullPlan, onClear, onError, onPubl
                                             <p className={styles.text}>{plan.data.expence.description || 'No data...'}</p>
                                         </div>
                                         <div className={styles.textBlock}>
-                                            <h2 className={styles.subTitle}>Versions history ({ })</h2>
-                                            <p className={styles.text}>{plan.data.expence.description || 'No data...'}</p>
+                                            <h2 className={styles.subTitle}>Versions history ({plan?.editions?.length})</h2>
+                                            <div className={styles.versionsWrapper}>
+                                                <Select content={'Version from'} propsValues={plan?.editions} wantToDisplayId={plan.activeEdition} onSelect={handleEditionsChange} style={{ border: '1px solid #C2C2C2', width: '360px' }} bigSize sortByDate />
+                                                <div style={{ width: '190px' }}>
+                                                    <Button text={'Cast a look'} onClick={handleReRenderEdition} />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className={styles.graphWrapper}>
@@ -346,7 +396,7 @@ const BusinessPlan = ({ plan, user, onInit, onNullPlan, onClear, onError, onPubl
                                                 <SummaryStat header={'author'} content={
                                                     <Link to={`/profile/${plan.activeOwner}/own`} >
                                                         <div className={styles.summaryFlexWrapper}>
-                                                            <p className={styles.summaryText}>Gerundos</p>
+                                                            <p className={styles.summaryText}>{plan.activeOwnerNickname}</p>
                                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                 <path d="M14.166 14.1667V5.83337M14.166 5.83337H5.83268M14.166 5.83337L5.83268 14.1667" stroke="white" strokeLinecap="square" strokeLinejoin="round" />
                                                             </svg>
@@ -429,7 +479,8 @@ BusinessPlan.propTypes = {
     onNeedMoreComments: PropTypes.func,
     categories: PropTypes.array,
     types: PropTypes.array,
-    onNeedServerData: PropTypes.func
+    onNeedServerData: PropTypes.func,
+    onPlanDeleted: PropTypes.func
 }
 
 export default BusinessPlan;

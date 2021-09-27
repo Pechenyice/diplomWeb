@@ -116,7 +116,7 @@ app.post('/api/createPlanEdition', middlewares.bindAuth, async (req, res) => {
                 success: false,
                 cause: 'Cannot create new edition'
             }));
-        }, API_ANSWER_DELAY); 
+        }, API_ANSWER_DELAY);
     }
 });
 
@@ -137,14 +137,14 @@ app.post('/api/createNewPlan', middlewares.bindAuth, async (req, res) => {
                         success: true,
                         data: sendContent
                     }));
-                }, API_ANSWER_DELAY); 
+                }, API_ANSWER_DELAY);
             } else {
                 setTimeout(() => {
                     res.send(JSON.stringify({
                         success: false,
                         cause: 'Something went wrong, we cannot create business for you!'
                     }));
-                }, API_ANSWER_DELAY);  
+                }, API_ANSWER_DELAY);
             }
         } else {
             setTimeout(() => {
@@ -152,7 +152,7 @@ app.post('/api/createNewPlan', middlewares.bindAuth, async (req, res) => {
                     success: false,
                     cause: 'Something went wrong, we cannot create business for you!'
                 }));
-            }, API_ANSWER_DELAY);  
+            }, API_ANSWER_DELAY);
         }
     } else {
         setTimeout(() => {
@@ -160,7 +160,7 @@ app.post('/api/createNewPlan', middlewares.bindAuth, async (req, res) => {
                 success: false,
                 cause: 'Something went wrong, we do not know yoy, looo-o-ol!'
             }));
-        }, API_ANSWER_DELAY);  
+        }, API_ANSWER_DELAY);
     }
 });
 
@@ -181,7 +181,7 @@ app.get('/api/logout', middlewares.bindAuth, async (req, res) => {
                 success: false,
                 cause: 'Something went wrong, we do not know yoy, looo-o-ol!'
             }));
-        }, API_ANSWER_DELAY);  
+        }, API_ANSWER_DELAY);
     }
 });
 
@@ -194,7 +194,7 @@ app.put('/api/updateProfilePassword', middlewares.bindAuth, async (req, res) => 
                 success: false,
                 cause: 'Something went wrong, we do not know yoy, looo-o-ol!'
             }));
-        }, API_ANSWER_DELAY); 
+        }, API_ANSWER_DELAY);
     } else {
         let [answer, moreInfo] = await dbUtils.updatePassword(result[0].user_id, req.body.oldPassword, req.body.password);
         if (answer.affectedRows == 1) {
@@ -219,7 +219,7 @@ app.put('/api/updateProfileData', middlewares.bindAuth, async (req, res) => {
                 success: false,
                 cause: 'Something went wrong, we do not know yoy, looo-o-ol!'
             }));
-        }, API_ANSWER_DELAY); 
+        }, API_ANSWER_DELAY);
     } else {
         let [answer, moreInfo] = await dbUtils.updateNickname(result[0].user_id, req.body.nickname);
         if (answer.affectedRows == 1) {
@@ -248,11 +248,11 @@ app.post('/api/checkToken', middlewares.bindAuth, async (req, res) => {
                 login: result[0].login,
                 nickname: result[0].nickname
             })) : {};
-            // :
-            // res.send(JSON.stringify({
-            //     success: false,
-            //     cause: 'No such user, please check login or password!'
-            // }));
+        // :
+        // res.send(JSON.stringify({
+        //     success: false,
+        //     cause: 'No such user, please check login or password!'
+        // }));
     }, API_ANSWER_DELAY);
 });
 
@@ -304,6 +304,42 @@ app.post('/api/auth', async (req, res) => {
     }, API_ANSWER_DELAY);
 });
 
+app.post('/api/publishComment', middlewares.bindAuth, async (req, res) => {
+    let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
+
+    if (result.length == 1) {
+        let comment = await dbUtils.createComment(req.body, result[0]._id);
+        comment = Object.assign({}, comment, {
+            author: {
+                id: result[0]._id,
+                nickname: result[0].nickname
+            }
+        });
+        if (comment) {
+            setTimeout(() => {
+                res.send(JSON.stringify({
+                    success: true,
+                    comment
+                }));
+            }, API_ANSWER_DELAY);
+        } else {
+            setTimeout(() => {
+                res.send(JSON.stringify({
+                    success: false,
+                    cause: 'Cannot create comment, try later!'
+                }));
+            }, API_ANSWER_DELAY);
+        }
+    } else {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Cannot create comment, we cannot auth you!'
+            }));
+        }, API_ANSWER_DELAY);
+    }
+});
+
 app.get('/api/getUserNickname', async (req, res) => {
     let [result, fields] = await dbUtils.getUserNickname(req.query.id);
 
@@ -320,22 +356,37 @@ app.get('/api/getUserNickname', async (req, res) => {
     }, API_ANSWER_DELAY);
 });
 
-app.get('/api/getComments', (req, res) => {
+app.get('/api/getComments', async (req, res) => {
     let analysed = {
         offset: +req.query.offset + +req.query.count
     };
 
-    let min = comments.length < analysed.offset ? comments.length : analysed.offset;
+    // let min = comments.length < analysed.offset ? comments.length : analysed.offset;
 
-    let ans = comments.slice(+req.query.offset, min);
+    // let ans = comments.slice(+req.query.offset, min);
 
-    analysed['needMore'] = min == ans.length;
+    let ans = await dbUtils.getComments(req.query);
+
+    analysed['needMore'] = req.query.count == ans.length;
 
     analysed['content'] = ans;
 
-    setTimeout(() => {
-        res.send(JSON.stringify(analysed));
-    }, API_ANSWER_DELAY);
+    if (ans) {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: true,
+                comments: analysed
+            }));
+        }, API_ANSWER_DELAY);
+    } else {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'No more comments right now!'
+            }));
+        }, API_ANSWER_DELAY);
+    }
+
 });
 
 app.get('/api/getBusinesses', async (req, res) => {
@@ -348,8 +399,6 @@ app.get('/api/getBusinesses', async (req, res) => {
     // let ans = businesses.slice(+req.query.offset, min);
 
     let ans = await dbUtils.getBusinessesWithFilters(req.query);
-
-    console.log(JSON.stringify(ans))
 
     analysed['needMore'] = req.query.count == ans.length;
 
@@ -386,12 +435,12 @@ app.get('/api/getPlan', async (req, res) => {
     let result = await dbUtils.getPlan(req.query.planId, req.query.edId);
 
     console.log(result);
-    
+
     if (Object.keys(result).length) {
         setTimeout(() => {
             res.send(JSON.stringify({
                 success: true,
-                plan: {...result}
+                plan: { ...result }
             }));
         }, API_ANSWER_DELAY);
     } else {
@@ -402,7 +451,7 @@ app.get('/api/getPlan', async (req, res) => {
             }));
         }, API_ANSWER_DELAY);
     }
-    
+
 });
 
 app.get('/api/getFiltersTypes', (req, res) => {
@@ -421,13 +470,13 @@ app.get('/api/getOwnPlans', middlewares.bindAuth, async (req, res) => {
     // let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
 
     // if (result.length == 1) {
-        let businesses = await dbUtils.getOwnerBusinesses(req.query.userId);
-        setTimeout(() => {
-            res.send(JSON.stringify({
-                success: true,
-                businesses
-            }));
-        }, API_ANSWER_DELAY); 
+    let businesses = await dbUtils.getOwnerBusinesses(req.query.userId);
+    setTimeout(() => {
+        res.send(JSON.stringify({
+            success: true,
+            businesses
+        }));
+    }, API_ANSWER_DELAY);
     // } else {
     //     setTimeout(() => {
     //         res.send(JSON.stringify({
@@ -460,7 +509,7 @@ fs.readFile('./../TODO', (_, content) => {
             dbUtils.initTypes(TYPES);
             dbUtils.initCategories(CATEGORIES);
         }
-        
+
         onServerStart();
     })
 });

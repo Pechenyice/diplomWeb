@@ -8,7 +8,9 @@ const BusinessPlanDisplay = connect(mapStateToProps, mapDispatchToProps, mergePr
 function mapStateToProps(state) {
     return {
         plan: state.plan,
-        user: state.user.id
+        user: state.user.id,
+        categories: state.categories,
+        types: state.types
     }
 }
 
@@ -22,6 +24,16 @@ function mapDispatchToProps(dispatch, ownProps) {
         },
         onClear: () => {
             dispatch(actions.clearPlanInfo());
+        },
+        onError: (text) => {
+            dispatch(actions.addError(text));
+        },
+        onPublishComment: (businessesId, editionId, comment) => {
+            dispatch(actions.fetchPublishComment(businessesId, editionId, comment));
+        },
+        onNeedServerData: () => {
+            dispatch(actions.fetchCategories());
+            dispatch(actions.fetchTypes());
         },
         dispatch
     }

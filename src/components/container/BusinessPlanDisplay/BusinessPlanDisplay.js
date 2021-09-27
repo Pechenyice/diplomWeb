@@ -35,6 +35,9 @@ function mapDispatchToProps(dispatch, ownProps) {
             dispatch(actions.fetchCategories());
             dispatch(actions.fetchTypes());
         },
+        onPlanDeleted: (businessesId, editionId) => {
+            dispatch(actions.fetchDeletePlan(businessesId, editionId));
+        },
         dispatch
     }
 }

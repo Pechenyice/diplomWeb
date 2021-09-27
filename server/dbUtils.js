@@ -177,22 +177,32 @@ const dbUtils = {
 
 	getBusinessOwner: async (bId) => {
 		return await connection.execute(
-			`select user_id from business where _id = ?;`,
+			`select user_id, nickname from business left join user on business.user_id = user._id where business._id = ?;`,
+			[bId]
+		);
+	},
+
+	deletePlan: async (bId) => {
+		return await connection.execute(
+			`delete from business where business._id = ?;`,
 			[bId]
 		);
 	},
 
 	getBusinessById: async function (bId, owner = null) {
 		let ownerId = owner;
+		let ownerNickname = null;
 
 		if (!ownerId) {
 			ownerId = await this.getBusinessOwner(bId);
+			ownerNickname = ownerId[0][0].nickname;
 			ownerId = ownerId[0][0].user_id;
 		}
 
 		let answer = {
 			id: bId,
 			owner: ownerId,
+			ownerNickname
 		};
 
 		let [editions, eFields] = await this.getBusinessEditions(bId);
@@ -235,6 +245,8 @@ const dbUtils = {
 
 		answer["editions"] = editionsData;
 
+		console.log(answer)
+
 		return answer;
 	},
 
@@ -257,11 +269,13 @@ const dbUtils = {
                     ex.materials AS materials,
                     ex.maintenance AS maintenance,
                     ex.description AS expenceDescription,
-                    b.user_id AS user_id
+                    b.user_id AS user_id,
+					u.nickname AS ownerNickname
             FROM edition e
             LEFT JOIN income i ON e._id = i.edition_id
             LEFT JOIN expence ex ON e._id = ex.edition_id
             LEFT JOIN business b ON e.business_id = b._id
+			LEFT JOIN user u ON b.user_id = u._id
             WHERE e._id = ?`,
 			[eId, eId, eId]
 		);
@@ -273,6 +287,7 @@ const dbUtils = {
 			{
 				name: editionObject.name,
 				owner: editionObject.user_id,
+				ownerNickname: editionObject.ownerNickname,
 				description: editionObject.description,
 				category: parseInt(editionObject.category_id),
 				type: parseInt(editionObject.type_id),
@@ -323,6 +338,31 @@ const dbUtils = {
 			`select * from edition a where not exists (select * from edition b where a.business_id = b.business_id and b.creation_date > a.creation_date) limit ? offset ?;`,
 			[count, offset]
 		);
+	},
+	
+	getAllBusinessEditions: async (bId) => {
+		let [result, fields] = await connection.execute(
+			`select * from edition where business_id=?;`,
+			[bId]
+		);
+
+		let editions = [];
+
+		for (let r of result) {
+			editions.push(
+				Object.assign({}, {
+					id: r._id,
+					content: {
+						category: r.category,
+						created: r.creation_date,
+						description: r.description,
+						name: r.name
+					}
+				})
+			);
+		}
+
+		return editions
 	},
 
 	getBusinessesWithFilters: async function (filters) {

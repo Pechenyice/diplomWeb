@@ -11,3 +11,4 @@
 11. Create try {} catch for sql queries with null return for error sending
 
 12. catalog is not updated after creation of plan, account is failing after edition
+13. Own plan is added to profile plans so it renders in other acccounts profile

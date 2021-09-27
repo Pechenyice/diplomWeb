@@ -266,13 +266,13 @@ const dbUtils = {
 			[eId, eId, eId]
 		);
 
-        let editionObject = res[0][0];
+		let editionObject = res[0][0];
 
 		return Object.assign(
 			{},
 			{
 				name: editionObject.name,
-                owner: editionObject.user_id,
+				owner: editionObject.user_id,
 				description: editionObject.description,
 				category: parseInt(editionObject.category_id),
 				type: parseInt(editionObject.type_id),
@@ -316,6 +316,9 @@ const dbUtils = {
 	},
 
 	getAllEditionsForBusinessesFiltration: async (offset, count) => {
+
+		//order by + filters
+
 		return await connection.execute(
 			`select * from edition a where not exists (select * from edition b where a.business_id = b.business_id and b.creation_date > a.creation_date) limit ? offset ?;`,
 			[count, offset]
@@ -336,6 +339,50 @@ const dbUtils = {
 		}
 
 		return businesses;
+	},
+
+	getComments: async (params) => {
+		let [result, fields] = await connection.execute(
+			`select * from comment where edition_id=? order by creation_date limit ? offset ?;`,
+			[params.edId, params.count, params.offset]
+		);
+
+		let comments = [];
+
+		console.log(params.count, params.offset, result)
+
+		for (let r of result) {
+			let [users, fields] = await connection.execute(
+				`select * from user where _id=?;`,
+				[r.user_id]
+			);
+			comments.push(Object.assign({}, {
+				id: r._id,
+				created: r.creation_date,
+				text: r.text,
+				author: {
+					id: r.user_id,
+					nickname: users[0].nickname
+				}
+			}));
+		}
+
+		console.log('comments', comments)
+
+		return comments;
+	},
+
+	createComment: async (data, user) => {
+		console.log(data)
+		let id = uuid.v4();
+		let created = Date.now();
+		let comment = null;
+		let [result, fields] = await connection.execute(
+			`insert into comment(_id, edition_id, user_id, text, creation_date) values (?, ?, ?, ?, ?);`,
+			[id, data.eId, user, data.comment, created]
+		);
+
+		return { id, created, text: data.comment }
 	},
 
 	updateNickname: async (id, nickname) => {

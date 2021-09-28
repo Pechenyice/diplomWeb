@@ -66,7 +66,10 @@ const actions = {
         PUBLISH_COMMENT_REQUEST_FAILED: 'PUBLISH_COMMENT_REQUEST_FAILED',
         DELETE_PLAN_REQUEST_STARTED: 'DELETE_PLAN_REQUEST_STARTED',
         DELETE_PLAN_REQUEST_SUCCESSED: 'DELETE_PLAN_REQUEST_SUCCESSED',
-        DELETE_PLAN_REQUEST_FAILED: 'DELETE_PLAN_REQUEST_FAILED'
+        DELETE_PLAN_REQUEST_FAILED: 'DELETE_PLAN_REQUEST_FAILED',
+        NEW_REACTION_REQUEST_STARTED: 'NEW_REACTION_REQUEST_STARTED',
+        NEW_REACTION_REQUEST_SUCCESSED: 'NEW_REACTION_REQUEST_SUCCESSED',
+        NEW_REACTION_REQUEST_FAILED: 'NEW_REACTION_REQUEST_FAILED'
     },
 
     findPlan: function ({ planId, edId }) {
@@ -123,6 +126,7 @@ const actions = {
                     if (e.name === 'AbortError') {
                         console.warn(`Request aborted`);
                     }
+                    console.warn(e)
                     dispatch(this.fetchPlanFail());
                     dispatch(this.addError('Failed load current business plan!'));
                 })
@@ -695,6 +699,46 @@ const actions = {
                     }
                     dispatch(this.fetchUserNicknameFail());
                     dispatch(this.addError('Failed load user nickname!'));
+                })
+        }
+    },
+
+    fetchNewReactionRequest: function () {
+        return {
+            type: this.types.NEW_REACTION_REQUEST_STARTED
+        }
+    },
+
+    fetchNewReactionSuccess: function (result) {
+        return {
+            type: this.types.NEW_REACTION_REQUEST_SUCCESSED,
+            result
+        }
+    },
+
+    fetchNewReactionFail: function () {
+        return {
+            type: this.types.NEW_REACTION_REQUEST_FAILED
+        }
+    },
+
+    fetchNewReaction: function(reaction, bId, eId) {
+        return (dispatch) => {
+            dispatch(this.fetchNewReactionRequest());
+            Client.sendReaction(reaction, bId, eId)
+                .then((result) => {
+                    if (result?.AUTH === "FAIL") this.addError('Need auth yourself first!');
+
+                    result.success ?
+                        dispatch(this.fetchNewReactionSuccess(result)) :
+                        dispatch(this.fetchNewReactionFail())
+                })
+                .catch((e) => {
+                    if (e.name === 'AbortError') {
+                        console.warn(`Request aborted`);
+                    }
+                    dispatch(this.fetchNewReactionFail());
+                    dispatch(this.addError('Failed set reaction!'));
                 })
         }
     },

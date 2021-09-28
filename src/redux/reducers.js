@@ -107,16 +107,29 @@ function reducer(state = initialState, action) {
 			});
 		}
 
+		case actions.types.NEW_REACTION_REQUEST_STARTED:
+		case actions.types.NEW_REACTION_REQUEST_SUCCESSED:
+		case actions.types.NEW_REACTION_REQUEST_FAILED: {
+			if (action?.result?.AUTH === "FAIL")
+				return Object.assign({}, state, toInitialState(state));
+
+			return Object.assign({}, state, {
+				plan: reactionReducer(state.plan, action),
+			});
+		}
+
 		case actions.types.DELETE_PLAN_REQUEST_STARTED:
 		case actions.types.DELETE_PLAN_REQUEST_SUCCESSED:
 		case actions.types.DELETE_PLAN_REQUEST_FAILED: {
-
-			console.log('actions.types.DELETE_PLAN_REQUEST_SUCCESSED', action)
+			console.log("actions.types.DELETE_PLAN_REQUEST_SUCCESSED", action);
 
 			if (action?.result?.AUTH === "FAIL")
 				return Object.assign({}, state, toInitialState(state));
 
-			return Object.assign({}, state, { profilePlans: dropProfilePlans(state), businesses: dropBusinessses(state) });
+			return Object.assign({}, state, {
+				profilePlans: dropProfilePlans(state),
+				businesses: dropBusinessses(state),
+			});
 		}
 
 		case actions.types.LOGOUT_REQUEST_STARTED:
@@ -170,7 +183,7 @@ function reducer(state = initialState, action) {
 
 			return Object.assign({}, state, {
 				profilePlans: newPlanReducer(state.profilePlans, action),
-				businesses: dropBusinessses(state)
+				businesses: dropBusinessses(state),
 			});
 		}
 
@@ -182,7 +195,7 @@ function reducer(state = initialState, action) {
 
 			return Object.assign({}, state, {
 				profilePlans: dropProfilePlans(state),
-				businesses: dropBusinessses(state)
+				businesses: dropBusinessses(state),
 			});
 		}
 
@@ -379,7 +392,7 @@ function dropBusinessses(state) {
 		count: 21,
 		needMore: true,
 		content: [],
-	}
+	};
 }
 
 function planReducer(state, action, businesses) {
@@ -394,22 +407,22 @@ function planReducer(state, action, businesses) {
 
 			let newPlan = plan
 				? {
-					isLoading: false,
-					isChecked: true,
-					activeBusiness: plan?.id,
-					activeEdition: edition?.id,
-					activeOwner: plan?.owner,
-					activeOwnerNickname: plan?.ownerNickname,
-					data: edition?.content || null,
-					editions: plan?.editions,
-					comments: {
 						isLoading: false,
-						needMore: true,
-						offset: 0,
-						count: 21,
-						content: [],
-					},
-				}
+						isChecked: true,
+						activeBusiness: plan?.id,
+						activeEdition: edition?.id,
+						activeOwner: plan?.owner,
+						activeOwnerNickname: plan?.ownerNickname,
+						data: edition?.content || null,
+						editions: plan?.editions,
+						comments: {
+							isLoading: false,
+							needMore: true,
+							offset: 0,
+							count: 21,
+							content: [],
+						},
+				  }
 				: {};
 
 			return Object.assign({}, state, newPlan, { isChecked: true });
@@ -445,7 +458,7 @@ function planReducer(state, action, businesses) {
 
 		case actions.types.PLAN_REQUEST_SUCCESSED: {
 			console.log("action plan successed", action);
-			console.log('action.plan.owner', action.plan.owner)
+			console.log("action.plan.owner", action.plan.owner);
 
 			return Object.assign({}, state, {
 				isLoading: false,
@@ -536,6 +549,40 @@ function guestReducer(state, action) {
 	}
 }
 
+function reactionReducer(state, action) {
+	switch (action.type) {
+		case actions.types.NEW_REACTION_REQUEST_STARTED: {
+			return state;
+		}
+
+		case actions.types.NEW_REACTION_REQUEST_SUCCESSED: {
+			if (action.result.type === 'like') {
+				return Object.assign({}, state, {
+					data: Object.assign({}, state.data, {
+						disliked: false,
+						liked: true,
+						likes: state.data.liked ? state.data.likes : state.data.likes + 1,
+						dislikes: state.data.disliked ? state.data.dislikes - 1 : state.data.dislikes
+					})
+				});
+			} else {
+				return Object.assign({}, state, {
+					data: Object.assign({}, state.data, {
+						disliked: true,
+						liked: false,
+						dislikes: state.data.disliked ? state.data.dislikes : state.data.dislikes + 1,
+						likes: state.data.liked ? state.data.likes - 1 : state.data.likes
+					})
+				});
+			}
+		}
+
+		case actions.types.NEW_REACTION_REQUEST_FAILED: {
+			return state;
+		}
+	}
+}
+
 function publishCommentReducer(state, action) {
 	switch (action.type) {
 		case actions.types.PUBLISH_COMMENT_REQUEST_STARTED: {
@@ -544,7 +591,14 @@ function publishCommentReducer(state, action) {
 
 		case actions.types.PUBLISH_COMMENT_REQUEST_SUCCESSED: {
 			return Object.assign({}, state, {
-				comments: Object.assign({}, { content: state.comments.content.concat([action.result.comment]) })
+				comments: Object.assign(
+					{},
+					{
+						content: state.comments.content.concat([
+							action.result.comment,
+						]),
+					}
+				),
 			});
 		}
 
@@ -603,7 +657,7 @@ function editPlanReducer(state, action) {
 				own: Object.assign({}, state.own, {
 					content: [],
 					isLoading: false,
-					isFetched: false
+					isFetched: false,
 				}),
 			});
 		}

@@ -30,73 +30,82 @@ const Catalog = ({ onFiltersSelected, onNeedMoreBusinesses, onInit, filters, cat
     }
 
     function handlePatternChange(e) {
-        setState(Object.assign({}, state, {pattern: e.target.value}));
+        setState(Object.assign({}, state, { pattern: e.target.value }));
     }
 
     function handleCategorySelected(id) {
-        setState(Object.assign({}, state, {category: id}));
+        setState(Object.assign({}, state, { category: id }));
     }
 
     function handleTypeSelected(id) {
-        setState(Object.assign({}, state, {type: id}));
+        setState(Object.assign({}, state, { type: id }));
     }
-    
+
     function handleSortSelected(id) {
-        setState(Object.assign({}, state, {sort: id}));
+        setState(Object.assign({}, state, { sort: id }));
     }
 
     return (
-        <section className={['sectionDimensioned', styles.catalogWrapper].join(' ')}>
-            <h1 className={styles.catalogMainText}>CATALOG</h1>
+        <section className={'sectionDimensioned'}>
+            <section className={[styles.catalogWrapper].join(' ')}>
+                <h1 className={styles.catalogMainText}>CATALOG</h1>
+            </section>
             {/* <div onClick={() => (onFiltersSelected(filters))} >WOW</div> */}
             {
                 shouldDisplayFilters ?
-                    <div className={styles.filtersWrapper}>
-                        <div className={styles.filtersSection}>
-                            <div className={styles.searchInputWrapper}>
-                                <input placeholder={'Search...'} type={'text'} className={styles.searchInput} onChange={handlePatternChange} />
-                                <svg className={styles.searchInputIcon} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M9.16667 15.8333C12.8486 15.8333 15.8333 12.8486 15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333Z" stroke="#7D7D7D" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M17.5 17.5L13.875 13.875" stroke="#7D7D7D" strokeLinecap="square" strokeLinejoin="round" />
-                                </svg>
-                            </div>
-                            <div className={styles.filtersElement}>
-                                <Select 
-                                    content={'Category'}
-                                    propsValues={categories.content.concat({id: -1, name: 'All'})}
-                                    onSelect={handleCategorySelected}
-                                />
-                            </div>
-                            <div className={styles.filtersElement}>
-                                <Select 
-                                content={'Type'}
-                                propsValues={types.content.concat({id: -1, name: 'All'})}
-                                onSelect={handleTypeSelected}
-                                />
-                            </div>
-                            <div className={styles.filtersElement}>
-                                <Select 
-                                content={'Sort by'}
-                                propsValues={[{id: 0, name: 'Popular'}, {id: 1, name: 'New first'}, {id: 2, name: 'Old first'}]}
-                                onSelect={handleSortSelected}
-                                />
-                            </div>
-                            <div className={styles.filtersElement}>
-                                <Button text={'Search'} onClick={handleFiltersSubmitClick}/>
-                            </div>
+                    <section>
+                        <div className={styles.filtersWrapper}>
+                            <section className={[styles.catalogWrapper].join(' ')}>
+                                <div className={styles.filtersSection}>
+                                    <div className={styles.searchInputWrapper}>
+                                        <input placeholder={'Search...'} type={'text'} className={styles.searchInput} onChange={handlePatternChange} />
+                                        <svg className={styles.searchInputIcon} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M9.16667 15.8333C12.8486 15.8333 15.8333 12.8486 15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333Z" stroke="#7D7D7D" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path d="M17.5 17.5L13.875 13.875" stroke="#7D7D7D" strokeLinecap="square" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
+                                    <div className={styles.filtersElement}>
+                                        <Select
+                                            content={'Category'}
+                                            propsValues={categories.content.concat({ id: -1, name: 'All' })}
+                                            onSelect={handleCategorySelected}
+                                        />
+                                    </div>
+                                    <div className={styles.filtersElement}>
+                                        <Select
+                                            content={'Type'}
+                                            propsValues={types.content.concat({ id: -1, name: 'All' })}
+                                            onSelect={handleTypeSelected}
+                                        />
+                                    </div>
+                                    <div className={styles.filtersElement}>
+                                        <Select
+                                            content={'Sort by'}
+                                            propsValues={[{ id: 0, name: 'Popular' }, { id: 1, name: 'New first' }, { id: 2, name: 'Old first' }]}
+                                            onSelect={handleSortSelected}
+                                        />
+                                    </div>
+                                    <div className={styles.filtersElement}>
+                                        <Button text={'Search'} onClick={handleFiltersSubmitClick} />
+                                    </div>
+
+                                </div>
+                            </section>
                         </div>
-                    </div> :
+                    </section> :
                     <div><p>Try to load filters from server...</p></div>
             }
             <div className={styles.catalogContent}>
-                <div className={styles.catalogBusinesses}>
+                <section className={[styles.catalogWrapper].join(' ')}>
+                    <div className={styles.catalogBusinesses}>
+                        {
+                            (businesses.content.length >= businesses.count || !businesses.needMore) && categories.content.length && types.content.length ? businesses.content.map(e => (<BusinessCard key={e.id} data={e} categories={categories} types={types} />)) : 'loading animation'
+                        }
+                    </div>
                     {
-                        (businesses.content.length >= businesses.count || !businesses.needMore) && categories.content.length && types.content.length ? businesses.content.map(e => (<BusinessCard key={e.id} data={e} categories={categories} types={types} />)) : 'loading animation'
+                        businesses.needMore && !businesses.isLoading ? <div className={styles.catalogLoadEventTrigger} onClick={() => { onNeedMoreBusinesses(); }}><p>LOAD MORE</p></div> : businesses.needMore ? <div className={styles.catalogLoadEventTrigger} ><p>Businesses loading...</p></div> : null
                     }
-                </div>
-                {
-                    businesses.needMore && !businesses.isLoading ? <div className={styles.catalogLoadEventTrigger} onClick={() => { onNeedMoreBusinesses(); }}><p>LOAD MORE</p></div> : businesses.needMore ? <div className={styles.catalogLoadEventTrigger} ><p>Businesses loading...</p></div> : null
-                }
+                </section>
             </div>
         </section>
     );

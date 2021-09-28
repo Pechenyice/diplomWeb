@@ -356,3 +356,7 @@
     line-height: 22px;
     color: rgba(16, 16, 16, 0.5);
 }
+
+.reaction svg {
+    cursor: pointer;
+}

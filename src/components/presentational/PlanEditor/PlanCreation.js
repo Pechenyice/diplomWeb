@@ -140,6 +140,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 							label={"Project name*"}
 							isEmpty={!state.name.length}
 							onChange={handleNameInput}
+							style={{marginBottom: '12px'}}
 						/>
 						<div className={styles.selectWrapper}>
 							<Select
@@ -163,7 +164,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 					<div className={styles.inputsWrapper}>
 						<TextArea
 							value={state.description}
-							placeholder={"Project description"}
+							placeholder={"Project description*"}
 							onChange={handleDescriptionInput}
 						/>
 					</div>
@@ -194,6 +195,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 							label={"Salary, month*"}
 							isEmpty={!state.spendings.salary.length}
 							onChange={handleSalaryInput}
+							style={{marginBottom: '12px'}}
 						/>
 						<Input
 							id={"projectElec"}
@@ -201,6 +203,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 							label={"Electricity, month*"}
 							isEmpty={!state.spendings.electricity.length}
 							onChange={handleElectricityInput}
+							style={{marginBottom: '12px'}}
 						/>
 						<Input
 							id={"projectAm"}
@@ -208,6 +211,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 							label={"Amortization*"}
 							isEmpty={!state.spendings.amortization.length}
 							onChange={handleAmortizationInput}
+							style={{marginBottom: '12px'}}
 						/>
 						<div className={styles.inputsDelimeter}>
 							<Input
@@ -216,6 +220,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 								label={"Materials*"}
 								isEmpty={!state.spendings.materials.length}
 								onChange={handleMaterialsInput}
+								style={{marginBottom: '12px'}}
 							/>
 							<Input
 								id={"projectMaintenance"}
@@ -223,6 +228,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 								label={"Maintenance*"}
 								isEmpty={!state.spendings.maintenance.length}
 								onChange={handleMaintenanceInput}
+								style={{marginBottom: '12px'}}
 							/>
 						</div>
 					</div>
@@ -320,6 +326,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 	function validateErrors() {
 		if (
 			!state.name ||
+			!state.description ||
 			!state.spendings.salary ||
 			!state.spendings.electricity ||
 			!state.spendings.amortization ||

@@ -3,7 +3,7 @@ import styles from './BusinessTag.module.css';
 import PropTypes from 'prop-types';
 
 const BusinessTag = ({ text, theme }) => (
-    <div className={theme === 'dark' ? styles.darkThemeTag : styles.lightThemetag} >{text}</div>
+    <div className={theme === 'type' ? styles.typeThemeTag : styles.categoryThemetag} >{text}</div>
 );
 
 BusinessTag.propTypes = {

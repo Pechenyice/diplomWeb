@@ -55,7 +55,17 @@ const Client = {
         CREATE_NEW_PLAN_CONTROLLER: new AbortController(),
         CREATE_PLAN_EDITION_CONTROLLER: new AbortController(),
         PUBLISH_COMMENT_CONTROLLER: new AbortController(),
-        DELETE_PLAN_CONTROLLER: new AbortController()
+        DELETE_PLAN_CONTROLLER: new AbortController(),
+        SEND_REACTION_CONTROLLER: new AbortController()
+    },
+
+    sendReaction: function(reaction, bId, eId) {
+        return this.safeFetch(this.constructUrl('/setReaction'), 'POST', this.aborts.SEND_REACTION_CONTROLLER, {reaction, bId, eId});
+    },
+
+    abortSendReaction: function () {
+        this.aborts.SEND_REACTION_CONTROLLER.abort();
+        this.aborts.SEND_REACTION_CONTROLLER = new AbortController();
     },
 
     deletePlan: function(bId, eId) {

@@ -38,6 +38,9 @@ function mapDispatchToProps(dispatch, ownProps) {
         onPlanDeleted: (businessesId, editionId) => {
             dispatch(actions.fetchDeletePlan(businessesId, editionId));
         },
+        onUserReact: (reaction, bId, eId) => {
+            dispatch(actions.fetchNewReaction(reaction, bId, eId));
+        },
         dispatch
     }
 }

@@ -9,9 +9,17 @@
     position: relative;
     width: 100%;
     height: max-content;
-    background-color: #E7E7E7;
-    padding: 30px;
     margin-top: 40px;
+    background-color: #F7F7F7;
+    padding: 30px;
+}
+
+.filtersWrapper .catalogWrapper {
+    padding-top: 0px;
+}
+
+.catalogContent .catalogWrapper {
+    padding-top: 0px;
 }
 
 .filtersSection {

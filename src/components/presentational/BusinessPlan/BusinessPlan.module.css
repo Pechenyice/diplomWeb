@@ -5,11 +5,6 @@
 	padding-top: 50px;
 }
 
-.planWrapperFlex {
-    display: flex;
-    justify-content: space-between;
-}
-
 .planWrapper {
     width: 100%;
 	max-width: 1200px;
@@ -57,6 +52,16 @@
 
 .textBlock {
     margin-bottom: 60px;
+}
+
+.textBlockDimensioned {
+    min-height: 100px;
+}
+
+.planTagsWrapper {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
 }
 
 .text {
@@ -220,8 +225,10 @@
 
 .graphWrapper {
     position: relative;
-    width: 400px;
-    padding-top: 120px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 0px;
 }
 
 .graphElem {
@@ -235,7 +242,10 @@
     flex-wrap: wrap;
     row-gap: 20px;
     justify-content: center;
-    margin-top: 40px;
+}
+
+.graphsWrapperLegendPart {
+    align-self: center;
 }
 
 .graphLegend {
@@ -245,70 +255,104 @@
 .legendElem {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
+    justify-content: left;
+    align-items: center;
+    column-gap: 10px;
+    margin-bottom: 5px;
+}
+
+.legendElem:last-child {
+    margin-bottom: 0px;
 }
 
 .legendColor {
-    height: 24px;
-    width: 24px;
-    border-radius: 20%;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
 }
 
 .legendText {
     width: max-content;
+    font-style: normal;
     font-weight: normal;
     font-size: 16px;
     line-height: 24px;
-}
-
-.graphElem .subTitle {
-    text-align: center;
+    color: rgba(16, 16, 16, 0.5);
 }
 
 .chartHint {
     font-weight: normal;
-    text-align: center;
-    font-size: 14px;
-    line-height: 16px;
-    text-transform: uppercase;
+    font-size: 16px;
+    line-height: 24px;
+    color: rgba(16, 16, 16, .5);
     color: rgba(0, 0, 0, 0.5);
     margin-bottom: 40px;
     margin-top: -10px;
 }
 
+.graphElemSmall .graphLegend {
+    width: 100%;
+}
+
+.graphElemSmall .graphLegendsWrapper {
+    row-gap: 8px;
+}
+
+.graphElemSmall .graphsWrapper {
+    gap: 20px;
+}
+
+.graphElemSmall .graphsWrapperGraphPart {
+    width: 250px;
+    align-self: center;
+}
+
+.graphElemSmall .graphsWrapperLegendPart {
+    width: 170px;
+}
+
 .graphElemBig {
-    width: 170%;
-    transform: translateX(-22%);
+    width: 50%;
+}
+
+.graphElemSmall {
+    width: 35%;
 }
 
 .grapghExplanationWrapper {
     width: 100%;
+    display: flex;
+    align-items: center;
+    margin-top: -10px;
+    margin-bottom: 40px;
 }
 
 .grapghExplanationMain {
-    font-family: "PP Neue Machina Regular";
-    font-style: normal;
     font-weight: normal;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 24px;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    margin-top: 30px;
-    text-align: center;
+    color: #101010;
 }
 
 .grapghExplanationHint {
-    font-size: 14px;
-    line-height: 16px;
-    text-transform: uppercase;
-    color: rgba(0, 0, 0, 0.5);
-    text-align: center;
-    margin-bottom: 20px;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: rgba(16, 16, 16, .5);
+}
+
+.graphsWrapper {
+    width: 100%;
+    display: flex;
+    gap: 40px;
+}
+
+.graphsWrapperGraphPart {
+    width: 430px;
 }
 
 .graphSad {
-    text-align: center;
+    margin-top: 80px;
     font-size: 48px;
 }
 

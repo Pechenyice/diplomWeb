@@ -5,18 +5,26 @@ import { Link } from "react-router-dom";
 import BusinessTag from "../BusinessTag/BusinessTag";
 
 const BusinessCard = ({ data, theme = "light", categories, types }) => (
-	<div
-		className={
-			theme === "dark" ? styles.darkCardWrapper : styles.cardWrapper
-		}
-	>
-		{
-			console.log('data', data)
-		}
-		<Link to={`/plan/${data.id}/ed/${data.editions[0].id}`}>
+	<Link to={`/plan/${data.id}/ed/${data.editions[0].id}`}>
+		<div
+			className={
+				theme === "dark" ? styles.darkCardWrapper : styles.cardWrapper
+			}
+		>
 			<div className={styles.cardContent}>
+				<div className={styles.planTagsWrapper}>
+					<BusinessTag theme={'type'} text={types.content.find(e => {
+						return e.id === data.editions[0].content.type;
+					}).name} />
+					<BusinessTag theme={'category'} text={categories.content.find(e => {
+						return e.id === data.editions[0].content.category;
+					}).name} />
+				</div>
 				<p className={styles.planName}>
 					{data.editions[0].content.name}
+				</p>
+				<p className={styles.planDescription}>
+					{data.editions[0].content.description}
 				</p>
 				<div className={styles.reactionsWrapper}>
 					<div className={styles.reaction}>
@@ -97,39 +105,10 @@ const BusinessCard = ({ data, theme = "light", categories, types }) => (
 						}
 					</div>
 				</div>
-				<p className={styles.planDescription}>
-					{data.editions[0].content.description}
-				</p>
-				<div className={styles.planTagsWrapper}>
-					<BusinessTag theme={theme} text={categories.content.find(e => {
-						return e.id === data.editions[0].content.category;
-					}).name} />
-					<BusinessTag theme={theme} text={types.content.find(e => {
-						return e.id === data.editions[0].content.type;
-					}).name} />
-				</div>
-
-				{/* <p>
-                    {data.editions[0].content.category}
-                </p>
-                <p>
-                    {data.editions[0].content.type}
-                </p>
-                <p>
-                    {data.editions[0].content.created}
-                </p>
-                <p>
-                    income: {data.editions[0].content.income.sum} {data.editions[0].content.income.text}
-                </p>
-                <p>
-                    expence: {data.editions[0].content.expence.sum} {data.editions[0].content.expence.text}
-                </p>
-                {
-                    data.editions.map(e => (<div key={e.id}>{e.id}</div>))
-                } */}
 			</div>
-		</Link>
-	</div>
+
+		</div>
+	</Link>
 );
 
 BusinessCard.propTypes = {

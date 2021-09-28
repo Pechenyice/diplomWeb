@@ -361,6 +361,13 @@ function toInitialState(state) {
 				content: [],
 			},
 		},
+		businesses: {
+			isLoading: false,
+			offset: 0,
+			count: 21,
+			needMore: true,
+			content: [],
+		},
 	};
 }
 

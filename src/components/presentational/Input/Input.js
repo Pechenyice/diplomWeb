@@ -12,6 +12,7 @@ const Input = ({
 	onChange,
 	readonly = false,
 	password = false,
+	style
 }) => {
 	const classes = [styles.inputWrapper];
 	if (isEmpty) classes.push(styles.emptyInputWrapper);
@@ -30,7 +31,7 @@ const Input = ({
 	}
 
 	return (
-		<div className={classes.join(" ")}>
+		<div className={classes.join(" ")} style={style}>
 			<input
 				className={styles.input}
 				id={id}
@@ -115,6 +116,7 @@ Input.propTypes = {
 	value: PropTypes.string,
 	error: PropTypes.string,
 	onChange: PropTypes.func,
+	style: PropTypes.object
 };
 
 export default Input;

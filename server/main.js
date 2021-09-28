@@ -8,6 +8,7 @@ const uuid = require('uuid');
 const middlewares = require('./middlewares');
 const cookieParser = require('cookie-parser');
 const dbUtils = require('./dbUtils');
+const e = require('express');
 
 app.use(express.json());
 app.use(cookieParser());
@@ -345,6 +346,60 @@ app.post('/api/auth', async (req, res) => {
     }, API_ANSWER_DELAY);
 });
 
+app.post('/api/setReaction', middlewares.bindAuth, async (req, res) => {
+    let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
+
+    if (result.length !== 1) {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Cannot set reaction, we cannot auth you!'
+            }));
+        }, API_ANSWER_DELAY);
+        return;
+    }
+
+    if (req.body.reaction === 'like') {
+        let answer = await dbUtils.createLike(req.body, result[0]._id);
+
+        if (!answer) {
+            setTimeout(() => {
+                res.send(JSON.stringify({
+                    success: false,
+                    cause: 'Cannot set reaction, something went wrong!'
+                }));
+            }, API_ANSWER_DELAY);
+            return;
+        }
+
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: true,
+                type: req.body.reaction
+            }));
+        }, API_ANSWER_DELAY);
+    } else {
+        let answer = await dbUtils.createDislike(req.body, result[0]._id);
+
+        if (!answer) {
+            setTimeout(() => {
+                res.send(JSON.stringify({
+                    success: false,
+                    cause: 'Cannot set reaction, something went wrong!'
+                }));
+            }, API_ANSWER_DELAY);
+            return;
+        }
+
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: true,
+                type: req.body.reaction
+            }));
+        }, API_ANSWER_DELAY);
+    }
+});
+
 app.post('/api/publishComment', middlewares.bindAuth, async (req, res) => {
     let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
 
@@ -431,6 +486,8 @@ app.get('/api/getComments', async (req, res) => {
 });
 
 app.get('/api/getBusinesses', async (req, res) => {
+    let [user, _] = await dbUtils.getUserByToken(req.cookies.authToken || '');
+
     let analysed = {
         offset: +req.query.offset + +req.query.count
     };
@@ -439,11 +496,13 @@ app.get('/api/getBusinesses', async (req, res) => {
 
     // let ans = businesses.slice(+req.query.offset, min);
 
-    let ans = await dbUtils.getBusinessesWithFilters(req.query);
+    let ans = await dbUtils.getBusinessesWithFilters(req.query, req.cookies.authToken && user[0]._id);
 
     analysed['needMore'] = req.query.count == ans.length;
 
     analysed['content'] = ans;
+
+    console.log(JSON.stringify(analysed))
 
     setTimeout(() => {
         res.send(JSON.stringify(analysed));
@@ -452,32 +511,25 @@ app.get('/api/getBusinesses', async (req, res) => {
 
 app.get('/api/getPlan', async (req, res) => {
 
-    // setTimeout(() => {
-    //     res.send(JSON.stringify({
-    //         name: `name test`,
-    //         owner: user.id,
-    //         description: `desc for non fetched test`,
-    //         category: 0,
-    //         type: 0,
-    //         created: 1631638551000,
-    //         income: {
-    //             sum: 100,
-    //             text: 'test'
-    //         },
-    //         expence: {
-    //             sum: 100,
-    //             text: 'test expence'
-    //         },
-    //         likes: 121,
-    //         dislikes: 300
-    //     }));
-    // }, API_ANSWER_DELAY);
+    let [user, _] = await dbUtils.getUserByToken(req.cookies.authToken || '');
 
-    let result = await dbUtils.getPlan(req.query.planId, req.query.edId);
+    // if (user.length !== 1) {
+    //     setTimeout(() => {
+    //         res.send(JSON.stringify({
+    //             success: false,
+    //             cause: 'Cannot set reaction, we cannot auth you!'
+    //         }));
+    //     }, API_ANSWER_DELAY);
+    //     return;
+    // }
+
+    let result = await dbUtils.getPlan(req.query.planId, req.query.edId, user[0]?._id || '');
 
     let editions = await dbUtils.getAllBusinessEditions(req.query.planId); // return only common values for versions select in plan view
 
     result = Object.assign({}, result, { editions: editions })
+
+    console.log(result)
 
     if (Object.keys(result).length) {
         setTimeout(() => {

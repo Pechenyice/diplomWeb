@@ -12,3 +12,5 @@
 
 12. catalog is not updated after creation of plan, account is failing after edition
 13. Own plan is added to profile plans so it renders in other acccounts profile
+
+14. Fix /getPlan (fails with userToken) and fix /getBusinesses (fails ~) and check (getPlan works, getBusinesses - not)

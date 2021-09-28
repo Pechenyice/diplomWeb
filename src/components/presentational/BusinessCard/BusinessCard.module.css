@@ -2,23 +2,52 @@
 	position: relative;
 	width: 360px;
 	height: 360px;
-	border: 1px solid #c2c2c2;
+	border: 1px solid rgba(43, 29, 103, 0.15);
+	box-shadow: 0px 94px 114px -56px rgba(43, 29, 103, 0.06);
+	transition: .3s;
+	cursor: pointer;
+}
+
+.cardWrapper:hover {
+	transition: .3s;
+	border: 1px solid rgba(43, 29, 103, 0.3);
+	box-shadow: 0px 94px 114px -56px rgba(43, 29, 103, 0.16);
 }
 
 .darkCardWrapper {
 	position: relative;
 	width: 360px;
 	height: 360px;
-	border: 1px solid #c2c2c2;
-	color: var(--light);
+	border: 1px solid rgba(107, 109, 110, 0.15);
+	box-shadow: 0px 94px 114px -56px rgba(0, 0, 0, 0.7);
+	transition: .3s;
+	cursor: pointer;
+}
+
+.darkCardWrapper:hover {
+	border: 1px solid rgba(107, 109, 110, 0.45);
+	box-shadow: 0px 94px 114px -56px #000000;
+	transition: .3s;
 }
 
 .cardContent {
 	padding: 30px;
 }
 
-.darkCardWrapper p {
+/* .darkCardWrapper p {
 	color: var(--light);
+} */
+
+.darkCardWrapper .planName {
+	color: var(--light);
+}
+
+.darkCardWrapper .planDescription {
+	color: #6B6D6E;
+}
+
+.darkCardWrapper .emotions {
+	color: rgba(255, 255, 255, 0.5);
 }
 
 .emotions {
@@ -36,23 +65,25 @@ p {
 }
 
 .planName {
+	margin-top: 30px;
+	margin-bottom: 20px;
 	width: 300px;
-	height: 90px;
+	max-height: 90px;
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
 
 .planDescription {
 	width: 300px;
-	height: 66px;
+	max-height: 90px;
 	text-overflow: ellipsis;
 	overflow: hidden;
 	font-family: "Gilroy Regular";
 	font-style: normal;
 	font-weight: normal;
 	font-size: 16px;
-	line-height: 22px;
-	margin-bottom: 40px;
+	line-height: 24px;
+	color: #6B6D6E;
 }
 
 .planTagsWrapper {
@@ -61,10 +92,18 @@ p {
 }
 
 .reactionsWrapper {
+	position: absolute;
+	bottom: 30px;
+	left: 30px;
 	display: flex;
-	gap: 30px;
-	margin-top: 30px;
-	margin-bottom: 20px;
+	gap: 20px;
+}
+
+.emotions {
+	font-weight: normal;
+	font-size: 16px;
+	line-height: 22px;
+	color: rgba(16, 16, 16, 0.5);
 }
 
 .reaction {

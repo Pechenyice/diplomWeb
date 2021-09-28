@@ -33,3 +33,39 @@
     line-height: 14px;
     text-transform: uppercase;
 }
+
+.typeThemeTag {
+    width: max-content;
+    height: max-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 15px;
+    background: #FF708B;
+    color: var(--light);
+    border-radius: 100px;
+    font-family: "Gilroy Medium";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    text-transform: uppercase;
+}
+
+.categoryThemetag {
+    width: max-content;
+    height: max-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 15px;
+    background: #8676FF;
+    color: var(--light);
+    border-radius: 100px;
+    font-family: "Gilroy Medium";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    text-transform: uppercase;
+}

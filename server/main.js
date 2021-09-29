@@ -359,45 +359,46 @@ app.post('/api/setReaction', middlewares.bindAuth, async (req, res) => {
         return;
     }
 
-    if (req.body.reaction === 'like') {
-        let answer = await dbUtils.createLike(req.body, result[0]._id);
+    let answer = null;
 
-        if (!answer) {
-            setTimeout(() => {
-                res.send(JSON.stringify({
-                    success: false,
-                    cause: 'Cannot set reaction, something went wrong!'
-                }));
-            }, API_ANSWER_DELAY);
-            return;
+    switch (req.body.reaction) {
+        case 'like': {
+            answer = await dbUtils.createLike(req.body, result[0]._id);
+            break;
         }
 
-        setTimeout(() => {
-            res.send(JSON.stringify({
-                success: true,
-                type: req.body.reaction
-            }));
-        }, API_ANSWER_DELAY);
-    } else {
-        let answer = await dbUtils.createDislike(req.body, result[0]._id);
-
-        if (!answer) {
-            setTimeout(() => {
-                res.send(JSON.stringify({
-                    success: false,
-                    cause: 'Cannot set reaction, something went wrong!'
-                }));
-            }, API_ANSWER_DELAY);
-            return;
+        case 'dislike': {
+            answer = await dbUtils.createDislike(req.body, result[0]._id);
+            break;
         }
 
-        setTimeout(() => {
-            res.send(JSON.stringify({
-                success: true,
-                type: req.body.reaction
-            }));
-        }, API_ANSWER_DELAY);
+        case 'dropLike': {
+            answer = await dbUtils.dropLike(req.body, result[0]._id);
+            break;
+        }
+
+        case 'dropDislike': {
+            answer = await dbUtils.dropDislike(req.body, result[0]._id);
+            break;
+        }
     }
+
+    if (!answer) {
+        setTimeout(() => {
+            res.send(JSON.stringify({
+                success: false,
+                cause: 'Cannot set reaction, something went wrong!'
+            }));
+        }, API_ANSWER_DELAY);
+        return;
+    }
+
+    setTimeout(() => {
+        res.send(JSON.stringify({
+            success: true,
+            type: req.body.reaction
+        }));
+    }, API_ANSWER_DELAY);
 });
 
 app.post('/api/publishComment', middlewares.bindAuth, async (req, res) => {
@@ -562,9 +563,6 @@ app.get('/api/getFiltersCategories', (req, res) => {
 });
 
 app.get('/api/getOwnPlans', middlewares.bindAuth, async (req, res) => {
-    // let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
-
-    // if (result.length == 1) {
     let businesses = await dbUtils.getOwnerBusinesses(req.query.userId);
     setTimeout(() => {
         res.send(JSON.stringify({
@@ -572,25 +570,25 @@ app.get('/api/getOwnPlans', middlewares.bindAuth, async (req, res) => {
             businesses
         }));
     }, API_ANSWER_DELAY);
-    // } else {
-    //     setTimeout(() => {
-    //         res.send(JSON.stringify({
-    //             success: false,
-    //             cause: 'Something went wrong, we do not know yoy, looo-o-ol!'
-    //         }));
-    //     }, API_ANSWER_DELAY);  
-    // }
 });
 
-app.get('/api/getLikedPlans', middlewares.bindAuth, (req, res) => {
+app.get('/api/getLikedPlans', middlewares.bindAuth, async (req, res) => {
+    let businesses = await dbUtils.getOwnerLikedBusinesses(req.query.userId);
     setTimeout(() => {
-        res.send(JSON.stringify(businesses));
+        res.send(JSON.stringify({
+            success: true,
+            businesses
+        }));
     }, API_ANSWER_DELAY);
 });
 
-app.get('/api/getDislikedPlans', middlewares.bindAuth, (req, res) => {
+app.get('/api/getDislikedPlans', middlewares.bindAuth, async (req, res) => {
+    let businesses = await dbUtils.getOwnerDislikedBusinesses(req.query.userId);
     setTimeout(() => {
-        res.send(JSON.stringify([]));
+        res.send(JSON.stringify({
+            success: true,
+            businesses
+        }));
     }, API_ANSWER_DELAY);
 });
 

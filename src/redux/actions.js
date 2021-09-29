@@ -727,8 +727,7 @@ const actions = {
             dispatch(this.fetchNewReactionRequest());
             Client.sendReaction(reaction, bId, eId)
                 .then((result) => {
-                    if (result?.AUTH === "FAIL") this.addError('Need auth yourself first!');
-
+                    if (result?.AUTH === "FAIL") dispatch(this.addError('Need auth yourself first!'));
                     result.success ?
                         dispatch(this.fetchNewReactionSuccess(result)) :
                         dispatch(this.fetchNewReactionFail())

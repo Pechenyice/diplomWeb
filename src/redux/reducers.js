@@ -115,6 +115,7 @@ function reducer(state = initialState, action) {
 
 			return Object.assign({}, state, {
 				plan: reactionReducer(state.plan, action),
+				profilePlans: dropProfilePlans(state),
 			});
 		}
 
@@ -242,6 +243,8 @@ function reducer(state = initialState, action) {
 				return Object.assign({}, state, toInitialState(state));
 
 			return Object.assign({}, state, {
+				profilePlans: dropProfilePlans(state),
+				businesses: dropBusinessses(state),
 				user: userReducer(state.user, action),
 			});
 		}
@@ -572,13 +575,29 @@ function reactionReducer(state, action) {
 						dislikes: state.data.disliked ? state.data.dislikes - 1 : state.data.dislikes
 					})
 				});
-			} else {
+			} else if (action.result.type === 'dislike') {
 				return Object.assign({}, state, {
 					data: Object.assign({}, state.data, {
 						disliked: true,
 						liked: false,
 						dislikes: state.data.disliked ? state.data.dislikes : state.data.dislikes + 1,
 						likes: state.data.liked ? state.data.likes - 1 : state.data.likes
+					})
+				});
+			} else if (action.result.type === 'dropLike') {
+				return Object.assign({}, state, {
+					data: Object.assign({}, state.data, {
+						disliked: false,
+						liked: false,
+						likes: state.data.liked ? state.data.likes - 1 : state.data.likes,
+					})
+				});
+			} else if (action.result.type === 'dropDislike') {
+				return Object.assign({}, state, {
+					data: Object.assign({}, state.data, {
+						disliked: false,
+						liked: false,
+						dislikes: state.data.disliked ? state.data.dislikes - 1 : state.data.dislikes,
 					})
 				});
 			}
@@ -797,12 +816,13 @@ function profilePlansReducer(state, action) {
 		}
 
 		case actions.types.LIKED_PLANS_REQUEST_SUCCESSED: {
+			console.log('IN SUCCESS LIKED: ', action)
 			return Object.assign({}, state, {
 				forUser: action.userId,
 				liked: Object.assign({}, state.liked, {
 					isLoading: false,
 					isFetched: true,
-					content: action.result,
+					content: action.result.businesses,
 				}),
 			});
 		}
@@ -832,7 +852,7 @@ function profilePlansReducer(state, action) {
 				disliked: Object.assign({}, state.disliked, {
 					isLoading: false,
 					isFetched: true,
-					content: action.result,
+					content: action.result.businesses,
 				}),
 			});
 		}

@@ -371,6 +371,20 @@ const dbUtils = {
 		);
 	},
 
+	getLikedBusinessesByOwnerId: async (owner) => {
+		return await connection.execute(
+			`select b._id from likes l left join edition e on l.edition_id = e._id left join business b on e.business_id = b._id where l.user_id = ? group by b._id order by e.creation_date;`,
+			[owner]
+		);
+	},
+
+	getDislikedBusinessesByOwnerId: async (owner) => {
+		return await connection.execute(
+			`select b._id from dislikes d left join edition e on d.edition_id = e._id left join business b on e.business_id = b._id where d.user_id = ? group by b._id order by e.creation_date;`,
+			[owner]
+		);
+	},
+	
     createLike: async (data, uId) => {
         let [deletion, _d] = await connection.execute(
 			`delete from dislikes where user_id = ? and edition_id = ?;`,
@@ -385,6 +399,15 @@ const dbUtils = {
         let [insertion, _i] = await connection.execute(
 			`insert into likes(_id, user_id, edition_id) values (?, ?, ?);`,
 			[uuid.v4(), uId, data.eId]
+		);
+
+        return true;
+    },
+
+	dropLike: async (data, uId) => {
+        let [deletion, _d] = await connection.execute(
+			`delete from likes where user_id = ? and edition_id = ?;`,
+			[uId, data.eId]
 		);
 
         return true;
@@ -409,8 +432,43 @@ const dbUtils = {
         return true;
     },
 
+	dropDislike: async (data, uId) => {
+        let [deletion, _d] = await connection.execute(
+			`delete from dislikes where user_id = ? and edition_id = ?;`,
+			[uId, data.eId]
+		);
+
+        return true;
+    },
+
 	getOwnerBusinesses: async function (owner) {
 		let [result, fields] = await this.getBusinessesByOwnerId(owner);
+
+		let businesses = [];
+
+		for (let r of result) {
+			let b = await this.getBusinessById(r._id);
+			businesses.push(b);
+		}
+
+		return businesses;
+	},
+
+	getOwnerLikedBusinesses: async function (owner) {
+		let [result, fields] = await this.getLikedBusinessesByOwnerId(owner);
+
+		let businesses = [];
+
+		for (let r of result) {
+			let b = await this.getBusinessById(r._id);
+			businesses.push(b);
+		}
+
+		return businesses;
+	},
+
+	getOwnerDislikedBusinesses: async function (owner) {
+		let [result, fields] = await this.getDislikedBusinessesByOwnerId(owner);
 
 		let businesses = [];
 

@@ -351,17 +351,20 @@ const BusinessPlan = ({
 		}
 	}
 
+	function handleDropLike() {
+		if (plan.data.liked) {
+			onUserReact("dropLike", plan.activeBusiness, plan.activeEdition);
+		}
+	}
+
+	function handleDropDislike() {
+		if (plan.data.disliked) {
+			onUserReact("dropDislike", plan.activeBusiness, plan.activeEdition);
+		}
+	}
+
 	return (
 		<section className={["sectionDimensioned"].join(" ")}>
-			{console.log(
-				"!plan.isLoading && categories.content.length && types.content.length",
-				!plan.isLoading &&
-				categories.content.length &&
-				types.content.length,
-				!plan.isLoading,
-				categories.content.length,
-				types.content.length
-			)}
 			{!plan.isLoading &&
 				categories.content.length &&
 				types.content.length ? (
@@ -456,6 +459,7 @@ const BusinessPlan = ({
 													viewBox="0 0 20 20"
 													fill="none"
 													xmlns="http://www.w3.org/2000/svg"
+													onClick={handleDropLike}
 												>
 													<path
 														d="M11.666 7.5V4.16667C11.666 3.50363 11.4026 2.86774 10.9338 2.3989C10.4649 1.93006 9.82906 1.66667 9.16602 1.66667L5.83268 9.16667V18.3333H15.2327C15.6346 18.3379 16.0247 18.197 16.3309 17.9367C16.6372 17.6763 16.8391 17.3141 16.8993 16.9167L18.0493 9.41667C18.0856 9.1778 18.0695 8.9339 18.0021 8.70188C17.9348 8.46985 17.8178 8.25525 17.6592 8.07293C17.5007 7.89061 17.3044 7.74494 17.084 7.64602C16.8636 7.54709 16.6243 7.49727 16.3827 7.5H11.666ZM5.83268 18.3333H3.33268C2.89065 18.3333 2.46673 18.1577 2.15417 17.8452C1.84161 17.5326 1.66602 17.1087 1.66602 16.6667V10.8333C1.66602 10.3913 1.84161 9.96738 2.15417 9.65482C2.46673 9.34226 2.89065 9.16667 3.33268 9.16667H5.83268"
@@ -499,6 +503,7 @@ const BusinessPlan = ({
 													viewBox="0 0 20 20"
 													fill="none"
 													xmlns="http://www.w3.org/2000/svg"
+													onClick={handleDropDislike}
 												>
 													<path
 														d="M8.33398 12.5V15.8333C8.33398 16.4964 8.59738 17.1323 9.06622 17.6011C9.53506 18.0699 10.1709 18.3333 10.834 18.3333L14.1673 10.8333V1.66667H4.76732C4.36538 1.66212 3.97534 1.803 3.66906 2.06333C3.36279 2.32366 3.16092 2.68591 3.10065 3.08333L1.95065 10.5833C1.91439 10.8222 1.93051 11.0661 1.99787 11.2981C2.06523 11.5301 2.18223 11.7448 2.34077 11.9271C2.49931 12.1094 2.69559 12.2551 2.91601 12.354C3.13643 12.4529 3.37573 12.5027 3.61732 12.5H8.33398ZM14.1673 1.66667H16.6673C17.1093 1.66667 17.5333 1.84226 17.8458 2.15482C18.1584 2.46738 18.334 2.89131 18.334 3.33333V9.16667C18.334 9.60869 18.1584 10.0326 17.8458 10.3452C17.5333 10.6577 17.1093 10.8333 16.6673 10.8333H14.1673"
@@ -1130,7 +1135,13 @@ const BusinessPlan = ({
 					<div>NO DATA</div>
 				)
 			) : (
-				<div>LOADING</div>
+				<div className={[styles.planWrapper, styles.animationWrapper].join(' ')}>
+					<svg xmlns="http://www.w3.org/2000/svg" className={styles.loading} viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+						<path fill="none" stroke="#8676FF" stroke-width="10" stroke-dasharray="177.0463604736328 79.54256774902345" d="M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40 C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z" stroke-linecap="round">
+							<animate attributeName="stroke-dashoffset" repeatCount="indefinite" dur="0.9174311926605504s" keyTimes="0;1" values="0;256.58892822265625"></animate>
+						</path>
+					</svg>
+				</div>
 			)}
 		</section>
 	);

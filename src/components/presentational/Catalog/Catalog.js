@@ -93,17 +93,35 @@ const Catalog = ({ onFiltersSelected, onNeedMoreBusinesses, onInit, filters, cat
                             </section>
                         </div>
                     </section> :
-                    <div><p>Try to load filters from server...</p></div>
+                    <section>
+                        <div className={styles.filtersWrapper}>
+                            <section className={[styles.catalogWrapper].join(' ')}>
+                                <div className={styles.filtersSection}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className={styles.loading} width="50" height="50" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                                        <path fill="none" stroke="#ff708b" stroke-width="10" stroke-dasharray="177.0463604736328 79.54256774902345" d="M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40 C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z" stroke-linecap="round">
+                                            <animate attributeName="stroke-dashoffset" repeatCount="indefinite" dur="0.9174311926605504s" keyTimes="0;1" values="0;256.58892822265625"></animate>
+                                        </path>
+                                    </svg>
+                                </div>
+                            </section>
+                        </div>
+                    </section>
             }
             <div className={styles.catalogContent}>
                 <section className={[styles.catalogWrapper].join(' ')}>
                     <div className={styles.catalogBusinesses}>
                         {
-                            (businesses.content.length >= businesses.count || !businesses.needMore) && categories.content.length && types.content.length ? businesses.content.map(e => (<BusinessCard key={e.id} data={e} categories={categories} types={types} />)) : 'loading animation'
+                            (businesses.content.length >= businesses.count || !businesses.needMore) && categories.content.length && types.content.length ? businesses.content.map(e => (<BusinessCard key={e.id} data={e} categories={categories} types={types} />)) : null
                         }
                     </div>
                     {
-                        businesses.needMore && !businesses.isLoading ? <div className={styles.catalogLoadEventTrigger} onClick={() => { onNeedMoreBusinesses(); }}><p>LOAD MORE</p></div> : businesses.needMore ? <div className={styles.catalogLoadEventTrigger} ><p>Businesses loading...</p></div> : null
+                        businesses.needMore && !businesses.isLoading ? <div className={styles.catalogLoadEventTrigger} onClick={() => { onNeedMoreBusinesses(); }}><p>LOAD MORE</p></div> : businesses.needMore ? <div className={styles.catalogLoadEventTrigger} >
+                            <svg xmlns="http://www.w3.org/2000/svg" className={styles.loading} width="100" height="100" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                                <path fill="none" stroke="#8676FF" stroke-width="10" stroke-dasharray="177.0463604736328 79.54256774902345" d="M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40 C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z" stroke-linecap="round">
+                                    <animate attributeName="stroke-dashoffset" repeatCount="indefinite" dur="0.9174311926605504s" keyTimes="0;1" values="0;256.58892822265625"></animate>
+                                </path>
+                            </svg>
+                        </div> : null
                     }
                 </section>
             </div>

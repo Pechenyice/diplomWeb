@@ -10,6 +10,7 @@ import TextArea from "../TextArea/TextArea";
 import { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import PropTypes from "prop-types";
+import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 
 const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 	let [state, setState] = useState({
@@ -355,12 +356,15 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 		setStep(step + 1);
 	}
 
+	let [shouldRedirect, setShouldRedirect] = useState(false);
+
 	function handleSubmitClick() {
 		if (validateErrors()) {
 			onError(validateErrors());
 			return;
 		}
 		onSubmit(state);
+		setShouldRedirect(true);
 	}
 
 	return (
@@ -369,6 +373,9 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 				" "
 			)}
 		>
+			{
+				shouldRedirect && <Redirect to={'/profile/own'} />
+			}
 			<h1>
 				CREATION: <span ref={el}></span>
 			</h1>

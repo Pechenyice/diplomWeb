@@ -1,12 +1,172 @@
 .landing {
     width: 100%;
 }
+
+.landingWrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding-top: 50px;
+}
   
 .buttonsWrapper {
     display: flex;
     justify-content: center;
-    gap: 50px;
-    width: 50%;
+    gap: 40px;
+    width: max-content;
+    margin: auto;
+}
+
+.landingLink {
+    width: 190px;
+}
+
+.landingMain {
+    font-family: "PP Neue Machina Regular";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 70px;
+    line-height: 78px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 60px;
+}
+
+.authorsWrapper {
+    position: relative;
+    margin-bottom: 100px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.landingBottomer {
+    margin-top: 300px;
+}
+
+.subTitle {
+	font-family: "PP Neue Machina Regular";
+	font-style: normal;
+	font-weight: normal;
+	font-size: 25px;
+	line-height: 24px;
+	text-transform: uppercase;
+	margin-bottom: 30px;
+}
+
+.authorsPhoto {
+    width: 570px;
+}
+
+.maryana {
+    width: 300px;
+    order: 1;
+    opacity: 0;
+    transition: .3s;
+}
+
+.authorsPhotoWrapper {
+    order: 2;
+}
+
+.german {
+    width: 300px;
+    order: 3;
+    opacity: 0;
+    transition: .3s;
+    padding-left: 40px;
+}
+
+.maryanaTrigger {
+    width: 100px;
     height: 100px;
-    background-color: grey;
+    border: 2px solid red;
+    position: absolute;
+    top: 100px;
+    left: calc(50% - 120px);
+    cursor: pointer;
+    transition: .3s;
+}
+
+.maryanaTrigger:hover {
+    transition: .3s;
+    border: 2px solid black;
+}
+
+.maryanaTrigger:hover ~ .maryana{
+    transition: .3s;
+    opacity: 1;
+}
+
+.germanTrigger {
+    width: 100px;
+    height: 100px;
+    border: 2px solid red;
+    position: absolute;
+    top: 10px;
+    left: calc(50% - 18px);
+    cursor: pointer;
+    transition: .3s;
+}
+
+.germanTrigger:hover {
+    transition: .3s;
+    border: 2px solid black;
+}
+
+.germanTrigger:hover ~ .german {
+    transition: .3s;
+    opacity: 1;
+}
+
+.germanTrigger:hover .triggerHint {
+    transition: .3s;
+    background-color: var(--dark);
+    color: var(--light);
+}
+
+.maryanaTrigger:hover .triggerHint {
+    transition: .3s;
+    background-color: var(--dark);
+    color: var(--light);
+}
+
+.author {
+    font-family: "PP Neue Machina Regular";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 25px;
+    line-height: 32px;
+    text-transform: uppercase;
+}
+
+.authorQuote {
+    font-family: "Gilroy Regular";
+    font-style: italic;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 24px;
+    text-transform: uppercase;
+    margin-top: 40px;
+    text-align: right;
+    margin-right: 50px;
+}
+
+.german .authorQuote {
+    margin-right: -30px;
+}
+
+.triggerHint {
+    height: 22px;
+    background-color: red;
+    width: max-content;
+    padding: 0 10px;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: bold;
+    position: absolute;
+    bottom: -24px;
+    left: -2px;
+    transition: .3s;
 }

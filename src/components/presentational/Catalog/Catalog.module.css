@@ -76,3 +76,7 @@
     margin: 60px auto;
     cursor: pointer;
 }
+
+.loading {
+    margin: auto;
+}

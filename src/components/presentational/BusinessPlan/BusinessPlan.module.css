@@ -404,3 +404,17 @@
 .reaction svg {
     cursor: pointer;
 }
+
+.animationWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 200px;
+}
+
+.loading {
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    justify-self: center;
+}

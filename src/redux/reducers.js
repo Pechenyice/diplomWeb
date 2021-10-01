@@ -130,6 +130,7 @@ function reducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				profilePlans: dropProfilePlans(state),
 				businesses: dropBusinessses(state),
+				filters: dropFilters(state)
 			});
 		}
 
@@ -185,6 +186,7 @@ function reducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				profilePlans: newPlanReducer(state.profilePlans, action),
 				businesses: dropBusinessses(state),
+				filters: dropFilters(state)
 			});
 		}
 
@@ -197,6 +199,7 @@ function reducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				profilePlans: dropProfilePlans(state),
 				businesses: dropBusinessses(state),
+				filters: dropFilters(state)
 			});
 		}
 
@@ -245,6 +248,7 @@ function reducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				profilePlans: dropProfilePlans(state),
 				businesses: dropBusinessses(state),
+				filters: dropFilters(state),
 				user: userReducer(state.user, action),
 			});
 		}
@@ -371,6 +375,12 @@ function toInitialState(state) {
 			needMore: true,
 			content: [],
 		},
+		filters: {
+			category: -1,
+			type: -1,
+			sort: 0,
+			pattern: "",
+		},
 	};
 }
 
@@ -402,6 +412,15 @@ function dropBusinessses(state) {
 		count: 21,
 		needMore: true,
 		content: [],
+	};
+}
+
+function dropFilters(state) {
+	return {
+		category: -1,
+		type: -1,
+		sort: 0,
+		pattern: "",
 	};
 }
 

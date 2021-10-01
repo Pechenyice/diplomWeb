@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-y: scroll;
 }
 
 code {
@@ -150,6 +151,46 @@ input::placeholder {
 }
 
 .planStep-exit-active {
+  opacity: 0;
+  transition: opacity 0ms;
+}
+
+/* popup animation */
+
+.popup-enter {
+  opacity: 0;
+}
+
+.popup-enter-active {
+  opacity: 1;
+  transition: opacity 300ms;
+}
+
+.popup-exit {
+  opacity: 1;
+}
+
+.popup-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+/* map animation */
+
+.mapAnimation-enter {
+  opacity: 0;
+}
+
+.mapAnimation-enter-active {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+.mapAnimation-exit {
+  opacity: 1;
+}
+
+.mapAnimation-exit-active {
   opacity: 0;
   transition: opacity 0ms;
 }

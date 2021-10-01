@@ -177,12 +177,19 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 		!notValid ? onSignUp(state.signUp) : onError(notValid);
 	}
 
+	let [activeAction, setActiveAction] = useState('signIn');
+
+	function handleActiveAction(action) {
+		return () => setActiveAction(action);
+	}
+
 	return (
 		<section className={['sectionDimensioned', styles.authWrapper].join(' ')}>
 			{isLogged ? <Redirect to={redirectPath()} /> : null}
 			<h1>
-				<span className={styles.authSignIn}>SIGN IN</span>{" "}
-				<span className={styles.authSignUp}>& CREATE ACCOUNT</span>
+				<span className={[styles.authAction, activeAction === 'signIn' && styles.activeAuthAction].join(' ')}>SIGN IN</span>
+				{" & "} 
+				<span className={[styles.authAction, activeAction === 'signUp' && styles.activeAuthAction].join(' ')}>CREATE ACCOUNT</span>
 			</h1>
 			<p className={styles.authHint}>
 				We will redirect you to your target just in
@@ -196,6 +203,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 						label={"Login/Email"}
 						isEmpty={!state.signIn.login}
 						onChange={handleSignInLoginChange}
+						onFocus={handleActiveAction('signIn')}
 					/>
 					<Input
 						id={"signInPassword"}
@@ -203,6 +211,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 						label={"Password"}
 						isEmpty={!state.signIn.pass}
 						onChange={handleSignInPasswordChange}
+						onFocus={handleActiveAction('signIn')}
 						password
 					/>
 					<Button
@@ -218,6 +227,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 						label={"Login/Email"}
 						isEmpty={!state.signUp.login}
 						onChange={handleSignUpLoginChange}
+						onFocus={handleActiveAction('signUp')}
 					/>
 					<Input
 						id={"signUpNickname"}
@@ -225,6 +235,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 						label={"Nickname"}
 						isEmpty={!state.signUp.nick}
 						onChange={handleSignUpNicknameChange}
+						onFocus={handleActiveAction('signUp')}
 					/>
 					<Input
 						id={"signUpPassword"}
@@ -232,6 +243,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 						label={"Password"}
 						isEmpty={!state.signUp.pass}
 						onChange={handleSignUpPasswordChange}
+						onFocus={handleActiveAction('signUp')}
 						password
 					/>
 					<Input
@@ -240,6 +252,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 						label={"Repeat password"}
 						isEmpty={!state.signUp.rePass}
 						onChange={handleSignUpRePasswordChange}
+						onFocus={handleActiveAction('signUp')}
 						password
 					/>
 					<div style={{ margin: "15px 0" }}>

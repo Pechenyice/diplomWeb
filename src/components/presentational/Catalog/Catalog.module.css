@@ -80,3 +80,14 @@
 .loading {
     margin: auto;
 }
+
+.noCaseText {
+    width: max-content;
+    margin: auto;
+    margin-bottom: 40px;
+}
+
+.noCaseButton {
+    width: 200px;
+    margin: auto;
+}

@@ -6,13 +6,14 @@
     padding-bottom: 100px;
 }
 
-.authSignIn {
-    transition: .2s; 
-}
-
-.authSignUp {
+.authAction {
     opacity: .5;
     transition: .2s;
+}
+
+.activeAuthAction {
+    opacity: 1;
+    transition: .2s; 
 }
 
 .authHint {

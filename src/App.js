@@ -14,6 +14,7 @@ import EditPlanDisplay from './components/container/EditPlanDisplay/EditPlanDisp
 import ProfileDisplay from './components/container/ProfileDisplay/ProfileDisplay';
 import ProfileRedirect from './components/container/ProfileRedirect/ProfileRedirect';
 import Footer from './components/presentational/Footer/Footer';
+import Terms from './components/presentational/Terms/Terms';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       <Switch>
         <Route path='/plan/:planId/ed/:edId' component={BusinessPlanDisplay} />
         <Route path='/catalog' component={CatalogComponent} />
+        <Route path='/terms' component={Terms} />
         <Route path='/auth' component={AuthDisplay} />
         <Route exact path='/' component={Landing} />
 

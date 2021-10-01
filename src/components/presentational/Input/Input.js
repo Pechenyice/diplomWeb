@@ -10,9 +10,10 @@ const Input = ({
 	value,
 	error = "",
 	onChange,
+	onFocus = () => {},
 	readonly = false,
 	password = false,
-	style
+	style,
 }) => {
 	const classes = [styles.inputWrapper];
 	if (isEmpty) classes.push(styles.emptyInputWrapper);
@@ -37,9 +38,10 @@ const Input = ({
 				id={id}
 				value={value}
 				onChange={onChange}
+				onFocus={onFocus}
 				readOnly={readonly}
 				type={hideSymbols ? "password" : "text"}
-				style={{paddingRight: '50px'}}
+				style={{ paddingRight: "50px" }}
 			/>
 			<label className={labelClasses.join(" ")} htmlFor={id}>
 				{label}
@@ -116,7 +118,8 @@ Input.propTypes = {
 	value: PropTypes.string,
 	error: PropTypes.string,
 	onChange: PropTypes.func,
-	style: PropTypes.object
+	onFocus: PropTypes.func,
+	style: PropTypes.object,
 };
 
 export default Input;

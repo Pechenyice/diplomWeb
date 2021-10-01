@@ -23,6 +23,10 @@ const Select = ({ content, propsValues, onSelect, bigSize=false, wantToDisplayId
     let [opened, setOpened] = useState(false);
     let [values, setValues] = useState(sortedValues);
 
+    if (wantToDisplayId != null && activeValueId !== wantToDisplayId) setActiveValueId(wantToDisplayId);
+
+    console.log(propsValues, wantToDisplayId,  sortedValues[0].id, wantToDisplayId || sortedValues[0].id, activeValueId, )
+
     function handleSwitch() {
         setOpened(!opened);
     }

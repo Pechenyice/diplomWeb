@@ -1,16 +1,18 @@
-1. End diplom
-2. Clear fetches in return of useEffect (if see error)
-3. All errors with handling plans editions and creations should find in PlanEditor.js (Now is not realised onNeedFetchEdition)
-4. Possible errors: fetchPlan and fetchBusinesses return different edition value (owner:) check if errors
-5. Create loading for auth tryes
-6. Finish Catalog selects
-7. Add created plan to CATALOG component (later - updated plan)
-8. Refactor no data and loading scenarious to normal design
-9. End logic of creating edition on server, after that check catalog and profile behavior after creating edition
-10. Add to plan categories, types, editions, owner, create normal post and get comments [IMPORTANT]
-11. Create try {} catch for sql queries with null return for error sending
+[NEEDS]
+1. Create try {} catch for sql queries with null return for error sending
+2. Creating normal error sending on 
+3. Clear console.log
+4. refactor auth to CASE-SENSETIVE
 
-12. catalog is not updated after creation of plan, account is failing after edition
-13. Own plan is added to profile plans so it renders in other acccounts profile
+[CHECKS]
+1. Sort order is not right with new plan (check push -> unshift)
 
-14. Fix /getPlan (fails with userToken) and fix /getBusinesses (fails ~) and check (getPlan works, getBusinesses - not)
+[FEATURES]
+1. Unit testing
+2. e2e testing
+3. docker container
+4. README
+
+[BACKEND]
+1. RabbitMQ
+2. Redis?

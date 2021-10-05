@@ -10,7 +10,8 @@ function mapStateToProps(state) {
         plan: state.plan,
         user: state.user.id,
         categories: state.categories,
-        types: state.types
+        types: state.types,
+        planActions: state.planActions
     }
 }
 

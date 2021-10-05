@@ -296,7 +296,11 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 					</p>
 				</div>
 				<div className={styles.stepNext}>
-					<Button text={"Create plan"} onClick={handleSubmitClick} />
+					{
+						plan ? 
+							<Button text={"Edit plan"} onClick={handleSubmitClick} /> : 
+							<Button text={"Create plan"} onClick={handleSubmitClick} />
+					}
 				</div>
 			</div>
 		</div>
@@ -321,7 +325,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 	}, [step]);
 
     function isNormalNumeric(n) {
-        return !isNaN(n - parseFloat(n)) && parseInt(n, 10) >= 0 
+        return !isNaN(n - parseFloat(n)) && parseInt(n, 10) >= 0 && Number.isInteger(+n);
     }
 
 	function validateErrors() {
@@ -345,7 +349,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 			!isNormalNumeric(state.spendings.maintenance) ||
 			!isNormalNumeric(state.incomings.profit)
 		)
-			return "Please enter numbers > 0 in numeric inputs!";
+			return "Please enter numbers > 0 and integer type in numeric inputs!";
 	}
 
 	function handlePrevStep() {
@@ -377,7 +381,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 				shouldRedirect && <Redirect to={'/profile/own'} />
 			}
 			<h1>
-				CREATION: <span ref={el}></span>
+				{plan ? 'EDITION' : 'CREATION'}: <span ref={el}></span>
 			</h1>
 
 			{categories.content.length && types.content.length ? (

@@ -59,6 +59,10 @@
     width: 190px;
 }
 
+.filtersElementButton {
+    height: 60px;
+}
+
 .catalogContent {
     margin-top: 60px;
     margin-bottom: 100px;

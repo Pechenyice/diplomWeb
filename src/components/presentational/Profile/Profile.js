@@ -9,6 +9,7 @@ import InvalidRoute from "../404/404";
 import BusinessCard from "../BusinessCard/BusinessCard";
 import Typed from "typed.js";
 import { CSSTransition } from "react-transition-group";
+import SVGManager from "../../../svgs/svgs";
 
 const Profile = ({
 	userId,
@@ -32,12 +33,14 @@ const Profile = ({
 	onError,
 	onClear,
 	location,
+	profileUpdateData = null,
 }) => {
 	const el = useRef(null);
 	const typed = useRef(null);
 
 	useEffect(() => {
-		if (!categories.content.length && !categories.isLoading) onNeedCategories();
+		if (!categories.content.length && !categories.isLoading)
+			onNeedCategories();
 		if (!types.content.length && !types.isLoading) onNeedTypes();
 
 		if (
@@ -62,7 +65,10 @@ const Profile = ({
 		if (nickname === null) onNeedUserNickname();
 
 		const options = {
-			strings: [`Welcome home, ${nickname} `],
+			strings:
+				businessman === userId
+					? [`Welcome home, ${nickname} `]
+					: [`Welcome to ${nickname}'s home`],
 			typeSpeed: 50,
 		};
 
@@ -91,7 +97,14 @@ const Profile = ({
 
 	const [showPlans, setShowPlans] = useState(false);
 	useEffect(() => {
-		if (profilePlans.own.content.length || profilePlans.liked.content.length || profilePlans.disliked.content.length) setTimeout(() => { setShowPlans(true) }, 20);
+		if (
+			profilePlans.own.content.length ||
+			profilePlans.liked.content.length ||
+			profilePlans.disliked.content.length
+		)
+			setTimeout(() => {
+				setShowPlans(true);
+			}, 20);
 	}, [profilePlans]);
 
 	// function handleDataLoginChange(e) {
@@ -157,7 +170,11 @@ const Profile = ({
 			}
 
 			case "profilePassword": {
-				if (!state.pass.oldPass || !state.pass.pass || !state.pass.rePass) {
+				if (
+					!state.pass.oldPass ||
+					!state.pass.pass ||
+					!state.pass.rePass
+				) {
 					onError("Cannot use empty passwords!");
 					return false;
 				}
@@ -169,7 +186,11 @@ const Profile = ({
 					onError("New passwords are not equal!");
 					return false;
 				}
-				if (state.pass.pass.length >= 64 || state.pass.rePass.length >= 64 || state.pass.oldPass.length >= 64) {
+				if (
+					state.pass.pass.length >= 64 ||
+					state.pass.rePass.length >= 64 ||
+					state.pass.oldPass.length >= 64
+				) {
 					onError(
 						"Cannot use such a long password, need < 64 symbols!"
 					);
@@ -181,26 +202,43 @@ const Profile = ({
 	}
 
 	function handleSaveProfileData() {
-		if (validate('profileData', state.data.nick)) {
+		if (validate("profileData", state.data.nick)) {
 			onSaveProfileData(state.data.nick);
 		}
 	}
 
 	function handleSaveProfilePassword() {
-		if (validate('profilePassword')) {
-			onSaveProfilePassword(state.pass.oldPass, state.pass.pass, state.pass.rePass);
-			setState(Object.assign({}, state, { pass: Object.assign({}, state.pass, { oldPass: '', pass: '', rePass: '' }) }))
+		if (validate("profilePassword")) {
+			onSaveProfilePassword(
+				state.pass.oldPass,
+				state.pass.pass,
+				state.pass.rePass
+			);
+			setState(
+				Object.assign({}, state, {
+					pass: Object.assign({}, state.pass, {
+						oldPass: "",
+						pass: "",
+						rePass: "",
+					}),
+				})
+			);
 		}
 	}
 
 	return (
 		<section
 			className={[
-				'sectionDimensioned',
+				"sectionDimensioned",
 				styles.profileWrapperDark,
 				styles.profileWrapperMain,
 			].join(" ")}
 		>
+			{profileUpdateData?.logoutInProcess && (
+				<div className={"userActionLocker"}>
+					{SVGManager.getSvg("lockerSvg")}
+				</div>
+			)}
 			<section className={styles.profileWrapperLight}>
 				<section className={styles.profileWrapper}>
 					{/* {login}
@@ -211,7 +249,7 @@ const Profile = ({
 						<Redirect to={"/profile/own"} />
 					) : null}
 					{location.pathname.split("/profile")[1] === "" ||
-						location.pathname.split("/profile")[1] === "/" ? (
+					location.pathname.split("/profile")[1] === "/" ? (
 						<Redirect
 							to={`${location.pathname}/own`.replace(/\/\//, "/")}
 						/>
@@ -219,77 +257,106 @@ const Profile = ({
 
 					<div className={styles.profileDataWrapperTop}>
 						<h1 className={styles.profileMainText}>PROFILE</h1>
-						<div className={styles.profileDataInfo}>
+						<div
+							className={[
+								styles.profileDataInfo,
+								businessman !== userId &&
+									styles.profileDataLongInfo,
+							].join(" ")}
+						>
 							<div className={styles.profileDummy}></div>
 							<div style={{ display: "flex" }}>
 								<p className={styles.typed} ref={el}></p>
 							</div>
 						</div>
 					</div>
-					<div className={styles.profileDataWrapper}>
-						<div className={styles.inputsWrapper}>
-							<h2 className={styles.subTitle}>Edit profile</h2>
-							<Input
-								id={"datalogin"}
-								label={"Login/Email"}
-								isEmpty={!state.data.login}
-								value={state.data.login}
-								onChange={() => { }}
-								readonly
-							/>
-							<Input
-								id={"dataNickname"}
-								label={"Nickname"}
-								isEmpty={!state.data.nick}
-								value={state.data.nick}
-								onChange={handleDataNicknameChange}
-							/>
-							<Button
-								text={"Apply changes"}
-								onClick={handleSaveProfileData}
-								style={{ marginTop: "15px" }}
-							/>
+					{businessman === userId && (
+						<div className={styles.profileDataWrapper}>
+							<div className={styles.inputsWrapper}>
+								<h2 className={styles.subTitle}>
+									Edit profile
+								</h2>
+								{profileUpdateData?.nicknameIsLoading && (
+									<div className={"userActionLocker"}>
+										{SVGManager.getSvg("lockerSvg")}
+									</div>
+								)}
+								<Input
+									id={"datalogin"}
+									label={"Login/Email"}
+									isEmpty={!state.data.login}
+									value={state.data.login}
+									onChange={() => {}}
+									readonly
+								/>
+								<Input
+									id={"dataNickname"}
+									label={"Nickname"}
+									isEmpty={!state.data.nick}
+									value={state.data.nick}
+									onChange={handleDataNicknameChange}
+								/>
+								<Button
+									text={"Apply changes"}
+									onClick={handleSaveProfileData}
+									style={{ marginTop: "15px" }}
+								/>
+							</div>
+							<div className={styles.inputsWrapper}>
+								<h2 className={styles.subTitle}>
+									Change password
+								</h2>
+								{profileUpdateData?.passwordIsLoading && (
+									<div className={"userActionLocker"}>
+										{SVGManager.getSvg("lockerSvg")}
+									</div>
+								)}
+								<Input
+									id={"oldPassPass"}
+									label={"Old password"}
+									isEmpty={!state.pass.oldPass}
+									value={state.pass.oldPass}
+									onChange={handleOldPassPasswordChange}
+									password
+								/>
+								<Input
+									id={"passPass"}
+									label={"New password"}
+									isEmpty={!state.pass.pass}
+									value={state.pass.pass}
+									onChange={handlePassPasswordChange}
+									password
+								/>
+								<Input
+									id={"passRePass"}
+									label={"Repeat password"}
+									isEmpty={!state.pass.rePass}
+									value={state.pass.rePass}
+									onChange={handlePassRePasswordChange}
+									password
+								/>
+								<Button
+									text={"Change password"}
+									onClick={handleSaveProfilePassword}
+									style={{ marginTop: "15px" }}
+								/>
+							</div>
+							<div className={styles.inputsWrapper}>
+								<h2 className={styles.subTitle}>
+									Manage profile
+								</h2>
+								<Button text={"Logout"} onClick={onLogout} />
+							</div>
 						</div>
-						<div className={styles.inputsWrapper}>
-							<h2 className={styles.subTitle}>Change password</h2>
-							<Input
-								id={"oldPassPass"}
-								label={"Old password"}
-								isEmpty={!state.pass.oldPass}
-								value={state.pass.oldPass}
-								onChange={handleOldPassPasswordChange}
-								password
-							/>
-							<Input
-								id={"passPass"}
-								label={"New password"}
-								isEmpty={!state.pass.pass}
-								value={state.pass.pass}
-								onChange={handlePassPasswordChange}
-								password
-							/>
-							<Input
-								id={"passRePass"}
-								label={"Repeat password"}
-								isEmpty={!state.pass.rePass}
-								value={state.pass.rePass}
-								onChange={handlePassRePasswordChange}
-								password
-							/>
-							<Button
-								text={"Change password"}
-								onClick={handleSaveProfilePassword}
-								style={{ marginTop: "15px" }}
-							/>
-						</div>
-						<div className={styles.inputsWrapper}>
-							<h2 className={styles.subTitle}>Manage profile</h2>
-							<Button text={"Logout"} onClick={onLogout} />
-						</div>
-					</div>
+					)}
 				</section>
 			</section>
-			<section className={styles.profileWrapperDark}>
+			<section
+				className={[
+					styles.profileWrapperDark,
+					businessman !== userId && styles.profileWrapperFixer,
+				].join(" ")}
+			>
 				<section
 					className={[
 						styles.profileWrapper,
@@ -299,11 +366,12 @@ const Profile = ({
 					<div className={styles.plansMainWrapper}>
 						<div className={styles.plansPartitionsWrapper}>
 							<NavLink
-								to={`${location.pathname
-									.split("/own")[0]
-									.split("/liked")[0]
-									.split("/disliked")[0]
-									}/own`.replace(/\/\//, "/")}
+								to={`${
+									location.pathname
+										.split("/own")[0]
+										.split("/liked")[0]
+										.split("/disliked")[0]
+								}/own`.replace(/\/\//, "/")}
 								className={styles.profileLink}
 								activeClassName={styles.activeProfileLink}
 							>
@@ -314,11 +382,12 @@ const Profile = ({
 								</span>
 							</NavLink>
 							<NavLink
-								to={`${location.pathname
-									.split("/own")[0]
-									.split("/liked")[0]
-									.split("/disliked")[0]
-									}/liked`.replace(/\/\//, "/")}
+								to={`${
+									location.pathname
+										.split("/own")[0]
+										.split("/liked")[0]
+										.split("/disliked")[0]
+								}/liked`.replace(/\/\//, "/")}
 								className={styles.profileLink}
 								activeClassName={styles.activeProfileLink}
 							>
@@ -330,11 +399,12 @@ const Profile = ({
 								</span>
 							</NavLink>
 							<NavLink
-								to={`${location.pathname
-									.split("/own")[0]
-									.split("/liked")[0]
-									.split("/disliked")[0]
-									}/disliked`.replace(/\/\//, "/")}
+								to={`${
+									location.pathname
+										.split("/own")[0]
+										.split("/liked")[0]
+										.split("/disliked")[0]
+								}/disliked`.replace(/\/\//, "/")}
 								className={styles.profileLink}
 								activeClassName={styles.activeProfileLink}
 							>
@@ -348,25 +418,28 @@ const Profile = ({
 								</span>
 							</NavLink>
 						</div>
-						<Link
-							to={"/newPlan"}
-							className={styles.plansCreateButton}
-						>
-							<Button
-								theme={"dark"}
-								text={"Create a business plan"}
-							/>
-						</Link>
+						{
+							businessman === userId && <Link
+								to={"/newPlan"}
+								className={styles.plansCreateButton}
+							>
+								<Button
+									theme={"dark"}
+									text={"Create a business plan"}
+								/>
+							</Link>
+						}
 					</div>
 					<Switch>
 						<Route
 							path={
 								`${location.pathname}`.split("/profile")[0] +
-								`/profile${`${location.pathname}`
-									.split("/profile")[1]
-									.split("/own")[0]
-									.split("/liked")[0]
-									.split("/disliked")[0]
+								`/profile${
+									`${location.pathname}`
+										.split("/profile")[1]
+										.split("/own")[0]
+										.split("/liked")[0]
+										.split("/disliked")[0]
 								}/own`
 							}
 							render={() => (
@@ -375,7 +448,9 @@ const Profile = ({
 										<p className={styles.plansHint}>
 											Loading own plans...
 										</p>
-									) : profilePlans.own.content.length && categories.content.length && types.content.length ? (
+									) : profilePlans.own.content.length &&
+									  categories.content.length &&
+									  types.content.length ? (
 										profilePlans.own.content.map((e) => (
 											<CSSTransition
 												in={showPlans}
@@ -403,11 +478,12 @@ const Profile = ({
 						<Route
 							path={
 								`${location.pathname}`.split("/profile")[0] +
-								`/profile${`${location.pathname}`
-									.split("/profile")[1]
-									.split("/own")[0]
-									.split("/liked")[0]
-									.split("/disliked")[0]
+								`/profile${
+									`${location.pathname}`
+										.split("/profile")[1]
+										.split("/own")[0]
+										.split("/liked")[0]
+										.split("/disliked")[0]
 								}/liked`
 							}
 							render={() => (
@@ -416,7 +492,9 @@ const Profile = ({
 										<p className={styles.plansHint}>
 											Loading liked plans...
 										</p>
-									) : profilePlans.liked.content.length && categories.content.length && types.content.length ? (
+									) : profilePlans.liked.content.length &&
+									  categories.content.length &&
+									  types.content.length ? (
 										profilePlans.liked.content.map((e) => (
 											<CSSTransition
 												in={showPlans}
@@ -445,11 +523,12 @@ const Profile = ({
 						<Route
 							path={
 								`${location.pathname}`.split("/profile")[0] +
-								`/profile${`${location.pathname}`
-									.split("/profile")[1]
-									.split("/own")[0]
-									.split("/liked")[0]
-									.split("/disliked")[0]
+								`/profile${
+									`${location.pathname}`
+										.split("/profile")[1]
+										.split("/own")[0]
+										.split("/liked")[0]
+										.split("/disliked")[0]
 								}/disliked`
 							}
 							render={() => (
@@ -458,7 +537,9 @@ const Profile = ({
 										<p className={styles.plansHint}>
 											Loading diliked plans...
 										</p>
-									) : profilePlans.disliked.content.length && categories.content.length && types.content.length ? (
+									) : profilePlans.disliked.content.length &&
+									  categories.content.length &&
+									  types.content.length ? (
 										profilePlans.disliked.content.map(
 											(e) => (
 												<CSSTransition
@@ -515,6 +596,7 @@ Profile.propTypes = {
 	onError: PropTypes.func,
 	onClear: PropTypes.func,
 	location: PropTypes.object,
+	profileUpdateData: PropTypes.any,
 };
 
 export default Profile;

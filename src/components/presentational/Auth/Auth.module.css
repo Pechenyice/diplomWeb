@@ -30,6 +30,7 @@
 }
 
 .inputsWrapper {
+    position: relative;
     width: 360px;
     height: max-content;
     display: flex;

@@ -7,6 +7,7 @@ import Select from "../Select/Select";
 import Button from "../Button/Button";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import SVGManager from "../../../svgs/svgs";
 
 const Catalog = ({
 	onFiltersSelected,
@@ -35,9 +36,6 @@ const Catalog = ({
 			onNeedMoreBusinesses();
 		setState(filters);
 	}, [filters]);
-
-	console.log("FILTERS", filters);
-	console.log("STATE", state);
 
 	function handleFiltersSubmitClick() {
 		// if (JSON.stringify(filters) === JSON.stringify(state)) {
@@ -74,6 +72,11 @@ const Catalog = ({
 					<div className={styles.filtersWrapper}>
 						<section className={[styles.catalogWrapper].join(" ")}>
 							<div className={styles.filtersSection}>
+								{businesses.isLoading && (
+									<div className={"userActionLocker"}>
+										{SVGManager.getSvg("lockerSvg")}
+									</div>
+								)}
 								<div className={styles.searchInputWrapper}>
 									<input
 										placeholder={"Search..."}
@@ -138,10 +141,11 @@ const Catalog = ({
 										wantToDisplayId={state.sort}
 									/>
 								</div>
-								<div className={styles.filtersElement}>
+								<div className={[styles.filtersElement, styles.filtersElementButton].join(' ')}>
 									<Button
 										text={"Search"}
 										onClick={handleFiltersSubmitClick}
+										style={{height: '60px'}}
 									/>
 								</div>
 							</div>

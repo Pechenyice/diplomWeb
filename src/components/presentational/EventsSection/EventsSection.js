@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import styles from './EventsSection.module.css';
+import { useEffect } from "react";
 
 const EventsSection = ({ errors, successes, onRemoveSuccess, onRemoveError }) => {
     let all = errors.concat(successes);
@@ -16,6 +17,13 @@ const EventsSection = ({ errors, successes, onRemoveSuccess, onRemoveError }) =>
     }
 
     all.sort(compare);
+
+    // useEffect(() => {
+    //     all.forEach(e => {
+    //         //spawns tons of errors
+    //         setTimeout(() => e.type === 'error' ? onRemoveError(e.id) : onRemoveSuccess(e.id), Date.now() - e.created + 5000);
+    //     });
+    // }, [errors, successes])
 
     return (
         <section className={styles.eventsSection}>

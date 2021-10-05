@@ -17,7 +17,8 @@ function mapStateToProps(state, ownProps) {
         profilePlans: state.profilePlans,
         categories: state.categories,
         types: state.types,
-        location: ownProps.location
+        location: ownProps.location,
+        profileUpdateData: state.userUpdateData
     };
 }
 

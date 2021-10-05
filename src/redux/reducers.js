@@ -11,6 +11,11 @@ const initialState = {
 		},
 		isLoading: false,
 	},
+	userUpdateData: {
+		nicknameIsLoading: false,
+		passwordIsLoading: false,
+		logoutInProcess: false,
+	},
 	guest: {
 		nickname: null,
 		isLoading: false,
@@ -38,6 +43,9 @@ const initialState = {
 			count: 21,
 			content: [],
 		},
+	},
+	planActions: {
+		reactionIsUpdating: false
 	},
 	categories: {
 		isLoading: false,
@@ -115,6 +123,7 @@ function reducer(state = initialState, action) {
 
 			return Object.assign({}, state, {
 				plan: reactionReducer(state.plan, action),
+				planActions: planActionsReducer(state.planActions, action),
 				profilePlans: dropProfilePlans(state),
 			});
 		}
@@ -144,6 +153,7 @@ function reducer(state = initialState, action) {
 				return Object.assign({}, state, toInitialState(state));
 
 			return Object.assign({}, state, {
+				userUpdateData: logoutStatusesReducer(state.userUpdateData, action),
 				user: logoutReducer(state.user, action),
 			});
 		}
@@ -164,17 +174,20 @@ function reducer(state = initialState, action) {
 				return Object.assign({}, state, toInitialState(state));
 
 			return Object.assign({}, state, {
+				userUpdateData: updateProfileDataStatusesReducer(state.userUpdateData, action),
 				user: updateProfileDataReducer(state.user, action),
 			});
 		}
 
 		case actions.types.UPDATE_PROFILE_PASSWORD_REQUEST_STARTED:
-		case actions.types.UPDATE_PROFILE_PASSWORD_REQUEST_STARTED:
-		case actions.types.UPDATE_PROFILE_PASSWORD_REQUEST_STARTED: {
+		case actions.types.UPDATE_PROFILE_PASSWORD_REQUEST_SUCCESSED:
+		case actions.types.UPDATE_PROFILE_PASSWORD_REQUEST_FAILED: {
 			if (action?.result?.AUTH === "FAIL")
 				return Object.assign({}, state, toInitialState(state));
 
-			return state;
+			return Object.assign({}, state, {
+				userUpdateData: updateProfilePasswordStatusesReducer(state.userUpdateData, action)
+			});
 		}
 
 		case actions.types.NEW_PLAN_CREATED_REQUEST_STARTED:
@@ -333,6 +346,11 @@ function toInitialState(state) {
 				isChecking: false,
 			},
 			isLoading: false,
+		},
+		userUpdateData: {
+			nicknameIsLoading: false,
+			passwordIsLoading: false,
+			logoutInProcess: false,
 		},
 		profilePlans: {
 			forUser: null,
@@ -578,6 +596,22 @@ function guestReducer(state, action) {
 	}
 }
 
+function planActionsReducer(state, action) {
+	switch (action.type) {
+		case actions.types.NEW_REACTION_REQUEST_STARTED: {
+			return Object.assign({}, state, {
+				reactionIsUpdating: true
+			});
+		}
+		case actions.types.NEW_REACTION_REQUEST_SUCCESSED:
+		case actions.types.NEW_REACTION_REQUEST_FAILED: {
+			return Object.assign({}, state, {
+				reactionIsUpdating: false
+			});
+		}
+	}
+}
+
 function reactionReducer(state, action) {
 	switch (action.type) {
 		case actions.types.NEW_REACTION_REQUEST_STARTED: {
@@ -653,6 +687,32 @@ function publishCommentReducer(state, action) {
 	}
 }
 
+function updateProfilePasswordStatusesReducer(state, action) {
+	switch (action.type) {
+		case actions.types.UPDATE_PROFILE_PASSWORD_REQUEST_STARTED: {
+			return Object.assign({}, state, {passwordIsLoading: true});
+		}
+
+		case actions.types.UPDATE_PROFILE_PASSWORD_REQUEST_SUCCESSED:
+		case actions.types.UPDATE_PROFILE_PASSWORD_REQUEST_FAILED: {
+			return Object.assign({}, state, {passwordIsLoading: false});
+		}
+	}
+}
+
+function updateProfileDataStatusesReducer(state, action) {
+	switch (action.type) {
+		case actions.types.UPDATE_PROFILE_DATA_REQUEST_STARTED: {
+			return Object.assign({}, state, {nicknameIsLoading: true});
+		}
+
+		case actions.types.UPDATE_PROFILE_DATA_REQUEST_SUCCESSED:
+		case actions.types.UPDATE_PROFILE_DATA_REQUEST_FAILED: {
+			return Object.assign({}, state, {nicknameIsLoading: false});
+		}
+	}
+}
+
 function updateProfileDataReducer(state, action) {
 	switch (action.type) {
 		case actions.types.UPDATE_PROFILE_DATA_REQUEST_STARTED: {
@@ -680,7 +740,7 @@ function newPlanReducer(state, action) {
 		case actions.types.NEW_PLAN_CREATED_REQUEST_SUCCESSED: {
 			return Object.assign({}, state, {
 				own: Object.assign({}, state.own, {
-					content: state.own.content.concat([action.result.data]),
+					content: [action.result.data].concat(state.own.content),
 				}),
 			});
 		}
@@ -709,6 +769,23 @@ function editPlanReducer(state, action) {
 
 		case actions.types.PLAN_EDITION_CREATED_REQUEST_FAILED: {
 			return state;
+		}
+	}
+}
+
+function logoutStatusesReducer(state, action) {
+	switch (action.type) {
+		case actions.types.LOGOUT_REQUEST_STARTED: {
+			return Object.assign({}, state, {
+				logoutInProcess: true
+			});
+		}
+
+		case actions.types.LOGOUT_REQUEST_SUCCESSED:
+		case actions.types.LOGOUT_REQUEST_FAILED: {
+			return Object.assign({}, state, {
+				logoutInProcess: false
+			});
 		}
 	}
 }

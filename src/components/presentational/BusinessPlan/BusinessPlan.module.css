@@ -24,6 +24,8 @@
 }
 
 .reactionsWrapper {
+	width: max-content;
+	position: relative;
 	display: flex;
 	gap: 30px;
 	margin: 60px 0;

@@ -12,6 +12,7 @@ import Select from "../Select/Select";
 import Graph from "../../helpers/AuthorizedRoute/Graph";
 import BusinessTag from "../BusinessTag/BusinessTag";
 import { CSSTransition } from "react-transition-group";
+import SVGManager from "../../../svgs/svgs";
 
 const BusinessPlan = ({
 	plan,
@@ -27,6 +28,7 @@ const BusinessPlan = ({
 	onNeedServerData,
 	onPlanDeleted,
 	onUserReact,
+	planActions
 }) => {
 	const IS_PROFITABLE =
 		plan?.data?.expence?.salary +
@@ -518,6 +520,12 @@ const BusinessPlan = ({
 										/>
 									</div>
 									<div className={styles.reactionsWrapper}>
+										{
+											planActions.reactionIsUpdating && 
+											<div className={"userActionLocker"}>
+												{SVGManager.getSvg('lockerSvg')}
+											</div>
+										}
 										<div className={styles.reaction}>
 											{plan.data.liked ? (
 												<svg
@@ -651,7 +659,7 @@ const BusinessPlan = ({
 												content={"Version from"}
 												propsValues={plan?.editions}
 												wantToDisplayId={
-													plan.activeEdition
+													activeEdition
 												}
 												onSelect={handleEditionsChange}
 												style={{
@@ -1289,6 +1297,7 @@ BusinessPlan.propTypes = {
 	onNeedServerData: PropTypes.func,
 	onPlanDeleted: PropTypes.func,
 	onUserReact: PropTypes.func,
+	planActions: PropTypes.object
 };
 
 export default BusinessPlan;

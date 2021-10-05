@@ -17,3 +17,6 @@
 [BACKEND]
 1. RabbitMQ
 2. Redis?
+
+[BUGS]
+1.onSubmit in catalog delets plans, but not loading them

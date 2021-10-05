@@ -3,6 +3,7 @@
 2. Creating normal error sending on 
 3. Clear console.log
 4. refactor auth to CASE-SENSETIVE
+5. Adaptive
 
 [CHECKS]
 1. Sort order is not right with new plan (check push -> unshift)

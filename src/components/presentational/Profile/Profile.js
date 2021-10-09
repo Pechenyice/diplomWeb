@@ -77,6 +77,8 @@ const Profile = ({
 		};
 	}, [nickname]);
 
+	useEffect(() => (() => onClear()), []);
+
 	const [state, setState] = useState({
 		data: {
 			login: login || "",

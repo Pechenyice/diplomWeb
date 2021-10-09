@@ -367,9 +367,12 @@ const actions = {
             dispatch(this.fetchAuthRequest());
             Client.loadAuthData(login, pass)
                 .then((result) => {
-                    result.success ?
-                        dispatch(this.fetchAuthSuccess(result)) :
+                    if (result.success) {
+                        dispatch(this.fetchAuthSuccess(result));
+                    } else {
+                        dispatch(this.fetchAuthFail(result));
                         dispatch(this.addError(result.cause));
+                    }
                 })
                 .catch((e) => {
                     if (e.name === 'AbortError') {

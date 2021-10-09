@@ -11,6 +11,8 @@ import Button from "../Button/Button";
 import Select from "../Select/Select";
 import Graph from "../../helpers/AuthorizedRoute/Graph";
 import BusinessTag from "../BusinessTag/BusinessTag";
+import { CSSTransition } from "react-transition-group";
+import SVGManager from "../../../svgs/svgs";
 
 const BusinessPlan = ({
 	plan,
@@ -26,34 +28,35 @@ const BusinessPlan = ({
 	onNeedServerData,
 	onPlanDeleted,
 	onUserReact,
+	planActions
 }) => {
 	const IS_PROFITABLE =
 		plan?.data?.expence?.salary +
-		plan?.data?.expence?.electricity +
-		plan?.data?.expence?.maintenance <
+			plan?.data?.expence?.electricity +
+			plan?.data?.expence?.maintenance <
 		plan?.data?.income?.profit;
 
 	const MONTHS = Math.ceil(
 		(plan?.data?.expence?.amortization + plan?.data?.expence?.materials) /
-		(plan?.data?.income?.profit -
-			(plan?.data?.expence?.salary +
-				plan?.data?.expence?.electricity +
-				plan?.data?.expence?.maintenance))
+			(plan?.data?.income?.profit -
+				(plan?.data?.expence?.salary +
+					plan?.data?.expence?.electricity +
+					plan?.data?.expence?.maintenance))
 	);
 
 	const SPENDINGS = IS_PROFITABLE
 		? plan?.data?.expence?.amortization +
-		plan?.data?.expence?.materials +
-		(plan?.data?.expence?.salary +
-			plan?.data?.expence?.electricity +
-			plan?.data?.expence?.maintenance) *
-		MONTHS
+		  plan?.data?.expence?.materials +
+		  (plan?.data?.expence?.salary +
+				plan?.data?.expence?.electricity +
+				plan?.data?.expence?.maintenance) *
+				MONTHS
 		: plan?.data?.expence?.amortization +
-		plan?.data?.expence?.materials +
-		(plan?.data?.expence?.salary +
-			plan?.data?.expence?.electricity +
-			plan?.data?.expence?.maintenance) *
-		12;
+		  plan?.data?.expence?.materials +
+		  (plan?.data?.expence?.salary +
+				plan?.data?.expence?.electricity +
+				plan?.data?.expence?.maintenance) *
+				12;
 
 	const INCOMINGS = IS_PROFITABLE
 		? plan?.data?.income?.profit * MONTHS
@@ -84,31 +87,31 @@ const BusinessPlan = ({
 				borderColor: "#FF708B",
 				data: [
 					plan?.data?.expence?.amortization +
-					plan?.data?.expence?.materials,
+						plan?.data?.expence?.materials,
 					plan?.data?.expence?.amortization +
-					plan?.data?.expence?.materials +
-					(IS_PROFITABLE
-						? (plan?.data?.expence?.salary +
-							plan?.data?.expence?.electricity +
-							plan?.data?.expence?.maintenance) *
-						MONTHS
-						: (plan?.data?.expence?.salary +
-							plan?.data?.expence?.electricity +
-							plan?.data?.expence?.maintenance) *
-						12),
+						plan?.data?.expence?.materials +
+						(IS_PROFITABLE
+							? (plan?.data?.expence?.salary +
+									plan?.data?.expence?.electricity +
+									plan?.data?.expence?.maintenance) *
+							  MONTHS
+							: (plan?.data?.expence?.salary +
+									plan?.data?.expence?.electricity +
+									plan?.data?.expence?.maintenance) *
+							  12),
 					plan?.data?.expence?.amortization +
-					plan?.data?.expence?.materials +
-					(IS_PROFITABLE
-						? (plan?.data?.expence?.salary +
-							plan?.data?.expence?.electricity +
-							plan?.data?.expence?.maintenance) *
-						MONTHS *
-						2
-						: (plan?.data?.expence?.salary +
-							plan?.data?.expence?.electricity +
-							plan?.data?.expence?.maintenance) *
-						12 *
-						2),
+						plan?.data?.expence?.materials +
+						(IS_PROFITABLE
+							? (plan?.data?.expence?.salary +
+									plan?.data?.expence?.electricity +
+									plan?.data?.expence?.maintenance) *
+							  MONTHS *
+							  2
+							: (plan?.data?.expence?.salary +
+									plan?.data?.expence?.electricity +
+									plan?.data?.expence?.maintenance) *
+							  12 *
+							  2),
 				],
 			},
 		],
@@ -182,19 +185,19 @@ const BusinessPlan = ({
 						? plan?.data?.expence?.salary * MONTHS
 						: plan?.data?.expence?.salary * 12) /
 						SPENDINGS) *
-					100,
+						100,
 					((IS_PROFITABLE
 						? plan?.data?.expence?.electricity * MONTHS
 						: plan?.data?.expence?.electricity * 12) /
 						SPENDINGS) *
-					100,
+						100,
 					(plan?.data?.expence?.amortization / SPENDINGS) * 100,
 					(plan?.data?.expence?.materials / SPENDINGS) * 100,
 					((IS_PROFITABLE
 						? plan?.data?.expence?.maintenance * MONTHS
 						: plan?.data?.expence?.maintenance * 12) /
 						SPENDINGS) *
-					100,
+						100,
 				],
 				borderWidth: 10,
 				backgroundColor: [
@@ -317,6 +320,8 @@ const BusinessPlan = ({
 
 	let [activeEdition, setActiveEdition] = useState(plan.activeEdition);
 
+	let [showPopup, setShowPopup] = useState(false);
+
 	function handleEditionsChange(id) {
 		setActiveEdition(id);
 	}
@@ -363,11 +368,72 @@ const BusinessPlan = ({
 		}
 	}
 
+	function handleShowPopup() {
+		setShowPopup(true);
+	}
+
+	function handleClosePopup() {
+		setShowPopup(false);
+	}
+
+	function handleStopPropagation(e) {
+		e.stopPropagation();
+	}
+
 	return (
 		<section className={["sectionDimensioned"].join(" ")}>
+			<CSSTransition
+				in={showPopup}
+				timeout={300}
+				classNames={"popup"}
+				unmountOnExit
+			>
+				<div className={styles.popupWrapper} onClick={handleClosePopup}>
+					<div
+						className={styles.popupWindow}
+						onClick={handleStopPropagation}
+					>
+						<p className={styles.popupMain}>Delete?</p>
+						<p className={styles.popupHint}>
+							business and all it's editions
+						</p>
+						<div className={styles.popupControls}>
+							<Button text={"no"} onClick={handleClosePopup} />
+							<p className={styles.deletion} onClick={handleDeletePlan}>Yes</p>
+						</div>
+						<div className={styles.popupClose} onClick={handleClosePopup}>
+							<svg
+								width="39"
+								height="40"
+								viewBox="0 0 39 40"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<rect
+									x="10.3652"
+									y="9.58775"
+									width="27.3404"
+									height="1.36702"
+									transform="rotate(45 10.3652 9.58775)"
+									fill="#101010"
+								/>
+								<rect
+									x="9.39844"
+									y="28.9203"
+									width="27.3404"
+									height="1.36702"
+									transform="rotate(-45 9.39844 28.9203)"
+									fill="#101010"
+								/>
+							</svg>
+						</div>
+					</div>
+					{/* onClick={handleDeletePlan} */}
+				</div>
+			</CSSTransition>
 			{!plan.isLoading &&
-				categories.content.length &&
-				types.content.length ? (
+			categories.content.length &&
+			types.content.length ? (
 				plan.data ? (
 					<section>
 						{needReRender && (
@@ -383,11 +449,7 @@ const BusinessPlan = ({
 							/>
 						)}
 						<section>
-							<div
-								className={[
-									styles.planWrapperMain,
-								].join(" ")}
-							>
+							<div className={[styles.planWrapperMain].join(" ")}>
 								<h1 className={styles.upperCase}>
 									{plan.data.name}
 								</h1>
@@ -420,37 +482,50 @@ const BusinessPlan = ({
 															styles.deletion
 														}
 														onClick={
-															handleDeletePlan
+															handleShowPopup
 														}
 													>
 														Delete
-													</p>
-													<p
-														className={
-															styles.deletionHint
-														}
-													>
-														business and all it's
-														editions
 													</p>
 												</div>
 											</div>
 										</div>
 									) : // <div>'not mine'</div>
-										null}
+									null}
 									<p className={styles.creationDate}>
 										Edition created:{" "}
 										{humanizeDate(plan.data.created)}
 									</p>
 									<div className={styles.planTagsWrapper}>
-										<BusinessTag theme={'type'} text={types.content.find(e => {
-											return e.id === plan.data.type;
-										}).name} />
-										<BusinessTag theme={'category'} text={categories.content.find(e => {
-											return e.id === plan.data.category;
-										}).name} />
+										<BusinessTag
+											theme={"type"}
+											text={
+												types.content.find((e) => {
+													return (
+														e.id === plan.data.type
+													);
+												}).name
+											}
+										/>
+										<BusinessTag
+											theme={"category"}
+											text={
+												categories.content.find((e) => {
+													return (
+														e.id ===
+														plan.data.category
+													);
+												}).name
+											}
+										/>
 									</div>
 									<div className={styles.reactionsWrapper}>
+										{
+											planActions.reactionIsUpdating && 
+											<div className={"userActionLocker"}>
+												{SVGManager.getSvg('lockerSvg')}
+											</div>
+										}
 										<div className={styles.reaction}>
 											{plan.data.liked ? (
 												<svg
@@ -540,7 +615,12 @@ const BusinessPlan = ({
 											}
 										</div>
 									</div>
-									<div className={[styles.textBlock, styles.textBlockDimensioned].join(" ")}>
+									<div
+										className={[
+											styles.textBlock,
+											styles.textBlockDimensioned,
+										].join(" ")}
+									>
 										<h2 className={styles.subTitle}>
 											Basic information
 										</h2>
@@ -548,8 +628,8 @@ const BusinessPlan = ({
 											{plan.data.description}
 										</p>
 									</div>
-									{
-										plan.data.income.description && <div className={styles.textBlock}>
+									{plan.data.income.description && (
+										<div className={styles.textBlock}>
 											<h2 className={styles.subTitle}>
 												What is the money spent on?
 											</h2>
@@ -557,17 +637,18 @@ const BusinessPlan = ({
 												{plan.data.income.description}
 											</p>
 										</div>
-									}
-									{
-										plan.data.expence.description && <div className={styles.textBlock}>
+									)}
+									{plan.data.expence.description && (
+										<div className={styles.textBlock}>
 											<h2 className={styles.subTitle}>
-												How will the business make money?
+												How will the business make
+												money?
 											</h2>
 											<p className={styles.text}>
 												{plan.data.expence.description}
 											</p>
 										</div>
-									}
+									)}
 									<div className={styles.textBlock}>
 										<h2 className={styles.subTitle}>
 											Versions history (
@@ -578,7 +659,7 @@ const BusinessPlan = ({
 												content={"Version from"}
 												propsValues={plan?.editions}
 												wantToDisplayId={
-													plan.activeEdition
+													activeEdition
 												}
 												onSelect={handleEditionsChange}
 												style={{
@@ -630,8 +711,8 @@ const BusinessPlan = ({
 														styles.grapghExplanationHint
 													}
 												>
-													&nbsp;and will have an estimated
-													income of{" "}
+													&nbsp;and will have an
+													estimated income of{" "}
 													{plan?.data?.income
 														?.profit -
 														(plan?.data?.expence
@@ -643,16 +724,32 @@ const BusinessPlan = ({
 													$
 												</div>
 											</div>
-											<div className={styles.graphsWrapper}>
-												<div className={styles.graphsWrapperGraphPart}>
+											<div
+												className={styles.graphsWrapper}
+											>
+												<div
+													className={
+														styles.graphsWrapperGraphPart
+													}
+												>
 													<Graph
 														type="line"
-														data={GRAPH_PAYBACK_DATA}
-														options={GRAPH_PAYBACK_OPTIONS}
-														style={{ width: "100%" }}
+														data={
+															GRAPH_PAYBACK_DATA
+														}
+														options={
+															GRAPH_PAYBACK_OPTIONS
+														}
+														style={{
+															width: "100%",
+														}}
 													/>
 												</div>
-												<div className={styles.graphsWrapperLegendPart}>
+												<div
+													className={
+														styles.graphsWrapperLegendPart
+													}
+												>
 													<div
 														className={
 															styles.legendElem
@@ -664,7 +761,7 @@ const BusinessPlan = ({
 															}
 															style={{
 																backgroundColor:
-																	'#FF708B',
+																	"#FF708B",
 															}}
 														></div>
 														<div
@@ -686,7 +783,7 @@ const BusinessPlan = ({
 															}
 															style={{
 																backgroundColor:
-																	'#02F1E3',
+																	"#02F1E3",
 															}}
 														></div>
 														<div
@@ -737,7 +834,12 @@ const BusinessPlan = ({
 											</p>
 										</div>
 									)}
-									<div className={[styles.graphElem, styles.graphElemSmall].join(' ')}>
+									<div
+										className={[
+											styles.graphElem,
+											styles.graphElemSmall,
+										].join(" ")}
+									>
 										<h2 className={styles.subTitle}>
 											Spendings, in %
 										</h2>
@@ -751,61 +853,72 @@ const BusinessPlan = ({
 											</h3>
 										)}
 										<div className={styles.graphsWrapper}>
-											<div className={styles.graphsWrapperGraphPart}>
+											<div
+												className={
+													styles.graphsWrapperGraphPart
+												}
+											>
 												<Graph
 													type="doughnut"
 													data={GRAPH_SPENDINGS_DATA}
-													options={GRAPH_SPENDINGS_OPTIONS}
+													options={
+														GRAPH_SPENDINGS_OPTIONS
+													}
 													style={{ width: "100%" }}
 												/>
 											</div>
-											<div className={styles.graphsWrapperLegendPart}>
+											<div
+												className={
+													styles.graphsWrapperLegendPart
+												}
+											>
 												<div
 													className={
 														styles.graphLegendsWrapper
 													}
 												>
-													{Object.keys(LEGEND_OPTIONS).map(
-														(e, i) => (
+													{Object.keys(
+														LEGEND_OPTIONS
+													).map((e, i) => (
+														<div
+															key={i}
+															className={
+																styles.graphLegend
+															}
+														>
 															<div
-																key={i}
 																className={
-																	styles.graphLegend
+																	styles.legendElem
 																}
 															>
 																<div
 																	className={
-																		styles.legendElem
+																		styles.legendColor
 																	}
-																>
-																	<div
-																		className={
-																			styles.legendColor
-																		}
-																		style={{
-																			backgroundColor:
-																				LEGEND_OPTIONS[
-																					e
-																				].color,
-																		}}
-																	></div>
-																	<div
-																		className={
-																			styles.legendText
-																		}
-																	>
-																		{e}:{" "}
-																		{
+																	style={{
+																		backgroundColor:
 																			LEGEND_OPTIONS[
 																				e
-																			].amount
-																		}
-																		$
-																	</div>
+																			]
+																				.color,
+																	}}
+																></div>
+																<div
+																	className={
+																		styles.legendText
+																	}
+																>
+																	{e}:{" "}
+																	{
+																		LEGEND_OPTIONS[
+																			e
+																		].amount
+																	}
+																	$
 																</div>
 															</div>
-														)
-													)}
+														</div>
+													))}
 												</div>
 											</div>
 										</div>
@@ -1050,14 +1163,14 @@ const BusinessPlan = ({
 										))}
 										<div>
 											{!plan.comments.offset &&
-												!plan.comments.isLoading
+											!plan.comments.isLoading
 												? onNeedMoreComments(
-													plan.activeBusiness,
-													plan.activeEdition
-												)
+														plan.activeBusiness,
+														plan.activeEdition
+												  )
 												: null}
 											{plan.comments.needMore &&
-												!plan.comments.isLoading ? (
+											!plan.comments.isLoading ? (
 												<div
 													onClick={() => {
 														onNeedMoreComments(
@@ -1083,7 +1196,7 @@ const BusinessPlan = ({
 													COMMENTS LOADING
 												</p>
 											) : !plan.comments.content
-												.length ? (
+													.length ? (
 												<p
 													className={
 														styles.commentsEventHint
@@ -1135,10 +1248,33 @@ const BusinessPlan = ({
 					<div>NO DATA</div>
 				)
 			) : (
-				<div className={[styles.planWrapper, styles.animationWrapper].join(' ')}>
-					<svg xmlns="http://www.w3.org/2000/svg" className={styles.loading} viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-						<path fill="none" stroke="#8676FF" stroke-width="10" stroke-dasharray="177.0463604736328 79.54256774902345" d="M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40 C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z" stroke-linecap="round">
-							<animate attributeName="stroke-dashoffset" repeatCount="indefinite" dur="0.9174311926605504s" keyTimes="0;1" values="0;256.58892822265625"></animate>
+				<div
+					className={[
+						styles.planWrapper,
+						styles.animationWrapper,
+					].join(" ")}
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className={styles.loading}
+						viewBox="0 0 100 100"
+						preserveAspectRatio="xMidYMid"
+					>
+						<path
+							fill="none"
+							stroke="#8676FF"
+							stroke-width="10"
+							stroke-dasharray="177.0463604736328 79.54256774902345"
+							d="M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40 C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z"
+							stroke-linecap="round"
+						>
+							<animate
+								attributeName="stroke-dashoffset"
+								repeatCount="indefinite"
+								dur="0.9174311926605504s"
+								keyTimes="0;1"
+								values="0;256.58892822265625"
+							></animate>
 						</path>
 					</svg>
 				</div>
@@ -1161,6 +1297,7 @@ BusinessPlan.propTypes = {
 	onNeedServerData: PropTypes.func,
 	onPlanDeleted: PropTypes.func,
 	onUserReact: PropTypes.func,
+	planActions: PropTypes.object
 };
 
 export default BusinessPlan;

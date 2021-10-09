@@ -59,6 +59,10 @@
     width: 190px;
 }
 
+.filtersElementButton {
+    height: 60px;
+}
+
 .catalogContent {
     margin-top: 60px;
     margin-bottom: 100px;
@@ -78,5 +82,16 @@
 }
 
 .loading {
+    margin: auto;
+}
+
+.noCaseText {
+    width: max-content;
+    margin: auto;
+    margin-bottom: 40px;
+}
+
+.noCaseButton {
+    width: 200px;
     margin: auto;
 }

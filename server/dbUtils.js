@@ -480,12 +480,35 @@ const dbUtils = {
 		return businesses;
 	},
 
-	getAllEditionsForBusinessesFiltration: async (offset, count) => {
+	getAllEditionsForBusinessesFiltration: async (offset, count, name, sort, category, type) => {
 		//order by + filters
 
+        sort = +sort;
+        category = +category;
+        type = +type;
+
+        const SORT_ENUM = {
+            0: 'order by creation_date desc',
+            1: 'order by creation_date',
+            2: 'order by li+di desc'
+        }
+
+        const FILTER_CATEGORY = category === -1 ? '' : 'category_id = ? and';
+        const FILTER_TYPE = type === -1 ? '' : 'type_id = ? and';
+
+        let values = [];
+
+        if (category !== -1) values.push(category + '');
+        if (type !== -1) values.push(type + '');
+
+        let query = `select a.*, (select count(_id) from likes where edition_id = a._id) as li, (select count(_id) from dislikes where edition_id = a._id) as di from edition a where ${FILTER_CATEGORY} ${FILTER_TYPE} name like ? and not exists (select * from edition b where a.business_id = b.business_id and b.creation_date > a.creation_date) ${SORT_ENUM[sort]} limit ? offset ?;`;
+        let filler = values.concat([`%${name}%`, count, offset]);
+
+        console.log(query, filler)
+
 		return await connection.execute(
-			`select * from edition a where not exists (select * from edition b where a.business_id = b.business_id and b.creation_date > a.creation_date) limit ? offset ?;`,
-			[count, offset]
+			query,
+            filler
 		);
 	},
 
@@ -518,9 +541,14 @@ const dbUtils = {
 	},
 
 	getBusinessesWithFilters: async function (filters, user=null) {
+        console.log('FILTERS', filters)
 		let [result, fields] = await this.getAllEditionsForBusinessesFiltration(
 			filters.offset,
-			filters.count
+			filters.count,
+            filters.f_pattern,
+            filters.f_sort,
+            filters.f_category,
+            filters.f_type
 		);
 
 		let businesses = [];

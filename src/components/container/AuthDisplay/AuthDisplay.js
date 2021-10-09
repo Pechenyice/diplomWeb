@@ -7,7 +7,8 @@ const AuthDisplay = connect(mapPropsToState, mapDispatchToState)(Auth);
 
 function mapPropsToState(state) {
     return {
-        isLogged: state.user.id === null ? false : true
+        isLogged: state.user.id === null ? false : true,
+        isLoading: state.user.isLoading
     };
 }
 

@@ -6,8 +6,16 @@ import Client from "../../../Client/Client";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
+import SVGManager from "../../../svgs/svgs";
 
-const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
+const Auth = ({
+	location,
+	isLoading,
+	isLogged,
+	onSignIn,
+	onSignUp,
+	onError,
+}) => {
 	useEffect(() => {
 		return () => {
 			Client.abortLoadAuthDataFetch();
@@ -177,12 +185,35 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 		!notValid ? onSignUp(state.signUp) : onError(notValid);
 	}
 
+	let [activeAction, setActiveAction] = useState("signIn");
+
+	function handleActiveAction(action) {
+		return () => setActiveAction(action);
+	}
+
 	return (
-		<section className={['sectionDimensioned', styles.authWrapper].join(' ')}>
+		<section
+			className={["sectionDimensioned", styles.authWrapper].join(" ")}
+		>
 			{isLogged ? <Redirect to={redirectPath()} /> : null}
 			<h1>
-				<span className={styles.authSignIn}>SIGN IN</span>{" "}
-				<span className={styles.authSignUp}>& CREATE ACCOUNT</span>
+				<span
+					className={[
+						styles.authAction,
+						activeAction === "signIn" && styles.activeAuthAction,
+					].join(" ")}
+				>
+					SIGN IN
+				</span>
+				{" & "}
+				<span
+					className={[
+						styles.authAction,
+						activeAction === "signUp" && styles.activeAuthAction,
+					].join(" ")}
+				>
+					CREATE ACCOUNT
+				</span>
 			</h1>
 			<p className={styles.authHint}>
 				We will redirect you to your target just in
@@ -190,12 +221,18 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 			</p>
 			<div className={styles.inputsBlock}>
 				<div className={styles.inputsWrapper}>
+					{isLoading && (
+						<div className={"userActionLocker"}>
+							{SVGManager.getSvg("lockerSvg")}
+						</div>
+					)}
 					<Input
 						id={"signInlogin"}
 						error={state.signIn.loginError}
 						label={"Login/Email"}
 						isEmpty={!state.signIn.login}
 						onChange={handleSignInLoginChange}
+						onFocus={handleActiveAction("signIn")}
 					/>
 					<Input
 						id={"signInPassword"}
@@ -203,6 +240,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 						label={"Password"}
 						isEmpty={!state.signIn.pass}
 						onChange={handleSignInPasswordChange}
+						onFocus={handleActiveAction("signIn")}
 						password
 					/>
 					<Button
@@ -212,12 +250,18 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 					/>
 				</div>
 				<div className={styles.inputsWrapper}>
+					{isLoading && (
+						<div className={"userActionLocker"}>
+							{SVGManager.getSvg("lockerSvg")}
+						</div>
+					)}
 					<Input
 						id={"signUplogin"}
 						error={state.signUp.loginError}
 						label={"Login/Email"}
 						isEmpty={!state.signUp.login}
 						onChange={handleSignUpLoginChange}
+						onFocus={handleActiveAction("signUp")}
 					/>
 					<Input
 						id={"signUpNickname"}
@@ -225,6 +269,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 						label={"Nickname"}
 						isEmpty={!state.signUp.nick}
 						onChange={handleSignUpNicknameChange}
+						onFocus={handleActiveAction("signUp")}
 					/>
 					<Input
 						id={"signUpPassword"}
@@ -232,6 +277,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 						label={"Password"}
 						isEmpty={!state.signUp.pass}
 						onChange={handleSignUpPasswordChange}
+						onFocus={handleActiveAction("signUp")}
 						password
 					/>
 					<Input
@@ -240,6 +286,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 						label={"Repeat password"}
 						isEmpty={!state.signUp.rePass}
 						onChange={handleSignUpRePasswordChange}
+						onFocus={handleActiveAction("signUp")}
 						password
 					/>
 					<div style={{ margin: "15px 0" }}>
@@ -271,6 +318,7 @@ const Auth = ({ location, isLogged, onSignIn, onSignUp, onError }) => {
 
 Auth.propTypes = {
 	location: PropTypes.object,
+	isLoading: PropTypes.bool.isRequired,
 	isLogged: PropTypes.bool.isRequired,
 	onSignIn: PropTypes.func.isRequired,
 	onSignUp: PropTypes.func.isRequired,

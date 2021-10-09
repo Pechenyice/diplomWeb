@@ -112,6 +112,21 @@ input::placeholder {
   min-height: calc(100vh - 90px - 72px);
 }
 
+/* locker of clicking */
+
+.userActionLocker {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* CSS TRANSITIONS FROM REACT TRANSITIONS GROUP */
 
 /* plan animation for profile, catalog */
@@ -151,6 +166,46 @@ input::placeholder {
 }
 
 .planStep-exit-active {
+  opacity: 0;
+  transition: opacity 0ms;
+}
+
+/* popup animation */
+
+.popup-enter {
+  opacity: 0;
+}
+
+.popup-enter-active {
+  opacity: 1;
+  transition: opacity 300ms;
+}
+
+.popup-exit {
+  opacity: 1;
+}
+
+.popup-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+/* map animation */
+
+.mapAnimation-enter {
+  opacity: 0;
+}
+
+.mapAnimation-enter-active {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+.mapAnimation-exit {
+  opacity: 1;
+}
+
+.mapAnimation-exit-active {
   opacity: 0;
   transition: opacity 0ms;
 }

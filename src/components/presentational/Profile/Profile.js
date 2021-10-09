@@ -43,25 +43,6 @@ const Profile = ({
 			onNeedCategories();
 		if (!types.content.length && !types.isLoading) onNeedTypes();
 
-		if (
-			cachedForUser !== userId &&
-			!profilePlans.own.isFetched &&
-			!profilePlans.own.isLoading
-		)
-			onNeedLoadOwnPlans();
-		if (
-			cachedForUser !== userId &&
-			!profilePlans.liked.isFetched &&
-			!profilePlans.liked.isLoading
-		)
-			onNeedLoadLikedPlans();
-		if (
-			cachedForUser !== userId &&
-			!profilePlans.disliked.isFetched &&
-			!profilePlans.disliked.isLoading
-		)
-			onNeedLoadDislikedPlans();
-
 		if (nickname === null) onNeedUserNickname();
 
 		const options = {
@@ -99,6 +80,25 @@ const Profile = ({
 
 	const [showPlans, setShowPlans] = useState(false);
 	useEffect(() => {
+		if (
+			cachedForUser !== userId &&
+			!profilePlans.own.isFetched &&
+			!profilePlans.own.isLoading
+		)
+			onNeedLoadOwnPlans();
+		if (
+			cachedForUser !== userId &&
+			!profilePlans.liked.isFetched &&
+			!profilePlans.liked.isLoading
+		)
+			onNeedLoadLikedPlans();
+		if (
+			cachedForUser !== userId &&
+			!profilePlans.disliked.isFetched &&
+			!profilePlans.disliked.isLoading
+		)
+			onNeedLoadDislikedPlans();
+			
 		if (
 			profilePlans.own.content.length ||
 			profilePlans.liked.content.length ||

@@ -864,7 +864,7 @@ function userReducer(state, action) {
 		}
 
 		case actions.types.AUTH_REQUEST_FAILED: {
-			console.log("auth failed");
+			console.log("HERE YOU LOOK auth failed");
 			return Object.assign({}, state, { id: null, isLoading: false });
 		}
 

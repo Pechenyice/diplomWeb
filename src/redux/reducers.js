@@ -95,6 +95,12 @@ function reducer(state = initialState, action) {
 				},
 			});
 		}
+		
+		case actions.types.CLEAR_PROFILE_PLANS: {
+			return Object.assign({}, state, {
+				profilePlans: dropProfilePlans(state),
+			});
+		}
 
 		case actions.types.PUBLISH_COMMENT_REQUEST_STARTED:
 		case actions.types.PUBLISH_COMMENT_REQUEST_SUCCESSED:

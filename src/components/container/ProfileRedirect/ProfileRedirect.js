@@ -50,19 +50,20 @@ function mergePropsWithDispatch(stateProps, dispatchProps) {
             dispatchProps.dispatch(actions.fetchTypes());
         },
         onClear: () => {
-            dispatchProps.dispatch(actions.clearGuest())
+            dispatchProps.dispatch(actions.clearGuest());
+            dispatchProps.dispatch(actions.clearProfilePlans());
         },
         onLogout: () => {
-            dispatchProps.dispatch(actions.fetchLogout())
+            dispatchProps.dispatch(actions.fetchLogout());
         },
         onError: (text) => {
-            dispatchProps.dispatch(actions.addError(text))
+            dispatchProps.dispatch(actions.addError(text));
         },
         onSaveProfileData: (nickname) => {
-            dispatchProps.dispatch(actions.updateProfileData(nickname))
+            dispatchProps.dispatch(actions.updateProfileData(nickname));
         },
         onSaveProfilePassword: (oldPass, pass) => {
-            dispatchProps.dispatch(actions.updateProfilePassword(oldPass, pass))
+            dispatchProps.dispatch(actions.updateProfilePassword(oldPass, pass));
         }
     };
 }

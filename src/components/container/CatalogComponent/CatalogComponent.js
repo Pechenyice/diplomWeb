@@ -32,8 +32,8 @@ function mergePropsWithDispatch(stateProps, dispatchProps) {
     return {
         ...stateProps,
         ...dispatchProps,
-        onNeedMoreBusinesses: () => {
-            dispatchProps.dispatch(actions.fetchBusinesses(stateProps.businesses.offset, stateProps.businesses.count, stateProps.filters));
+        onNeedMoreBusinesses: (offset, filters) => {
+            dispatchProps.dispatch(actions.fetchBusinesses(offset !== null ? offset : stateProps.businesses.offset, stateProps.businesses.count, filters || stateProps.filters));
         }
     }
 };

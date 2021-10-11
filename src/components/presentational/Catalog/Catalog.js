@@ -44,8 +44,10 @@ const Catalog = ({
 	}, []);
 
 	function handleFiltersSubmitClick() {
-		setState(Object.assign({}, state));
+		if (businesses.isLoading) return;
+		// setState(Object.assign({}, state));
 		onFiltersSelected(state);
+		onNeedMoreBusinesses(0, state);
 	}
 
 	function handlePatternChange(e) {
@@ -75,11 +77,11 @@ const Catalog = ({
 					<div className={styles.filtersWrapper}>
 						<section className={[styles.catalogWrapper].join(" ")}>
 							<div className={styles.filtersSection}>
-								{businesses.isLoading && (
+								{/* {businesses.isLoading && (
 									<div className={"userActionLocker"}>
 										{SVGManager.getSvg("lockerSvg")}
 									</div>
-								)}
+								)} */}
 								<div className={styles.searchInputWrapper}>
 									<input
 										placeholder={"Search..."}

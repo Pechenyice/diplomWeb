@@ -301,7 +301,7 @@ const Profile = ({
 								<Button
 									text={"Apply changes"}
 									onClick={handleSaveProfileData}
-									style={{ marginTop: "15px" }}
+									className={styles.profileButton}
 								/>
 							</div>
 							<div className={styles.inputsWrapper}>
@@ -340,14 +340,14 @@ const Profile = ({
 								<Button
 									text={"Change password"}
 									onClick={handleSaveProfilePassword}
-									style={{ marginTop: "15px" }}
+									className={styles.profileButton}
 								/>
 							</div>
 							<div className={styles.inputsWrapper}>
 								<h2 className={styles.subTitle}>
 									Manage profile
 								</h2>
-								<Button text={"Logout"} onClick={onLogout} />
+								<Button text={"Logout"} onClick={onLogout} className={styles.profileButton} />
 							</div>
 						</div>
 					)}

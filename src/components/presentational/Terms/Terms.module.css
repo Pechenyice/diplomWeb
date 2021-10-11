@@ -15,3 +15,23 @@
 	font-size: 16px;
 	line-height: 24px;
 }
+
+@media screen and (max-width: 1280px) {
+	.termsWrapper {
+		max-width: 728px;
+	}
+
+	.termsText {
+		width: 728px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.termsWrapper {
+		max-width: 312px;
+	}
+
+	.termsText {
+		width: 312px;
+	}
+}

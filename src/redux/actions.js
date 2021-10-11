@@ -231,11 +231,17 @@ const actions = {
     },
 
     fetchBusinesses: function (offset, count, filters) {
+        console.log('SENDED', offset, count, filters)
         return (dispatch) => {
             dispatch(this.fetchBusinessesRequest());
             Client.loadBusinesses(offset, count, filters)
                 .then((result) => {
-                    dispatch(this.fetchBusinessesSuccess(result));
+                    if (result.success) {
+                        dispatch(this.fetchBusinessesSuccess(result));
+                    } else {
+                        dispatch(this.fetchBusinessesFail());
+                        dispatch(this.addError(result.cause));
+                    }
                 })
                 .catch((e) => {
                     if (e.name === 'AbortError') {
@@ -487,10 +493,10 @@ const actions = {
                 .then((result) => {
                     if (result.success) {
                         dispatch(this.fetchUpdateProfileDataSuccess(result));
-                        dispatch(this.addSuccess('Nickname changed succesfully!'))
+                        dispatch(this.addSuccess('Nickname changed succesfully!'));
                     } else {
-                        dispatch(this.fetchUpdateProfileDataFail({ AUTH: 'FAIL' }));
-                        dispatch(this.addError(result.cause))
+                        dispatch(this.fetchUpdateProfileDataFail(result));
+                        dispatch(this.addError(result.cause));
                     }
                 })
                 .catch((e) => {
@@ -575,7 +581,7 @@ const actions = {
                         dispatch(this.fetchUpdateProfilePasswordSuccess(result));
                         dispatch(this.addSuccess('Password changed succesfully!'))
                     } else {
-                        dispatch(this.fetchUpdateProfilePasswordFail({ AUTH: 'FAIL' }));
+                        dispatch(this.fetchUpdateProfilePasswordFail(result));
                         dispatch(this.addError(result.cause))
                     }
                 })

@@ -6,7 +6,6 @@
 5. Adaptive
 
 [CHECKS]
-1. Sort order is not right with new plan (check push -> unshift)
 
 [FEATURES]
 1. Unit testing
@@ -19,4 +18,3 @@
 2. Redis?
 
 [BUGS]
-1.onSubmit in catalog delets plans, but not loading them

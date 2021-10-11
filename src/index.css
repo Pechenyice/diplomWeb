@@ -112,6 +112,21 @@ input::placeholder {
   min-height: calc(100vh - 90px - 72px);
 }
 
+@media screen and (max-width: 768px) {
+  .sectionDimensioned {
+    min-height: calc(100vh - 100px - 124px);
+  }
+
+  h1 {
+    font-family: "PP Neue Machina Regular";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 34px;
+    line-height: 34px;
+    color: var(--dark);
+  }
+}
+
 /* locker of clicking */
 
 .userActionLocker {

@@ -95,3 +95,51 @@
     width: 200px;
     margin: auto;
 }
+
+@media screen and (max-width: 1280px) {
+    .catalogWrapper {
+        max-width: 728px;
+    }
+
+    .filtersSection {
+        gap: 0px;
+        row-gap: 20px;
+        justify-content: space-between;
+    }
+
+    .searchInputWrapper {
+        width: 479px;
+    }
+
+    .filtersElement {
+        width: 230px;
+        order: 3;
+    }
+
+    .filtersElementButton {
+        order: 2;
+    }
+
+    .catalogBusinesses {
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 788px) {
+    .catalogWrapper {
+        max-width: 312px;
+    }
+
+    .searchInputWrapper {
+        width: 312px;
+    }
+
+    .filtersElement {
+        width: 312px;
+        order: unset;
+    }
+
+    .filtersElementButton {
+        order: unset;
+    }
+}

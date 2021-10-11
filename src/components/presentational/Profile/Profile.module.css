@@ -45,7 +45,8 @@
 	border-radius: 50%;
 	background-image: url(./profiler.png);
 	background-position: 50% 50%;
-	background-size: 100%;
+	background-size: cover;
+	background-repeat: no-repeat;
 }
 
 .plansMainWrapper {
@@ -98,6 +99,7 @@
 }
 
 .typed {
+	max-width: 1070px;
 	font-size: 18px;
 	line-height: 24px;
 	align-self: center;
@@ -134,4 +136,87 @@
 
 .profileWrapperFixer {
 	margin-top: -100px;
+}
+
+.profileButton {
+	margin-top: 15px;
+}
+
+@media screen and (max-width: 1280px) {
+	.typed {
+		max-width: 598px;
+	}
+
+	.profileWrapper {
+		max-width: 728px;
+	}
+
+	.profileDataWrapper {
+		gap: 50px;
+		flex-wrap: wrap;
+		justify-content: end;
+	}
+
+	.inputsWrapper {
+		width: calc(50% - 25px);
+	}
+
+	.profileButton {
+		margin-top: 0px;
+		height: 60px;
+	}
+
+	.plansMainWrapper {
+		flex-wrap: wrap;
+		row-gap: 48px;
+		justify-content: center;
+	}
+
+	.plansPartitionsWrapper {
+		order: 2;
+	}
+
+	.plansCreateButton {
+		order: 1;
+	}
+
+	.plansWrapper {
+		gap: 48px;
+		justify-content: center;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.profileDummy {
+		width: 70px;
+		height: 70px;
+	}
+
+	.profileDataInfo {
+		gap: 24px;
+	}
+	
+	.typed {
+		max-width: 218px;
+	}
+	
+    .profileWrapper {
+		max-width: 312px;
+	}
+
+	.inputsWrapper {
+		width: 312px;
+	}
+
+	.plansCreateButton {
+		min-width: 312px;
+	}
+
+	.plansPartitionsWrapper {
+		gap: 12px;
+	}
+	
+	.profileLink {
+		line-height: 0px;
+	}
 }

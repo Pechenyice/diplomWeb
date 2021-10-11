@@ -34,7 +34,7 @@ const Landing = () => {
 					<Link to={"/catalog"} className={styles.landingLink}>
 						<Button onClick={() => {}} text={"To catalog"} />
 					</Link>
-					<Link to={"/profile"} className={styles.landingLink}>
+					<Link to={"/profile/own"} className={styles.landingLink}>
 						<Button onClick={() => {}} text={"Become a member"} />
 					</Link>
 				</div>

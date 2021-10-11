@@ -678,6 +678,7 @@ function publishCommentReducer(state, action) {
 			return Object.assign({}, state, {
 				comments: Object.assign(
 					{},
+					state.comments,
 					{
 						content: state.comments.content.concat([
 							action.result.comment,

@@ -29,3 +29,10 @@
 .success {
     background-color: rgb(67, 167, 80);
 }
+
+
+@media screen and (max-width: 768px) {
+    .eventsSection {
+        right: 6px;
+    } 
+}

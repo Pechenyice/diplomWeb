@@ -32,31 +32,31 @@ const BusinessPlan = ({
 }) => {
 	const IS_PROFITABLE =
 		plan?.data?.expence?.salary +
-			plan?.data?.expence?.electricity +
-			plan?.data?.expence?.maintenance <
+		plan?.data?.expence?.electricity +
+		plan?.data?.expence?.maintenance <
 		plan?.data?.income?.profit;
 
 	const MONTHS = Math.ceil(
 		(plan?.data?.expence?.amortization + plan?.data?.expence?.materials) /
-			(plan?.data?.income?.profit -
-				(plan?.data?.expence?.salary +
-					plan?.data?.expence?.electricity +
-					plan?.data?.expence?.maintenance))
+		(plan?.data?.income?.profit -
+			(plan?.data?.expence?.salary +
+				plan?.data?.expence?.electricity +
+				plan?.data?.expence?.maintenance))
 	);
 
 	const SPENDINGS = IS_PROFITABLE
 		? plan?.data?.expence?.amortization +
-		  plan?.data?.expence?.materials +
-		  (plan?.data?.expence?.salary +
-				plan?.data?.expence?.electricity +
-				plan?.data?.expence?.maintenance) *
-				MONTHS
+		plan?.data?.expence?.materials +
+		(plan?.data?.expence?.salary +
+			plan?.data?.expence?.electricity +
+			plan?.data?.expence?.maintenance) *
+		MONTHS
 		: plan?.data?.expence?.amortization +
-		  plan?.data?.expence?.materials +
-		  (plan?.data?.expence?.salary +
-				plan?.data?.expence?.electricity +
-				plan?.data?.expence?.maintenance) *
-				12;
+		plan?.data?.expence?.materials +
+		(plan?.data?.expence?.salary +
+			plan?.data?.expence?.electricity +
+			plan?.data?.expence?.maintenance) *
+		12;
 
 	const INCOMINGS = IS_PROFITABLE
 		? plan?.data?.income?.profit * MONTHS
@@ -87,31 +87,31 @@ const BusinessPlan = ({
 				borderColor: "#FF708B",
 				data: [
 					plan?.data?.expence?.amortization +
-						plan?.data?.expence?.materials,
+					plan?.data?.expence?.materials,
 					plan?.data?.expence?.amortization +
-						plan?.data?.expence?.materials +
-						(IS_PROFITABLE
-							? (plan?.data?.expence?.salary +
-									plan?.data?.expence?.electricity +
-									plan?.data?.expence?.maintenance) *
-							  MONTHS
-							: (plan?.data?.expence?.salary +
-									plan?.data?.expence?.electricity +
-									plan?.data?.expence?.maintenance) *
-							  12),
+					plan?.data?.expence?.materials +
+					(IS_PROFITABLE
+						? (plan?.data?.expence?.salary +
+							plan?.data?.expence?.electricity +
+							plan?.data?.expence?.maintenance) *
+						MONTHS
+						: (plan?.data?.expence?.salary +
+							plan?.data?.expence?.electricity +
+							plan?.data?.expence?.maintenance) *
+						12),
 					plan?.data?.expence?.amortization +
-						plan?.data?.expence?.materials +
-						(IS_PROFITABLE
-							? (plan?.data?.expence?.salary +
-									plan?.data?.expence?.electricity +
-									plan?.data?.expence?.maintenance) *
-							  MONTHS *
-							  2
-							: (plan?.data?.expence?.salary +
-									plan?.data?.expence?.electricity +
-									plan?.data?.expence?.maintenance) *
-							  12 *
-							  2),
+					plan?.data?.expence?.materials +
+					(IS_PROFITABLE
+						? (plan?.data?.expence?.salary +
+							plan?.data?.expence?.electricity +
+							plan?.data?.expence?.maintenance) *
+						MONTHS *
+						2
+						: (plan?.data?.expence?.salary +
+							plan?.data?.expence?.electricity +
+							plan?.data?.expence?.maintenance) *
+						12 *
+						2),
 				],
 			},
 		],
@@ -185,19 +185,19 @@ const BusinessPlan = ({
 						? plan?.data?.expence?.salary * MONTHS
 						: plan?.data?.expence?.salary * 12) /
 						SPENDINGS) *
-						100,
+					100,
 					((IS_PROFITABLE
 						? plan?.data?.expence?.electricity * MONTHS
 						: plan?.data?.expence?.electricity * 12) /
 						SPENDINGS) *
-						100,
+					100,
 					(plan?.data?.expence?.amortization / SPENDINGS) * 100,
 					(plan?.data?.expence?.materials / SPENDINGS) * 100,
 					((IS_PROFITABLE
 						? plan?.data?.expence?.maintenance * MONTHS
 						: plan?.data?.expence?.maintenance * 12) /
 						SPENDINGS) *
-						100,
+					100,
 				],
 				borderWidth: 10,
 				backgroundColor: [
@@ -432,8 +432,8 @@ const BusinessPlan = ({
 				</div>
 			</CSSTransition>
 			{!plan.isLoading &&
-			categories.content.length &&
-			types.content.length ? (
+				categories.content.length &&
+				types.content.length ? (
 				plan.data ? (
 					<section>
 						{needReRender && (
@@ -491,7 +491,7 @@ const BusinessPlan = ({
 											</div>
 										</div>
 									) : // <div>'not mine'</div>
-									null}
+										null}
 									<p className={styles.creationDate}>
 										Edition created:{" "}
 										{humanizeDate(plan.data.created)}
@@ -521,7 +521,7 @@ const BusinessPlan = ({
 									</div>
 									<div className={styles.reactionsWrapper}>
 										{
-											planActions.reactionIsUpdating && 
+											planActions.reactionIsUpdating &&
 											<div className={"userActionLocker"}>
 												{SVGManager.getSvg('lockerSvg')}
 											</div>
@@ -1163,14 +1163,13 @@ const BusinessPlan = ({
 										))}
 										<div>
 											{!plan.comments.offset &&
-											!plan.comments.isLoading
-												? onNeedMoreComments(
-														plan.activeBusiness,
-														plan.activeEdition
-												  )
-												: null}
+												!plan.comments.isLoading && plan.comments.needMore &&
+												onNeedMoreComments(
+													plan.activeBusiness,
+													plan.activeEdition
+												)}
 											{plan.comments.needMore &&
-											!plan.comments.isLoading ? (
+												!plan.comments.isLoading ? (
 												<div
 													onClick={() => {
 														onNeedMoreComments(
@@ -1196,7 +1195,7 @@ const BusinessPlan = ({
 													COMMENTS LOADING
 												</p>
 											) : !plan.comments.content
-													.length ? (
+												.length ? (
 												<p
 													className={
 														styles.commentsEventHint

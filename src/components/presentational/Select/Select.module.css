@@ -151,3 +151,9 @@
     background-color: var(--dark);
     transition: .2s;
 }
+
+@media screen and (max-width: 768px) {
+    .selectBigContentValue {
+        width: 150px;
+    }    
+}

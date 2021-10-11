@@ -289,7 +289,7 @@ const Auth = ({
 						onFocus={handleActiveAction("signUp")}
 						password
 					/>
-					<div style={{ margin: "15px 0" }}>
+					<div className={styles.agreementWrapper} >
 						<input
 							type="checkbox"
 							id="checkbox"

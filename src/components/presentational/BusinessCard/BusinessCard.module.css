@@ -118,3 +118,21 @@ p {
 .invisibleWrapper {
 	opacity: 0;
 } */
+
+@media screen and (max-width: 1280px) {
+	.cardWrapper {
+		width: 312px;
+	}
+
+	.darkCardWrapper {
+		width: 312px;
+	}
+
+	.planName {
+		width: 252px;
+	}
+
+	.planDescription {
+		width: 252px;
+	}
+}

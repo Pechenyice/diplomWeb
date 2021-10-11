@@ -368,3 +368,276 @@
     top: 0;
     left: 0;
 }
+
+.mapContainerMiddle {
+	display: none;
+}
+
+.mapContainerLittle {
+	display: none;
+}
+
+@media screen and (max-width: 1280px) {
+	.landingWrapper {
+		max-width: 728px;
+	}
+
+	.landingMain {
+		font-size: 60px;
+		line-height: 70px;
+	}
+
+	.mainDecorator {
+		left: -80px;
+		transform: scale(.9);
+	}
+
+	.landingIconsWrapper {
+		gap: 0px;
+		margin-top: 0px;
+	}
+
+	.landingIconContent {
+		width: 312px;
+		transform: scale(.7);
+	}
+
+	.svgArrow {
+		display: none;
+	}
+
+	.landingIconContent svg{
+		margin-left: -84px;
+	}
+
+	.landingExplanation {
+		margin-top: 0px;
+	}
+
+	.landingBottomer {
+		display: none;
+	}
+
+	.mapContainerBig {
+		display: none;
+	}
+
+	.mapContainerMiddle {
+		display: block;
+	}
+
+	.mapsHeading {
+		font-size: 50px;
+		line-height: 50px;
+	}
+
+	.bossFirst {
+		width: 180px;
+		top: 120px;
+		left: 3px;
+	}
+	
+	.bossSecond {
+		width: 250px;
+		left: 47.5%;
+		top: 110px;
+	}
+	
+	.bossThird {
+		width: 350px;
+		right: -3.5%;
+		top: 325px;
+	}
+	
+	.bossFourth {
+		width: 350px;
+		left: -7.5%;
+		top: 465px;
+	}	
+
+	.creatorFirst {
+		width: 180px;
+		top: 130px;
+		right: 5px;
+	}
+
+	.creatorSecond {
+		width: 300px;
+		right: 45%;
+		top: 110px;
+	}
+
+	.creatorThird {
+		width: 350px;
+		left: -7.5%;
+		top: 330px;
+	}
+
+	.creatorFourth {
+		width: 400px;
+		right: 0%;
+		top: 465px;
+	}
+
+	.mapContainer {
+		overflow: hidden;
+	}
+
+	.landingDark {
+		overflow: hidden;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.landingWrapper {
+		max-width: 312px;
+	}
+
+	.landingMain {
+		font-size: 38px;
+		line-height: 48px;
+	}
+
+	.buttonsWrapper {
+		width: 100%;
+		flex-wrap: wrap;
+		gap: 12px;
+	}
+
+	.mainDecorator {
+		display: none;
+	}
+	
+	.landingLink {
+		width: 100%;
+	}
+
+	.landingIconsWrapper {
+		width: 100%;
+		flex-wrap: wrap;
+		gap: 0px;
+		margin-top: 0px;
+	}
+
+	.landingIconContent {
+		width: 312px;
+		transform: scale(.7);
+		margin-top: -50px;
+	}
+
+	.landingIconContent:last-child {
+		margin-top: -150px;
+	}
+
+	.explanationMain {
+		font-size: 28px;
+    	line-height: 28px;
+	}
+
+	.explanationSubTitle {
+		font-size: 22px;
+    	line-height: 22px;
+	}
+
+	.mapPointer {
+		display: none;
+	}
+
+	.explanationWrapper {
+		flex-wrap: wrap;
+	}
+
+	.explanationTextWrapper {
+		width: 312px;
+		height: 312px;
+	}
+
+	.explanationTextWrapper:last-child {
+		border-left: 1px solid var(--dark);
+	}
+
+	.explanationSwapSubTitle {
+		font-size: 24px;
+		line-height: 24px;
+	}
+
+	.mapContainerMiddle {
+		display: none;
+	}
+
+	.mapContainerLittle {
+		display: block;
+	}
+	
+	.landingDark {
+		min-height: 900px;
+		padding: 50px 0 0 0;
+	}
+
+	.mapsHeading {
+		font-size: 31px;
+		line-height: 38px;
+	}
+
+	.mapText {
+		font-size: 20px;
+		line-height: 20px;
+		text-align: left;
+	}
+
+	.bossFirst {
+		width: 180px;
+		top: 10px;
+		left: unset;
+		right: 10px;
+	}
+	
+	.bossSecond {
+		width: 180px;
+		top: 150px;
+		left: unset;
+		right: 10px;
+	}
+	
+	.bossThird {
+		width: 180px;
+		top: 290px;
+		left: unset;
+		right: 10px;
+	}
+	
+	.bossFourth {
+		width: 180px;
+		top: 440px;
+		left: unset;
+		right: 10px;
+	}
+
+	.creatorFirst {
+		width: 180px;
+		top: 10px;
+		left: unset;
+		right: 10px;
+	}
+
+	.creatorSecond {
+		width: 180px;
+		top: 150px;
+		left: unset;
+		right: 10px;
+	}
+
+	.creatorThird {
+		width: 180px;
+		top: 290px;
+		left: unset;
+		right: 10px;
+	}
+
+	.creatorFourth {
+		width: 180px;
+		top: 440px;
+		left: unset;
+		right: 10px;
+	}
+}

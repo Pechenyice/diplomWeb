@@ -16,60 +16,84 @@ let connection = null;
 const dbUtils = {
 	addUser: async ({ login, nickname, password }) => {
 		let id = uuid.v4();
-		let answer = await connection.execute(
-			`INSERT INTO User (_id, login, password, photo_path, nickname)
+		try {
+			let answer = await connection.execute(
+				`INSERT INTO User (_id, login, password, photo_path, nickname)
             SELECT * FROM (SELECT ? as _id, ? as login, ? as password, null as photo_path, ? as nickname) AS tmp
             WHERE NOT EXISTS (
-                SELECT login FROM User WHERE login = ? or nickname = ?
+                SELECT login FROM User WHERE BINARY login = ? or BINARY nickname = ?
             ) LIMIT 1;`,
-			[id, login, password, nickname, login, nickname]
-		);
+				[id, login, password, nickname, login, nickname]
+			);
+		} catch {
+			return { id, answer: null, login, nickname };
+		}
 
 		return { id, answer, login, nickname };
 	},
 
 	getUser: async ({ login, password }) => {
-		return await connection.execute(
-			`Select * from User where login = ? and password = ?;`,
-			[login, password]
-		);
+		try {
+			return await connection.execute(
+				`Select * from User where BINARY login = ? and BINARY password = ?;`,
+				[login, password]
+			);
+		} catch {
+			return null;
+		}
 	},
 
 	getUserNickname: async (id) => {
-		return await connection.execute(
-			`Select (nickname) from User where _id = ?;`,
-			[id]
-		);
+		try {
+			return await connection.execute(
+				`Select (nickname) from User where _id = ?;`,
+				[id]
+			);
+		} catch {
+			return null;
+		}
 	},
 
 	initTypes: async (types) => {
-		await connection.execute("delete from Type;", []);
+		try {
+			await connection.execute("delete from Type;", []);
 
-		for (let t of types) {
-			connection.execute("insert into Type(_id, name) values(?, ?);", [
-				t.id,
-				t.name,
-			]);
+			for (let t of types) {
+				connection.execute("insert into Type(_id, name) values(?, ?);", [
+					t.id,
+					t.name,
+				]);
+			}
+		} catch (e) {
+			console.log('failed update TYPES');
 		}
 	},
 
 	initCategories: async (categories) => {
-		await connection.execute("delete from Category;", []);
+		try {
+			await connection.execute("delete from Category;", []);
 
-		for (let c of categories) {
-			connection.execute(
-				"insert into Category(_id, name) values(?, ?);",
-				[c.id, c.name]
-			);
+			for (let c of categories) {
+				connection.execute(
+					"insert into Category(_id, name) values(?, ?);",
+					[c.id, c.name]
+				);
+			}
+		} catch (e) {
+			console.log('failed update CATEGORIES');
 		}
 	},
 
 	createBusiness: async (id) => {
 		let bId = uuid.v4();
-		await connection.execute(
-			`insert into business(_id, user_id) values (?, ?);`,
-			[bId, id]
-		);
+		try {
+			await connection.execute(
+				`insert into business(_id, user_id) values (?, ?);`,
+				[bId, id]
+			);
+		} catch {
+			return null;
+		}
 
 		return bId;
 	},
@@ -99,30 +123,33 @@ const dbUtils = {
 
 	createEdition: async function (bId, { data }) {
 		let edId = uuid.v4();
-		let result = await connection.execute(
-			`insert into edition(_id, business_id, category_id, type_id, name, description, creation_date) values (?, ?, ?, ?, ?, ?, ?);`,
-			[
-				edId,
-				bId,
-				data.category,
-				data.type,
-				data.name,
-				data.description,
-				Date.now(),
-			]
-		);
+		try {
+			let result = await connection.execute(
+				`insert into edition(_id, business_id, category_id, type_id, name, description, creation_date) values (?, ?, ?, ?, ?, ?, ?);`,
+				[
+					edId,
+					bId,
+					data.category,
+					data.type,
+					data.name,
+					data.description,
+					Date.now(),
+				]
+			);
 
-		this.createIncome(edId, data.incomings);
-		this.createExpence(edId, data.spendings);
+			this.createIncome(edId, data.incomings);
+			this.createExpence(edId, data.spendings);
+		} catch {
+			return null;
+		}
 
 		return edId;
 	},
 
-	getEditionById: async (eId, user=null) => {
-        console.log('USER', user)
-		return user ? 
-        await connection.execute(
-			`
+	getEditionById: async (eId, user = null) => {
+		return user ?
+			await connection.execute(
+				`
             select
                 (
                 select
@@ -167,10 +194,10 @@ const dbUtils = {
                 where
                     e._id = ?;
             `,
-			[eId, eId, eId, user, eId, user, eId]
-		) :
-        await connection.execute(
-			`
+				[eId, eId, eId, user, eId, user, eId]
+			) :
+			await connection.execute(
+				`
             select
                 (
                 select
@@ -214,8 +241,8 @@ const dbUtils = {
                 where
                     e._id = ?;
             `,
-			[eId, eId, eId]
-		);
+				[eId, eId, eId]
+			);
 	},
 
 	getBusinessEditions: async (bId) => {
@@ -226,20 +253,28 @@ const dbUtils = {
 	},
 
 	getBusinessOwner: async (bId) => {
-		return await connection.execute(
-			`select user_id, nickname from business left join user on business.user_id = user._id where business._id = ?;`,
-			[bId]
-		);
+		try {
+			return await connection.execute(
+				`select user_id, nickname from business left join user on business.user_id = user._id where business._id = ?;`,
+				[bId]
+			);
+		} catch {
+			return null;
+		}
 	},
 
 	deletePlan: async (bId) => {
-		return await connection.execute(
-			`delete from business where business._id = ?;`,
-			[bId]
-		);
+		try {
+			return await connection.execute(
+				`delete from business where business._id = ?;`,
+				[bId]
+			);
+		} catch {
+			return null;
+		}
 	},
 
-	getBusinessById: async function (bId, owner = null, user=null) {
+	getBusinessById: async function (bId, owner = null, user = null) {
 		let ownerId = owner;
 		let ownerNickname = null;
 
@@ -301,67 +336,71 @@ const dbUtils = {
 	},
 
 	getPlan: async (bId, eId, user) => {
-		let res = await connection.execute(
-			`SELECT e._id,
-                    (select count(_id) from likes where edition_id = ?) as likes, 
-                    (select count(_id) from dislikes where edition_id = ?) as dislikes,
-                    (select _id from likes where edition_id = ? and user_id = ?) as liked,
-                    (select _id from dislikes where edition_id = ? and user_id = ?) as disliked,
-                    e.business_id,
-                    e.category_id,
-                    e.type_id,
-                    e.name,
-                    e.description,
-                    e.creation_date,
-                    i.profit AS profit,
-                    i.description AS incomeDescription,
-                    ex.salary AS salary,
-                    ex.electricity AS electricity,
-                    ex.amortization AS amortization,
-                    ex.materials AS materials,
-                    ex.maintenance AS maintenance,
-                    ex.description AS expenceDescription,
-                    b.user_id AS user_id,
-					u.nickname AS ownerNickname
-            FROM edition e
-            LEFT JOIN income i ON e._id = i.edition_id
-            LEFT JOIN expence ex ON e._id = ex.edition_id
-            LEFT JOIN business b ON e.business_id = b._id
-			LEFT JOIN user u ON b.user_id = u._id
-            WHERE e._id = ?`,
-			[eId, eId, eId, user, eId, user, eId]
-		);
+		try {
+			let res = await connection.execute(
+				`SELECT e._id,
+						(select count(_id) from likes where edition_id = ?) as likes, 
+						(select count(_id) from dislikes where edition_id = ?) as dislikes,
+						(select _id from likes where edition_id = ? and user_id = ?) as liked,
+						(select _id from dislikes where edition_id = ? and user_id = ?) as disliked,
+						e.business_id,
+						e.category_id,
+						e.type_id,
+						e.name,
+						e.description,
+						e.creation_date,
+						i.profit AS profit,
+						i.description AS incomeDescription,
+						ex.salary AS salary,
+						ex.electricity AS electricity,
+						ex.amortization AS amortization,
+						ex.materials AS materials,
+						ex.maintenance AS maintenance,
+						ex.description AS expenceDescription,
+						b.user_id AS user_id,
+						u.nickname AS ownerNickname
+				FROM edition e
+				LEFT JOIN income i ON e._id = i.edition_id
+				LEFT JOIN expence ex ON e._id = ex.edition_id
+				LEFT JOIN business b ON e.business_id = b._id
+				LEFT JOIN user u ON b.user_id = u._id
+				WHERE e._id = ?`,
+				[eId, eId, eId, user, eId, user, eId]
+			);
 
-		let editionObject = res[0][0];
+			let editionObject = res[0][0];
 
-		return Object.assign(
-			{},
-			{
-				name: editionObject.name,
-				owner: editionObject.user_id,
-				ownerNickname: editionObject.ownerNickname,
-				description: editionObject.description,
-				category: parseInt(editionObject.category_id),
-				type: parseInt(editionObject.type_id),
-				likes: editionObject.likes,
-				dislikes: editionObject.dislikes,
-				created: editionObject.creation_date,
-				income: {
-					profit: editionObject.profit,
-					description: editionObject.incomeDescription,
-				},
-				expence: {
-					description: editionObject.expenceDescription,
-					salary: editionObject.salary,
-					electricity: editionObject.electricity,
-					amortization: editionObject.amortization,
-					materials: editionObject.materials,
-					maintenance: editionObject.maintenance,
-				},
-				liked: editionObject.liked,
-				disliked: editionObject.disliked,
-			}
-		);
+			return Object.assign(
+				{},
+				{
+					name: editionObject.name,
+					owner: editionObject.user_id,
+					ownerNickname: editionObject.ownerNickname,
+					description: editionObject.description,
+					category: parseInt(editionObject.category_id),
+					type: parseInt(editionObject.type_id),
+					likes: editionObject.likes,
+					dislikes: editionObject.dislikes,
+					created: editionObject.creation_date,
+					income: {
+						profit: editionObject.profit,
+						description: editionObject.incomeDescription,
+					},
+					expence: {
+						description: editionObject.expenceDescription,
+						salary: editionObject.salary,
+						electricity: editionObject.electricity,
+						amortization: editionObject.amortization,
+						materials: editionObject.materials,
+						maintenance: editionObject.maintenance,
+					},
+					liked: editionObject.liked,
+					disliked: editionObject.disliked,
+				}
+			);
+		} catch {
+			return null;
+		}
 	},
 
 	getBusinessesByOwnerId: async (owner) => {
@@ -384,97 +423,123 @@ const dbUtils = {
 			[owner]
 		);
 	},
-	
-    createLike: async (data, uId) => {
-        let [deletion, _d] = await connection.execute(
-			`delete from dislikes where user_id = ? and edition_id = ?;`,
-			[uId, data.eId]
-		);
 
-        [deletion, _d] = await connection.execute(
-			`delete from likes where user_id = ? and edition_id = ?;`,
-			[uId, data.eId]
-		);
+	createLike: async (data, uId) => {
+		try {
+			let [deletion, _d] = await connection.execute(
+				`delete from dislikes where user_id = ? and edition_id = ?;`,
+				[uId, data.eId]
+			);
 
-        let [insertion, _i] = await connection.execute(
-			`insert into likes(_id, user_id, edition_id) values (?, ?, ?);`,
-			[uuid.v4(), uId, data.eId]
-		);
+			[deletion, _d] = await connection.execute(
+				`delete from likes where user_id = ? and edition_id = ?;`,
+				[uId, data.eId]
+			);
 
-        return true;
-    },
+			let [insertion, _i] = await connection.execute(
+				`insert into likes(_id, user_id, edition_id) values (?, ?, ?);`,
+				[uuid.v4(), uId, data.eId]
+			);
+		} catch {
+			return false;
+		}
+
+		return true;
+	},
 
 	dropLike: async (data, uId) => {
-        let [deletion, _d] = await connection.execute(
-			`delete from likes where user_id = ? and edition_id = ?;`,
-			[uId, data.eId]
-		);
+		try {
+			let [deletion, _d] = await connection.execute(
+				`delete from likes where user_id = ? and edition_id = ?;`,
+				[uId, data.eId]
+			);
+		} catch {
+			return false;
+		}
+		return true;
+	},
 
-        return true;
-    },
+	createDislike: async (data, uId) => {
+		try {
+			let [deletion, _d] = await connection.execute(
+				`delete from likes where user_id = ? and edition_id = ?;`,
+				[uId, data.eId]
+			);
 
-    createDislike: async (data, uId) => {
-        let [deletion, _d] = await connection.execute(
-			`delete from likes where user_id = ? and edition_id = ?;`,
-			[uId, data.eId]
-		);
+			[deletion, _d] = await connection.execute(
+				`delete from dislikes where user_id = ? and edition_id = ?;`,
+				[uId, data.eId]
+			);
 
-        [deletion, _d] = await connection.execute(
-			`delete from dislikes where user_id = ? and edition_id = ?;`,
-			[uId, data.eId]
-		);
+			let [insertion, _i] = await connection.execute(
+				`insert into dislikes(_id, user_id, edition_id) values (?, ?, ?);`,
+				[uuid.v4(), uId, data.eId]
+			);
+		} catch {
+			return false;
+		}
 
-        let [insertion, _i] = await connection.execute(
-			`insert into dislikes(_id, user_id, edition_id) values (?, ?, ?);`,
-			[uuid.v4(), uId, data.eId]
-		);
-
-        return true;
-    },
+		return true;
+	},
 
 	dropDislike: async (data, uId) => {
-        let [deletion, _d] = await connection.execute(
-			`delete from dislikes where user_id = ? and edition_id = ?;`,
-			[uId, data.eId]
-		);
+		try {
+			let [deletion, _d] = await connection.execute(
+				`delete from dislikes where user_id = ? and edition_id = ?;`,
+				[uId, data.eId]
+			);
+		} catch {
+			return false;
+		}
 
-        return true;
-    },
+		return true;
+	},
 
 	getOwnerBusinesses: async function (owner) {
-		let [result, fields] = await this.getBusinessesByOwnerId(owner);
-
 		let businesses = [];
+		try {
+			let [result, fields] = await this.getBusinessesByOwnerId(owner);
 
-		for (let r of result) {
-			let b = await this.getBusinessById(r._id);
-			businesses.push(b);
+			for (let r of result) {
+				let b = await this.getBusinessById(r._id);
+				businesses.push(b);
+			}
+		} catch {
+			return null;
 		}
 
 		return businesses;
 	},
 
 	getOwnerLikedBusinesses: async function (owner) {
-		let [result, fields] = await this.getLikedBusinessesByOwnerId(owner);
-
 		let businesses = [];
 
-		for (let r of result) {
-			let b = await this.getBusinessById(r._id);
-			businesses.push(b);
+		try {
+			let [result, fields] = await this.getLikedBusinessesByOwnerId(owner);
+
+			for (let r of result) {
+				let b = await this.getBusinessById(r._id);
+				businesses.push(b);
+			}
+		} catch {
+			return null;
 		}
 
 		return businesses;
 	},
 
 	getOwnerDislikedBusinesses: async function (owner) {
-		let [result, fields] = await this.getDislikedBusinessesByOwnerId(owner);
-
 		let businesses = [];
 
-		for (let r of result) {
-			let b = await this.getBusinessById(r._id);
-			businesses.push(b);
+		try {
+			let [result, fields] = await this.getDislikedBusinessesByOwnerId(owner);
+
+			for (let r of result) {
+				let b = await this.getBusinessById(r._id);
+				businesses.push(b);
+			}
+		} catch {
+			return null;
 		}
 
 		return businesses;
@@ -483,145 +548,160 @@ const dbUtils = {
 	getAllEditionsForBusinessesFiltration: async (offset, count, name, sort, category, type) => {
 		//order by + filters
 
-        sort = +sort;
-        category = +category;
-        type = +type;
+		sort = +sort;
+		category = +category;
+		type = +type;
 
-        const SORT_ENUM = {
-            0: 'order by creation_date desc',
-            1: 'order by creation_date',
-            2: 'order by li+di desc'
-        }
+		const SORT_ENUM = {
+			0: 'order by creation_date desc',
+			1: 'order by creation_date',
+			2: 'order by li+di desc'
+		}
 
-        const FILTER_CATEGORY = category === -1 ? '' : 'category_id = ? and';
-        const FILTER_TYPE = type === -1 ? '' : 'type_id = ? and';
+		const FILTER_CATEGORY = category === -1 ? '' : 'category_id = ? and';
+		const FILTER_TYPE = type === -1 ? '' : 'type_id = ? and';
 
-        let values = [];
+		let values = [];
 
-        if (category !== -1) values.push(category + '');
-        if (type !== -1) values.push(type + '');
+		if (category !== -1) values.push(category + '');
+		if (type !== -1) values.push(type + '');
 
-        let query = `select a.*, (select count(_id) from likes where edition_id = a._id) as li, (select count(_id) from dislikes where edition_id = a._id) as di from edition a where ${FILTER_CATEGORY} ${FILTER_TYPE} name like ? and not exists (select * from edition b where a.business_id = b.business_id and b.creation_date > a.creation_date) ${SORT_ENUM[sort]} limit ? offset ?;`;
-        let filler = values.concat([`%${name}%`, count, offset]);
-
-        console.log(query, filler)
+		let query = `select a.*, (select count(_id) from likes where edition_id = a._id) as li, (select count(_id) from dislikes where edition_id = a._id) as di from edition a where ${FILTER_CATEGORY} ${FILTER_TYPE} name like ? and not exists (select * from edition b where a.business_id = b.business_id and b.creation_date > a.creation_date) ${SORT_ENUM[sort]} limit ? offset ?;`;
+		let filler = values.concat([`%${name}%`, count, offset]);
 
 		return await connection.execute(
 			query,
-            filler
+			filler
 		);
 	},
 
 	getAllBusinessEditions: async (bId) => {
-		let [result, fields] = await connection.execute(
-			`select * from edition where business_id=?;`,
-			[bId]
-		);
-
 		let editions = [];
 
-		for (let r of result) {
-			editions.push(
-				Object.assign(
-					{},
-					{
-						id: r._id,
-						content: {
-							category: r.category,
-							created: r.creation_date,
-							description: r.description,
-							name: r.name,
-						},
-					}
-				)
+		try {
+			let [result, fields] = await connection.execute(
+				`select * from edition where business_id=?;`,
+				[bId]
 			);
+
+			for (let r of result) {
+				editions.push(
+					Object.assign(
+						{},
+						{
+							id: r._id,
+							content: {
+								category: r.category,
+								created: r.creation_date,
+								description: r.description,
+								name: r.name,
+							},
+						}
+					)
+				);
+			}
+		} catch {
+			return null;
 		}
 
 		return editions;
 	},
 
-	getBusinessesWithFilters: async function (filters, user=null) {
-        console.log('FILTERS', filters)
-		let [result, fields] = await this.getAllEditionsForBusinessesFiltration(
-			filters.offset,
-			filters.count,
-            filters.f_pattern,
-            filters.f_sort,
-            filters.f_category,
-            filters.f_type
-		);
-
+	getBusinessesWithFilters: async function (filters, user = null) {
 		let businesses = [];
 
-		for (let r of result) {
-			let b = await this.getBusinessById(r.business_id, null, user);
-			businesses.push(b);
+		try {
+			let [result, fields] = await this.getAllEditionsForBusinessesFiltration(
+				filters.offset,
+				filters.count,
+				filters.f_pattern,
+				filters.f_sort,
+				filters.f_category,
+				filters.f_type
+			);
+
+			for (let r of result) {
+				let b = await this.getBusinessById(r.business_id, null, user);
+				businesses.push(b);
+			}
+		} catch {
+			return null;
 		}
 
 		return businesses;
 	},
 
 	getComments: async (params) => {
-		let [result, fields] = await connection.execute(
-			`select * from comment where edition_id=? order by creation_date limit ? offset ?;`,
-			[params.edId, params.count, params.offset]
-		);
-
 		let comments = [];
-
-		console.log(params.count, params.offset, result);
-
-		for (let r of result) {
-			let [users, fields] = await connection.execute(
-				`select * from user where _id=?;`,
-				[r.user_id]
+		try {
+			let [result, fields] = await connection.execute(
+				`select * from comment where edition_id=? order by creation_date limit ? offset ?;`,
+				[params.edId, params.count, params.offset]
 			);
-			comments.push(
-				Object.assign(
-					{},
-					{
-						id: r._id,
-						created: r.creation_date,
-						text: r.text,
-						author: {
-							id: r.user_id,
-							nickname: users[0].nickname,
-						},
-					}
-				)
-			);
+
+			for (let r of result) {
+				let [users, fields] = await connection.execute(
+					`select * from user where _id=?;`,
+					[r.user_id]
+				);
+				comments.push(
+					Object.assign(
+						{},
+						{
+							id: r._id,
+							created: r.creation_date,
+							text: r.text,
+							author: {
+								id: r.user_id,
+								nickname: users[0].nickname,
+							},
+						}
+					)
+				);
+			}
+		} catch {
+			return null;
 		}
-
-		console.log("comments", comments);
 
 		return comments;
 	},
 
 	createComment: async (data, user) => {
-		console.log(data);
 		let id = uuid.v4();
 		let created = Date.now();
 		let comment = null;
-		let [result, fields] = await connection.execute(
-			`insert into comment(_id, edition_id, user_id, text, creation_date) values (?, ?, ?, ?, ?);`,
-			[id, data.eId, user, data.comment, created]
-		);
+		try {
+			let [result, fields] = await connection.execute(
+				`insert into comment(_id, edition_id, user_id, text, creation_date) values (?, ?, ?, ?, ?);`,
+				[id, data.eId, user, data.comment, created]
+			);
+		} catch {
+			return null;
+		}
 
 		return { id, created, text: data.comment };
 	},
 
 	updateNickname: async (id, nickname) => {
-		return await connection.execute(
-			`update user set nickname = ? where _id = ?;`,
-			[nickname, id]
-		);
+		try {
+			return await connection.execute(
+				`update user set nickname = ? where _id = ?;`,
+				[nickname, id]
+			);
+		} catch {
+			return null;
+		}
 	},
 
 	updatePassword: async (id, oldPass, pass) => {
-		return await connection.execute(
-			`update user set password = ? where _id in (select _id from (select * from user) as tmp where tmp._id = ? and tmp.password = ?);`,
-			[pass, id, oldPass]
-		);
+		try {
+			return await connection.execute(
+				`update user set password = ? where _id in (select _id from (select * from user) as tmp where tmp._id = ? and BINARY tmp.password = ?);`,
+				[pass, id, oldPass]
+			);
+		} catch {
+			return null;
+		}
 	},
 
 	setToken: async (id, deathDate, ip) => {
@@ -635,10 +715,14 @@ const dbUtils = {
 	},
 
 	getUserByToken: async (token) => {
-		return await connection.execute(
-			`select * from token left join user on token.user_id = user._id where body = ?;`,
-			[token]
-		);
+		try {
+			return await connection.execute(
+				`select * from token left join user on token.user_id = user._id where body = ?;`,
+				[token]
+			);
+		} catch {
+			return null;
+		}
 	},
 
 	dropToken: async (token) => {

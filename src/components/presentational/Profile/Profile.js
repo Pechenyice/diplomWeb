@@ -62,9 +62,7 @@ const Profile = ({
 			// Client.abortLoadLikedPlansFetch();
 			// Client.abortLoadDislikedPlansFetch();
 		};
-	}, [nickname, guest]);
-
-	useEffect(() => (() => onClear()), []);
+	}, [nickname]);
 
 	useEffect(() => (() => onClear()), []);
 

@@ -297,7 +297,7 @@ const dbUtils = {
 		for (let e of editions) {
 			let currentEdition = await this.getEditionById(e._id, user);
 			let editionObject = currentEdition[0][0];
-			editionsData.unshift(
+			editionsData.push(
 				Object.assign(
 					{},
 					{
@@ -329,6 +329,8 @@ const dbUtils = {
 				)
 			);
 		}
+
+		editionsData.reverse();
 
 		answer["editions"] = editionsData;
 

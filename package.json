@@ -26,7 +26,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "start npm run start && cd ./server && start npm run start",
+    "dev": "npm run start && cd ./server && npm run start",
     "initial": "npm i && cd ./server && npm i && cd ../ && npm run dev"
   },
   "eslintConfig": {

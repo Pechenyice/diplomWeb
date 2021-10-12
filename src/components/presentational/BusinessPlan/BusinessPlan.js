@@ -28,35 +28,35 @@ const BusinessPlan = ({
 	onNeedServerData,
 	onPlanDeleted,
 	onUserReact,
-	planActions
+	planActions,
 }) => {
 	const IS_PROFITABLE =
 		plan?.data?.expence?.salary +
-		plan?.data?.expence?.electricity +
-		plan?.data?.expence?.maintenance <
+			plan?.data?.expence?.electricity +
+			plan?.data?.expence?.maintenance <
 		plan?.data?.income?.profit;
 
 	const MONTHS = Math.ceil(
 		(plan?.data?.expence?.amortization + plan?.data?.expence?.materials) /
-		(plan?.data?.income?.profit -
-			(plan?.data?.expence?.salary +
-				plan?.data?.expence?.electricity +
-				plan?.data?.expence?.maintenance))
+			(plan?.data?.income?.profit -
+				(plan?.data?.expence?.salary +
+					plan?.data?.expence?.electricity +
+					plan?.data?.expence?.maintenance))
 	);
 
 	const SPENDINGS = IS_PROFITABLE
 		? plan?.data?.expence?.amortization +
-		plan?.data?.expence?.materials +
-		(plan?.data?.expence?.salary +
-			plan?.data?.expence?.electricity +
-			plan?.data?.expence?.maintenance) *
-		MONTHS
+		  plan?.data?.expence?.materials +
+		  (plan?.data?.expence?.salary +
+				plan?.data?.expence?.electricity +
+				plan?.data?.expence?.maintenance) *
+				MONTHS
 		: plan?.data?.expence?.amortization +
-		plan?.data?.expence?.materials +
-		(plan?.data?.expence?.salary +
-			plan?.data?.expence?.electricity +
-			plan?.data?.expence?.maintenance) *
-		12;
+		  plan?.data?.expence?.materials +
+		  (plan?.data?.expence?.salary +
+				plan?.data?.expence?.electricity +
+				plan?.data?.expence?.maintenance) *
+				12;
 
 	const INCOMINGS = IS_PROFITABLE
 		? plan?.data?.income?.profit * MONTHS
@@ -87,31 +87,31 @@ const BusinessPlan = ({
 				borderColor: "#FF708B",
 				data: [
 					plan?.data?.expence?.amortization +
-					plan?.data?.expence?.materials,
+						plan?.data?.expence?.materials,
 					plan?.data?.expence?.amortization +
-					plan?.data?.expence?.materials +
-					(IS_PROFITABLE
-						? (plan?.data?.expence?.salary +
-							plan?.data?.expence?.electricity +
-							plan?.data?.expence?.maintenance) *
-						MONTHS
-						: (plan?.data?.expence?.salary +
-							plan?.data?.expence?.electricity +
-							plan?.data?.expence?.maintenance) *
-						12),
+						plan?.data?.expence?.materials +
+						(IS_PROFITABLE
+							? (plan?.data?.expence?.salary +
+									plan?.data?.expence?.electricity +
+									plan?.data?.expence?.maintenance) *
+							  MONTHS
+							: (plan?.data?.expence?.salary +
+									plan?.data?.expence?.electricity +
+									plan?.data?.expence?.maintenance) *
+							  12),
 					plan?.data?.expence?.amortization +
-					plan?.data?.expence?.materials +
-					(IS_PROFITABLE
-						? (plan?.data?.expence?.salary +
-							plan?.data?.expence?.electricity +
-							plan?.data?.expence?.maintenance) *
-						MONTHS *
-						2
-						: (plan?.data?.expence?.salary +
-							plan?.data?.expence?.electricity +
-							plan?.data?.expence?.maintenance) *
-						12 *
-						2),
+						plan?.data?.expence?.materials +
+						(IS_PROFITABLE
+							? (plan?.data?.expence?.salary +
+									plan?.data?.expence?.electricity +
+									plan?.data?.expence?.maintenance) *
+							  MONTHS *
+							  2
+							: (plan?.data?.expence?.salary +
+									plan?.data?.expence?.electricity +
+									plan?.data?.expence?.maintenance) *
+							  12 *
+							  2),
 				],
 			},
 		],
@@ -185,19 +185,19 @@ const BusinessPlan = ({
 						? plan?.data?.expence?.salary * MONTHS
 						: plan?.data?.expence?.salary * 12) /
 						SPENDINGS) *
-					100,
+						100,
 					((IS_PROFITABLE
 						? plan?.data?.expence?.electricity * MONTHS
 						: plan?.data?.expence?.electricity * 12) /
 						SPENDINGS) *
-					100,
+						100,
 					(plan?.data?.expence?.amortization / SPENDINGS) * 100,
 					(plan?.data?.expence?.materials / SPENDINGS) * 100,
 					((IS_PROFITABLE
 						? plan?.data?.expence?.maintenance * MONTHS
 						: plan?.data?.expence?.maintenance * 12) /
 						SPENDINGS) *
-					100,
+						100,
 				],
 				borderWidth: 10,
 				backgroundColor: [
@@ -399,9 +399,17 @@ const BusinessPlan = ({
 						</p>
 						<div className={styles.popupControls}>
 							<Button text={"no"} onClick={handleClosePopup} />
-							<p className={styles.deletion} onClick={handleDeletePlan}>Yes</p>
+							<p
+								className={styles.deletion}
+								onClick={handleDeletePlan}
+							>
+								Yes
+							</p>
 						</div>
-						<div className={styles.popupClose} onClick={handleClosePopup}>
+						<div
+							className={styles.popupClose}
+							onClick={handleClosePopup}
+						>
 							<svg
 								width="39"
 								height="40"
@@ -432,8 +440,8 @@ const BusinessPlan = ({
 				</div>
 			</CSSTransition>
 			{!plan.isLoading &&
-				categories.content.length &&
-				types.content.length ? (
+			categories.content.length &&
+			types.content.length ? (
 				plan.data ? (
 					<section>
 						{needReRender && (
@@ -491,7 +499,7 @@ const BusinessPlan = ({
 											</div>
 										</div>
 									) : // <div>'not mine'</div>
-										null}
+									null}
 									<p className={styles.creationDate}>
 										Edition created:{" "}
 										{humanizeDate(plan.data.created)}
@@ -520,12 +528,11 @@ const BusinessPlan = ({
 										/>
 									</div>
 									<div className={styles.reactionsWrapper}>
-										{
-											planActions.reactionIsUpdating &&
+										{planActions.reactionIsUpdating && (
 											<div className={"userActionLocker"}>
-												{SVGManager.getSvg('lockerSvg')}
+												{SVGManager.getSvg("lockerSvg")}
 											</div>
-										}
+										)}
 										<div className={styles.reaction}>
 											{plan.data.liked ? (
 												<svg
@@ -658,9 +665,7 @@ const BusinessPlan = ({
 											<Select
 												content={"Version from"}
 												propsValues={plan?.editions}
-												wantToDisplayId={
-													activeEdition
-												}
+												wantToDisplayId={activeEdition}
 												onSelect={handleEditionsChange}
 												style={{
 													border: "1px solid #C2C2C2",
@@ -669,14 +674,34 @@ const BusinessPlan = ({
 												bigSize
 												sortByDate
 											/>
-											<div style={{ width: "190px" }}>
-												<Button
-													text={"Cast a look"}
-													onClick={
-														handleReRenderEdition
-													}
-												/>
+											<div className={styles.castNewPlanEditionLook} >
+												{plan.activeEdition !==
+													activeEdition &&
+													activeEdition !== null && (
+														<Button
+															text={"Cast a look"}
+															onClick={
+																handleReRenderEdition
+															}
+														/>
+													)}
 											</div>
+										</div>
+									</div>
+									<div
+										className={[
+											styles.textBlock,
+											styles.textBlockDimensioned,
+										].join(" ")}
+									>
+										<h2 className={styles.subTitle}>
+											Export data
+										</h2>
+										<div className={styles.exportDataWrapper}>
+											<Button
+												text={"Save in pdf"}
+												onClick={() => window.print()}
+											/>
 										</div>
 									</div>
 								</div>
@@ -1163,13 +1188,14 @@ const BusinessPlan = ({
 										))}
 										<div>
 											{!plan.comments.offset &&
-												!plan.comments.isLoading && plan.comments.needMore &&
+												!plan.comments.isLoading &&
+												plan.comments.needMore &&
 												onNeedMoreComments(
 													plan.activeBusiness,
 													plan.activeEdition
 												)}
 											{plan.comments.needMore &&
-												!plan.comments.isLoading ? (
+											!plan.comments.isLoading ? (
 												<div
 													onClick={() => {
 														onNeedMoreComments(
@@ -1195,7 +1221,7 @@ const BusinessPlan = ({
 													COMMENTS LOADING
 												</p>
 											) : !plan.comments.content
-												.length ? (
+													.length ? (
 												<p
 													className={
 														styles.commentsEventHint
@@ -1296,7 +1322,7 @@ BusinessPlan.propTypes = {
 	onNeedServerData: PropTypes.func,
 	onPlanDeleted: PropTypes.func,
 	onUserReact: PropTypes.func,
-	planActions: PropTypes.object
+	planActions: PropTypes.object,
 };
 
 export default BusinessPlan;

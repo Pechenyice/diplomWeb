@@ -89,7 +89,6 @@ const initialState = {
 };
 
 function reducer(state = initialState, action) {
-	console.log("ACTION", action);
 	switch (action.type) {
 		case actions.types.APPLY_FILTERS: {
 			return Object.assign({}, state, {
@@ -137,8 +136,6 @@ function reducer(state = initialState, action) {
 		case actions.types.DELETE_PLAN_REQUEST_STARTED:
 		case actions.types.DELETE_PLAN_REQUEST_SUCCESSED:
 		case actions.types.DELETE_PLAN_REQUEST_FAILED: {
-			console.log("actions.types.DELETE_PLAN_REQUEST_SUCCESSED", action);
-
 			if (action?.result?.AUTH === "FAIL")
 				return Object.assign({}, state, toInitialState(state));
 
@@ -516,9 +513,6 @@ function planReducer(state, action, businesses) {
 		}
 
 		case actions.types.PLAN_REQUEST_SUCCESSED: {
-			console.log("action plan successed", action);
-			console.log("action.plan.owner", action.plan.owner);
-
 			return Object.assign({}, state, {
 				isLoading: false,
 				isFetched: true,
@@ -866,17 +860,14 @@ function userReducer(state, action) {
 		}
 
 		case actions.types.AUTH_REQUEST_STARTED: {
-			console.log("auth started");
 			return Object.assign({}, state, { isLoading: true });
 		}
 
 		case actions.types.AUTH_REQUEST_FAILED: {
-			console.log("HERE YOU LOOK auth failed");
 			return Object.assign({}, state, { id: null, isLoading: false });
 		}
 
 		case actions.types.AUTH_REQUEST_SUCCESSED: {
-			console.log("auth successed", action.result.id);
 			return Object.assign({}, state, {
 				id: action.result.id,
 				login: action.result.login,
@@ -925,7 +916,6 @@ function profilePlansReducer(state, action) {
 		}
 
 		case actions.types.LIKED_PLANS_REQUEST_SUCCESSED: {
-			console.log('IN SUCCESS LIKED: ', action)
 			return Object.assign({}, state, {
 				forUser: action.userId,
 				liked: Object.assign({}, state.liked, {

@@ -231,7 +231,6 @@ const actions = {
     },
 
     fetchBusinesses: function (offset, count, filters) {
-        console.log('SENDED', offset, count, filters)
         return (dispatch) => {
             dispatch(this.fetchBusinessesRequest());
             Client.loadBusinesses(offset, count, filters)

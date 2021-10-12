@@ -472,3 +472,97 @@
 	line-height: 24px;
 	text-transform: uppercase;
 }
+
+.exportDataWrapper {
+	width: 312px;
+}
+
+.castNewPlanEditionLook {
+	width: 190px;
+}
+
+@media screen and (max-width: 1280px) {
+	.planWrapper {
+		max-width: 728px;
+	}
+
+	.planWrapperMain {
+		max-width: 728px;
+	}
+
+	.summaryWrapper {
+		flex-wrap: wrap;
+	}
+
+	.graphWrapper {
+		flex-wrap: wrap;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.planWrapper {
+		max-width: 312px;
+	}
+
+	.planWrapperMain {
+		max-width: 312px;
+	}
+
+	.planWrapperFlexMain {
+		width: 312px;
+	}
+
+	.versionsWrapper {
+		margin-bottom: 150px;
+		flex-wrap: wrap;
+	}
+
+	.grapghExplanationWrapper {
+		flex-wrap: wrap;
+	}
+	
+	.graphsWrapper {
+		flex-wrap: wrap;
+	}
+
+	.graphElemSmall {
+		width: 100%;
+	}
+
+	.graphElemBig {
+		width: 100%;
+	}
+
+	.graphElem .subTitle {
+		font-size: 24px;
+	}
+
+	.summaryWrapper {
+		row-gap: 80px;
+	}
+
+	.summaryContent {
+		row-gap: 24px;
+		column-gap: 12px;
+	}
+
+	.commentsBlockWrapper {
+		width: 312px;
+	}
+
+	.commentsInput {
+		width: 75%;
+	}
+
+	.controlsWrapper {
+		width: 312px;
+	}
+
+	.controlsControlBig {
+		width: 100px;
+	}
+	
+	.castNewPlanEditionLook {
+		width: 312px;
+	}
+}

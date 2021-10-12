@@ -103,6 +103,12 @@ function reducer(state = initialState, action) {
 				},
 			});
 		}
+		
+		case actions.types.CLEAR_PROFILE_PLANS: {
+			return Object.assign({}, state, {
+				profilePlans: dropProfilePlans(state),
+			});
+		}
 
 		case actions.types.PUBLISH_COMMENT_REQUEST_STARTED:
 		case actions.types.PUBLISH_COMMENT_REQUEST_SUCCESSED:
@@ -678,6 +684,7 @@ function publishCommentReducer(state, action) {
 			return Object.assign({}, state, {
 				comments: Object.assign(
 					{},
+					state.comments,
 					{
 						content: state.comments.content.concat([
 							action.result.comment,
@@ -864,7 +871,7 @@ function userReducer(state, action) {
 		}
 
 		case actions.types.AUTH_REQUEST_FAILED: {
-			console.log("auth failed");
+			console.log("HERE YOU LOOK auth failed");
 			return Object.assign({}, state, { id: null, isLoading: false });
 		}
 

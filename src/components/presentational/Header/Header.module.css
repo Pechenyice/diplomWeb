@@ -21,6 +21,8 @@
     text-transform: uppercase;
     display: flex;
     align-items: center;
+    border-bottom: 1px solid transparent;
+    transition: .2s;
 }
 
 .headerAfterLogoLink {
@@ -29,4 +31,54 @@
 
 .activeHeaderLink {
     border-bottom: 1px solid var(--dark);
+}
+
+.smallScreenLink {
+    display: none;
+}
+
+.headerLink:hover {
+    border-bottom: 1px solid var(--dark);
+    transition: .2s;
+}
+
+@media screen and (max-width: 1280px) {
+    .header {
+        max-width: 728px;
+    }
+
+    .headerBlock {
+        display: flex;
+        align-items: center;
+        gap: 45px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header {
+        height: 100px;
+        max-width: 312px;
+        flex-wrap: wrap;
+    }
+
+    .headerBlock {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        padding-top: 24px;
+    }
+
+    .headerAfterLogoLink {
+        margin-left: 0px;
+    }
+
+    .smallScreenLink {
+        display: block;
+    }
+
+    .bigScreenLink {
+        display: none;
+    }
 }

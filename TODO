@@ -18,5 +18,3 @@
 2. Redis?
 
 [BUGS]
-1.onSubmit in catalog delets plans, but not loading them
-2.own profile plan is not updated from other account

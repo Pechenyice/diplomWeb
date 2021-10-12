@@ -71,3 +71,44 @@
     gap: 10px;
     margin-bottom: -12px;
 }
+
+@media screen and (max-width: 1280px) {
+    .planCreationWrapper {
+        width: 728px;
+    }
+
+    .creationContent {
+        width: 100%;
+    }
+
+    .stepContent {
+        gap: 8px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .planCreationWrapper {
+        width: 312px;
+    }
+
+    .inputsWrapper {
+        width: 312px;
+    }
+
+    .stepContent {
+        flex-wrap: wrap;
+    }
+
+    .creationContent {
+        margin: 50px 0;
+    }
+
+    .stepContentWrapper {
+        margin-bottom: 150px;
+    }
+
+    .planEditonCurrentStepFixer {
+        font-size: 32px;
+        line-height: 32px;
+    }
+}

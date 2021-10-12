@@ -380,7 +380,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan=null }) => {
 			{
 				shouldRedirect && <Redirect to={'/profile/own'} />
 			}
-			<h1>
+			<h1 className={styles.planEditonCurrentStepFixer}>
 				{plan ? 'EDITION' : 'CREATION'}: <span ref={el}></span>
 			</h1>
 

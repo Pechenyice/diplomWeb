@@ -45,3 +45,16 @@
 .linkHintHelper {
     color: #878787;
 }
+
+@media screen and (max-width: 1280px) {
+    .linkHint {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .linkWrapper {
+        text-align: center;
+        margin: auto;
+    }
+}

@@ -32,17 +32,22 @@ const Catalog = ({
 			(!types.content.length && !types.isLoading)
 		)
 			onInit();
-		if (businesses.content.length < businesses.count)
-			onNeedMoreBusinesses();
+		
 		setState(filters);
 	}, [filters]);
 
+	useEffect(() => {
+		if (businesses.content.length < businesses.count && 
+			onNeedMoreBusinesses // delete this if businesses loading failes
+			)
+			onNeedMoreBusinesses();
+	}, []);
+
 	function handleFiltersSubmitClick() {
-		// if (JSON.stringify(filters) === JSON.stringify(state)) {
-		//     return;
-		// }
-		setState(Object.assign({}, state));
+		if (businesses.isLoading) return;
+		// setState(Object.assign({}, state));
 		onFiltersSelected(state);
+		onNeedMoreBusinesses(0, state);
 	}
 
 	function handlePatternChange(e) {
@@ -72,11 +77,11 @@ const Catalog = ({
 					<div className={styles.filtersWrapper}>
 						<section className={[styles.catalogWrapper].join(" ")}>
 							<div className={styles.filtersSection}>
-								{businesses.isLoading && (
+								{/* {businesses.isLoading && (
 									<div className={"userActionLocker"}>
 										{SVGManager.getSvg("lockerSvg")}
 									</div>
-								)}
+								)} */}
 								<div className={styles.searchInputWrapper}>
 									<input
 										placeholder={"Search..."}

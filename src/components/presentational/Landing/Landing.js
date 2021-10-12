@@ -34,7 +34,7 @@ const Landing = () => {
 					<Link to={"/catalog"} className={styles.landingLink}>
 						<Button onClick={() => {}} text={"To catalog"} />
 					</Link>
-					<Link to={"/profile"} className={styles.landingLink}>
+					<Link to={"/profile/own"} className={styles.landingLink}>
 						<Button onClick={() => {}} text={"Become a member"} />
 					</Link>
 				</div>
@@ -47,7 +47,7 @@ const Landing = () => {
 							Tired of working for «uncle»?
 						</p>
 					</div>
-					{SVGManager.getSvg("landingArrow")}
+					<div className={styles.svgArrow}>{SVGManager.getSvg("landingArrow")}</div>
 					<div className={styles.landingIconContent}>
 						{SVGManager.getSvg("landingBusiness")}
 						<p
@@ -71,7 +71,7 @@ const Landing = () => {
 					WHY WAS BUSINASS CREATED?
 				</h1>
 				<div className={styles.mapPointer}>
-					<h2 className={styles.subTitle}>
+					<h2 className={[styles.subTitle, styles.explanationSubTitle].join(' ')}>
 						Choose scenario and follow the map
 					</h2>
 					<svg
@@ -106,7 +106,7 @@ const Landing = () => {
 						].join(" ")}
 						onClick={handleSwapMap("boss")}
 					>
-						<h2 className={styles.subTitle}>For businessmen</h2>
+						<h2 className={[styles.subTitle, styles.explanationSwapSubTitle].join(' ')}>For businessmen</h2>
 						<p className={styles.explanationText}>
 							Сan choose existed business plan and not
 							investigating a bicycle, moreover he can read
@@ -121,7 +121,7 @@ const Landing = () => {
 						].join(" ")}
 						onClick={handleSwapMap("creator")}
 					>
-						<h2 className={styles.subTitle}>For creators</h2>
+						<h2 className={[styles.subTitle, styles.explanationSwapSubTitle].join(' ')}>For creators</h2>
 						<p className={styles.explanationText}>
 							Can advertise own existing business or franchise, or
 							share his business ideas with a wide range of people
@@ -131,7 +131,7 @@ const Landing = () => {
 			</div>
 			<div className={styles.landingDark}>
 				<div className={styles.landingWrapper}>
-					<h1>
+					<h1 className={styles.mapsHeading}>
 						<span
 							className={[
 								styles.landingAction,
@@ -160,8 +160,14 @@ const Landing = () => {
 							unmountOnExit
 						>
 							<div>
-								<div className={styles.mapContainer}>
+								<div className={[styles.mapContainer, styles.mapContainerBig].join(' ')}>
 									{SVGManager.getSvg("landingBossMap")}
+								</div>
+								<div className={[styles.mapContainer, styles.mapContainerMiddle].join(' ')}>
+									{SVGManager.getSvg("landingBossMapMiddle")}
+								</div>
+								<div className={[styles.mapContainer, styles.mapContainerLittle].join(' ')}>
+									{SVGManager.getSvg("landingBossMapLittle")}
 								</div>
 								<p
 									className={[
@@ -204,8 +210,14 @@ const Landing = () => {
 							unmountOnExit
 						>
 							<div>
-								<div className={styles.mapContainer}>
+								<div className={[styles.mapContainer, styles.mapContainerBig].join(' ')}>
 									{SVGManager.getSvg("landingCreatorMap")}
+								</div>
+								<div className={[styles.mapContainer, styles.mapContainerLittle].join(' ')}>
+									{SVGManager.getSvg("landingCreatorMapLittle")}
+								</div>
+								<div className={[styles.mapContainer, styles.mapContainerMiddle].join(' ')}>
+									{SVGManager.getSvg("landingCreatorMapMiddle")}
 								</div>
 								<p
 									className={[

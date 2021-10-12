@@ -48,3 +48,23 @@
         transform: translateX(100%);
     }
 }
+
+@media screen and (max-width: 768px) {
+    .preloaderContent {
+        width: 312px;
+    }
+
+    .preloaderText {
+        width: 280px;
+        height: 60px;
+        margin-left: auto;
+        margin-right: auto;
+        /* text-align: center; */
+    }
+}
+
+@media screen and (max-height: 600px) {
+    .preloaderAnimationWrapper {
+        bottom: -50px;
+    }
+}

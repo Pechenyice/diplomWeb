@@ -43,31 +43,6 @@ const Profile = ({
 			onNeedCategories();
 		if (!types.content.length && !types.isLoading) onNeedTypes();
 
-		console.log(`cachedForUser !== userId &&
-		!profilePlans.own.isFetched &&
-		!profilePlans.own.isLoading`, cachedForUser !== userId &&
-		!profilePlans.own.isFetched &&
-		!profilePlans.own.isLoading, cachedForUser !== userId, !profilePlans.own.isFetched, !profilePlans.own.isLoading, profilePlans)
-
-		if (
-			cachedForUser !== userId &&
-			!profilePlans.own.isFetched &&
-			!profilePlans.own.isLoading
-		)
-			onNeedLoadOwnPlans();
-		if (
-			cachedForUser !== userId &&
-			!profilePlans.liked.isFetched &&
-			!profilePlans.liked.isLoading
-		)
-			onNeedLoadLikedPlans();
-		if (
-			cachedForUser !== userId &&
-			!profilePlans.disliked.isFetched &&
-			!profilePlans.disliked.isLoading
-		)
-			onNeedLoadDislikedPlans();
-
 		if (nickname === null) onNeedUserNickname();
 
 		const options = {
@@ -91,6 +66,8 @@ const Profile = ({
 
 	useEffect(() => (() => onClear()), []);
 
+	useEffect(() => (() => onClear()), []);
+
 	const [state, setState] = useState({
 		data: {
 			login: login || "",
@@ -105,6 +82,25 @@ const Profile = ({
 
 	const [showPlans, setShowPlans] = useState(false);
 	useEffect(() => {
+		if (
+			cachedForUser !== userId &&
+			!profilePlans.own.isFetched &&
+			!profilePlans.own.isLoading
+		)
+			onNeedLoadOwnPlans();
+		if (
+			cachedForUser !== userId &&
+			!profilePlans.liked.isFetched &&
+			!profilePlans.liked.isLoading
+		)
+			onNeedLoadLikedPlans();
+		if (
+			cachedForUser !== userId &&
+			!profilePlans.disliked.isFetched &&
+			!profilePlans.disliked.isLoading
+		)
+			onNeedLoadDislikedPlans();
+			
 		if (
 			profilePlans.own.content.length ||
 			profilePlans.liked.content.length ||
@@ -307,7 +303,7 @@ const Profile = ({
 								<Button
 									text={"Apply changes"}
 									onClick={handleSaveProfileData}
-									style={{ marginTop: "15px" }}
+									className={styles.profileButton}
 								/>
 							</div>
 							<div className={styles.inputsWrapper}>
@@ -346,14 +342,14 @@ const Profile = ({
 								<Button
 									text={"Change password"}
 									onClick={handleSaveProfilePassword}
-									style={{ marginTop: "15px" }}
+									className={styles.profileButton}
 								/>
 							</div>
 							<div className={styles.inputsWrapper}>
 								<h2 className={styles.subTitle}>
 									Manage profile
 								</h2>
-								<Button text={"Logout"} onClick={onLogout} />
+								<Button text={"Logout"} onClick={onLogout} className={styles.profileButton} />
 							</div>
 						</div>
 					)}

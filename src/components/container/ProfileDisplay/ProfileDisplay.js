@@ -31,16 +31,16 @@ function mergePropsWithDispatch(stateProps, dispatchProps) {
         ...stateProps,
         ...dispatchProps,
         onNeedLoadOwnPlans: () => {
-            dispatchProps.dispatch(actions.fetchOwnPlans(stateProps.userId))
+            dispatchProps.dispatch(actions.fetchOwnPlans(stateProps.userId));
         }, 
         onNeedLoadLikedPlans: () => {
-            dispatchProps.dispatch(actions.fetchLikedPlans(stateProps.userId))
+            dispatchProps.dispatch(actions.fetchLikedPlans(stateProps.userId));
         }, 
         onNeedLoadDislikedPlans: () => {
-            dispatchProps.dispatch(actions.fetchDislikedPlans(stateProps.userId))
+            dispatchProps.dispatch(actions.fetchDislikedPlans(stateProps.userId));
         },
         onNeedUserNickname: () => {
-            dispatchProps.dispatch(actions.fetchUserNickname(stateProps.userId))
+            dispatchProps.dispatch(actions.fetchUserNickname(stateProps.userId));
         },
         onClear: () => {
             dispatchProps.dispatch(actions.clearGuest());

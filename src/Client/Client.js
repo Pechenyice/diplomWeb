@@ -168,7 +168,6 @@ const Client = {
     },
 
     loadBusinesses: function (offset, count, filters) {
-        console.log('CLIENT ENDPOINT', offset, count, filters)
         return this.safeFetch(this.constructUrl(`/getBusinesses?offset=${offset}&count=${count}&f_category=${filters.category}&f_type=${filters.type}&f_pattern=${filters.pattern}&f_sort=${filters.sort}`), 'GET', this.aborts.LOAD_BUSINESSES_CONTROLLER);
     },
 

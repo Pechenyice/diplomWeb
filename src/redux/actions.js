@@ -69,7 +69,8 @@ const actions = {
         DELETE_PLAN_REQUEST_FAILED: 'DELETE_PLAN_REQUEST_FAILED',
         NEW_REACTION_REQUEST_STARTED: 'NEW_REACTION_REQUEST_STARTED',
         NEW_REACTION_REQUEST_SUCCESSED: 'NEW_REACTION_REQUEST_SUCCESSED',
-        NEW_REACTION_REQUEST_FAILED: 'NEW_REACTION_REQUEST_FAILED'
+        NEW_REACTION_REQUEST_FAILED: 'NEW_REACTION_REQUEST_FAILED',
+        CLEAR_PROFILE_PLANS: 'CLEAR_PROFILE_PLANS'
     },
 
     findPlan: function ({ planId, edId }) {
@@ -91,6 +92,12 @@ const actions = {
     clearGuest: function () {
         return {
             type: this.types.NULLIFY_GUEST
+        }
+    },
+
+    clearProfilePlans: function() {
+        return {
+            type: this.types.CLEAR_PROFILE_PLANS
         }
     },
 

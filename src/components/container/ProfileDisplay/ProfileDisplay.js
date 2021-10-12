@@ -12,7 +12,7 @@ function mapStateToProps(state, ownProps) {
         login: null,
         nickname: state.guest.nickname,
         userDataIsLoading: state.guest.isLoading,
-        cachedLoadedForUser: state.profilePlans.forUser,
+        cachedForUser: state.profilePlans.forUser,
         profilePlans: state.profilePlans,
         categories: state.categories,
         types: state.types,
@@ -43,7 +43,8 @@ function mergePropsWithDispatch(stateProps, dispatchProps) {
             dispatchProps.dispatch(actions.fetchUserNickname(stateProps.userId))
         },
         onClear: () => {
-            dispatchProps.dispatch(actions.clearGuest())
+            dispatchProps.dispatch(actions.clearGuest());
+            dispatchProps.dispatch(actions.clearProfilePlans());
         },
         onNeedCategories: () => {
             dispatchProps.dispatch(actions.fetchCategories());

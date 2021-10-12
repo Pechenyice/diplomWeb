@@ -43,6 +43,12 @@ const Profile = ({
 			onNeedCategories();
 		if (!types.content.length && !types.isLoading) onNeedTypes();
 
+		console.log(`cachedForUser !== userId &&
+		!profilePlans.own.isFetched &&
+		!profilePlans.own.isLoading`, cachedForUser !== userId &&
+		!profilePlans.own.isFetched &&
+		!profilePlans.own.isLoading, cachedForUser !== userId, !profilePlans.own.isFetched, !profilePlans.own.isLoading, profilePlans)
+
 		if (
 			cachedForUser !== userId &&
 			!profilePlans.own.isFetched &&
@@ -81,7 +87,9 @@ const Profile = ({
 			// Client.abortLoadLikedPlansFetch();
 			// Client.abortLoadDislikedPlansFetch();
 		};
-	}, [nickname]);
+	}, [nickname, guest]);
+
+	useEffect(() => (() => onClear()), []);
 
 	const [state, setState] = useState({
 		data: {

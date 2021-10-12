@@ -158,6 +158,12 @@ function reducer(state = initialState, action) {
 			});
 		}
 
+		case actions.types.CLEAR_PROFILE_PLANS: {
+			return Object.assign({}, state, {
+				profilePlans: dropProfilePlans(state)
+			});
+		}
+
 		case actions.types.NULLIFY_GUEST: {
 			return Object.assign({}, state, {
 				guest: {

@@ -51,7 +51,8 @@ function mergePropsWithDispatch(stateProps, dispatchProps) {
             dispatchProps.dispatch(actions.fetchTypes());
         },
         onClear: () => {
-            dispatchProps.dispatch(actions.clearGuest())
+            dispatchProps.dispatch(actions.clearGuest());
+            dispatchProps.dispatch(actions.clearProfilePlans());
         },
         onLogout: () => {
             dispatchProps.dispatch(actions.fetchLogout())

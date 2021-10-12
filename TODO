@@ -1,9 +1,5 @@
 [NEEDS]
-1. Create try {} catch for sql queries with null return for error sending
-2. Creating normal error sending on 
-3. Clear console.log
-4. refactor auth to CASE-SENSETIVE
-5. Adaptive
+1. refactor DB utils
 
 [CHECKS]
 

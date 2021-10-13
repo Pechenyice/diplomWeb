@@ -1,7 +1,7 @@
 {
   "name": "diplom_web",
   "version": "0.1.0",
-  "proxy": "http://localhost:3001",
+  "proxy": "http://diplom_backend:3001",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
@@ -26,7 +26,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "npm run start && cd ./server && npm run start",
+    "win_dev": "start npm run start && cd ./server && start npm run start",
+    "linux_dev": "npm run start && cd ./server && npm run start",
     "initial": "npm i && cd ./server && npm i && cd ../ && npm run dev"
   },
   "eslintConfig": {

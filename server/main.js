@@ -2,8 +2,9 @@ const express = require('express');
 const app = express();
 if (process.env.ENV !== 'DOCKERDEV') {
     require('dotenv').config();
+    console.log("LOADED WITH DOTENV ENV");
 } else {
-    console.log("LOADED WITH DOCKER_COMPOSE ENV")
+    console.log("LOADED WITH DOCKER_COMPOSE ENV");
 }
 const port = process.env.PORT || 3001;
 const fs = require('fs');
@@ -503,7 +504,6 @@ app.get('/api/getFiltersCategories', (req, res) => {
 
 app.get('/api/getOwnPlans', middlewares.bindAuth, async (req, res) => {
     let businesses = await dbUtils.getOwnerBusinesses(req.query.userId);
-    console.log('businesses own ', businesses);
     if (businesses == null) {
         setTimeout(() => {
             res.send(arrangeAbort('Something went wrong!'));
@@ -512,7 +512,6 @@ app.get('/api/getOwnPlans', middlewares.bindAuth, async (req, res) => {
     }
 
     setTimeout(() => {
-        console.log('businesses', businesses);
         res.send(JSON.stringify({
             success: true,
             businesses
@@ -522,7 +521,6 @@ app.get('/api/getOwnPlans', middlewares.bindAuth, async (req, res) => {
 
 app.get('/api/getLikedPlans', middlewares.bindAuth, async (req, res) => {
     let businesses = await dbUtils.getOwnerLikedBusinesses(req.query.userId);
-    console.log('businesses liked ', businesses);
     if (businesses == null) {
         setTimeout(() => {
             res.send(arrangeAbort('Something went wrong!'));
@@ -531,7 +529,6 @@ app.get('/api/getLikedPlans', middlewares.bindAuth, async (req, res) => {
     }
 
     setTimeout(() => {
-        console.log('businesses', businesses);
         res.send(JSON.stringify({
             success: true,
             businesses
@@ -541,7 +538,6 @@ app.get('/api/getLikedPlans', middlewares.bindAuth, async (req, res) => {
 
 app.get('/api/getDislikedPlans', middlewares.bindAuth, async (req, res) => {
     let businesses = await dbUtils.getOwnerDislikedBusinesses(req.query.userId);
-    console.log('businesses disliked ', businesses);
     if (businesses == null) {
         setTimeout(() => {
             res.send(arrangeAbort('Something went wrong!'));
@@ -550,7 +546,6 @@ app.get('/api/getDislikedPlans', middlewares.bindAuth, async (req, res) => {
     }
 
     setTimeout(() => {
-        console.log('businesses', businesses);
         res.send(JSON.stringify({
             success: true,
             businesses

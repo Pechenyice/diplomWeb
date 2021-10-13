@@ -23,7 +23,10 @@ services:
     depends_on: 
       - mysql
   diplom:
-    build: .
+    build:
+      context: .
+      args:
+        BACKEND_PORT: '3001'
     image: pechenyice/diplom:test
     ports:
       - "80:80"

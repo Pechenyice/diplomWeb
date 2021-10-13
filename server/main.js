@@ -499,8 +499,8 @@ app.get('/api/getFiltersCategories', (req, res) => {
 
 app.get('/api/getOwnPlans', middlewares.bindAuth, async (req, res) => {
     let businesses = await dbUtils.getOwnerBusinesses(req.query.userId);
-
-    if (!businesses) {
+    console.log('businesses own ', businesses);
+    if (businesses == null) {
         setTimeout(() => {
             res.send(arrangeAbort('Something went wrong!'));
         }, API_ANSWER_DELAY);
@@ -508,6 +508,7 @@ app.get('/api/getOwnPlans', middlewares.bindAuth, async (req, res) => {
     }
 
     setTimeout(() => {
+        console.log('businesses', businesses);
         res.send(JSON.stringify({
             success: true,
             businesses
@@ -517,8 +518,8 @@ app.get('/api/getOwnPlans', middlewares.bindAuth, async (req, res) => {
 
 app.get('/api/getLikedPlans', middlewares.bindAuth, async (req, res) => {
     let businesses = await dbUtils.getOwnerLikedBusinesses(req.query.userId);
-
-    if (!businesses) {
+    console.log('businesses liked ', businesses);
+    if (businesses == null) {
         setTimeout(() => {
             res.send(arrangeAbort('Something went wrong!'));
         }, API_ANSWER_DELAY);
@@ -526,6 +527,7 @@ app.get('/api/getLikedPlans', middlewares.bindAuth, async (req, res) => {
     }
 
     setTimeout(() => {
+        console.log('businesses', businesses);
         res.send(JSON.stringify({
             success: true,
             businesses
@@ -535,8 +537,8 @@ app.get('/api/getLikedPlans', middlewares.bindAuth, async (req, res) => {
 
 app.get('/api/getDislikedPlans', middlewares.bindAuth, async (req, res) => {
     let businesses = await dbUtils.getOwnerDislikedBusinesses(req.query.userId);
-
-    if (!businesses) {
+    console.log('businesses disliked ', businesses);
+    if (businesses == null) {
         setTimeout(() => {
             res.send(arrangeAbort('Something went wrong!'));
         }, API_ANSWER_DELAY);
@@ -544,6 +546,7 @@ app.get('/api/getDislikedPlans', middlewares.bindAuth, async (req, res) => {
     }
 
     setTimeout(() => {
+        console.log('businesses', businesses);
         res.send(JSON.stringify({
             success: true,
             businesses

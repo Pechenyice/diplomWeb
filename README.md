@@ -1,70 +1,59 @@
-# Getting Started with Create React App
+# Getting Started with Diplom project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is powered by js + react + node.js + mysql, so, to run it:
 
-## Available Scripts
+## 0. install [docker](https://www.docker.com/get-started)
 
-In the project directory, you can run:
+## 1. Deploy
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### 1.1 Fastest way
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```
+git pull https://github.com/Pechenyice/diplomWeb.git
 
-### `npm test`
+cd ./diplomWeb
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+docker compose -f docker-compose-fast-boot.yml up
+```
 
-### `npm run build`
+this will start already built docker containers from docker hub
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 1.2 Fast way
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+git pull https://github.com/Pechenyice/diplomWeb.git
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+cd ./diplomWeb
 
-### `npm run eject`
+docker compose -f docker-compose.yml up
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+this will build your own containers with any changes you want to
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 1.3 Local case
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```
+git pull https://github.com/Pechenyice/diplomWeb.git
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+npm run init
 
-## Learn More
+npm run win_dev (on Windows)
+npm run linux_dev (on Linux)
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+this will install all packages and start both frontend and backend servers, in this case <br/>DONT FORGET TO CHANGE "proxy" FIELD IN package.json
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### package.json
 
-### Code Splitting
+```
+...
+"name": "diplom_web",
+"version": "0.1.0",
+"proxy": "http://diplom_backend:3001", <- this is for docker strategy
+"proxy": "http://localhost:3001", <- this is for local strategy
+"private": true,
+...
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+(you are on local strategy btw, use "proxy": "http://localhost:3001")

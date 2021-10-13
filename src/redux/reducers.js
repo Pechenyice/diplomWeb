@@ -904,6 +904,7 @@ function profilePlansReducer(state, action) {
 				own: Object.assign({}, state.own, {
 					isLoading: false,
 					isFetched: true,
+					content: []
 				}),
 			});
 		}
@@ -932,6 +933,7 @@ function profilePlansReducer(state, action) {
 				liked: Object.assign({}, state.liked, {
 					isLoading: false,
 					isFetched: true,
+					content: []
 				}),
 			});
 		}
@@ -962,6 +964,7 @@ function profilePlansReducer(state, action) {
 				disliked: Object.assign({}, state.disliked, {
 					isLoading: false,
 					isFetched: true,
+					content: []
 				}),
 			});
 		}

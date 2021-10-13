@@ -11,6 +11,14 @@ services:
       - ./dumps:/docker-entrypoint-initdb.d
   diplom_backend:
     image: pechenyice/diplom_backend:test
+    environment:
+      ENV: 'DOCKERDEV'
+      PORT: '3001'
+      DBHOST: 'mysql'
+      DBUSER: 'root'
+      DBPASS: 'root'
+      DBNAME: 'diplom'
+      TOKENLIFETIME: '300'
     depends_on: 
       - mysql
   diplom:

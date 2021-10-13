@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm install \
-	&& printf "ls\ncat ./package.json\nnpm run dev" > entrypoint.sh
+	&& printf "ls\ncat ./package.json\nnpm run start" > entrypoint.sh
 
 # add app
 COPY . ./

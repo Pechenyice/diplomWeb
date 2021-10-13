@@ -1,6 +1,10 @@
 const express = require('express');
 const app = express();
-require('dotenv').config();
+if (process.env.ENV !== 'DOCKERDEV') {
+    require('dotenv').config();
+} else {
+    console.log("LOADED WITH DOCKER_COMPOSE ENV")
+}
 const port = process.env.PORT || 3001;
 const fs = require('fs');
 const chalk = require('chalk');
@@ -12,7 +16,7 @@ const dbUtils = require('./dbUtils');
 app.use(express.json());
 app.use(cookieParser());
 
-if (process.env.ENV === 'DEV') app.use(middlewares.bindLogs);
+if (process.env.ENV === 'LOCALDEV' || process.env.ENV === 'DOCKERDEV') app.use(middlewares.bindLogs);
 
 const API_ANSWER_DELAY = 1000;
 const TOKEN_LIFETIME = process.env.TOKENLIFETIME;

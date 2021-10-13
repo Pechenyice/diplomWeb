@@ -1,0 +1,21 @@
+version: '3.1'
+services:
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'diplom'
+      MYSQL_PASSWORD: 'root'
+      MYSQL_ROOT_PASSWORD: 'root'
+    volumes:
+      - ./dumps:/docker-entrypoint-initdb.d
+  diplom_backend:
+    build: ./server/
+    image: pechenyice/diplom_backend:test
+    depends_on: 
+      - mysql
+  diplom:
+    build: ./
+    image: pechenyice/diplom:test
+    ports:
+      - "80:3000"

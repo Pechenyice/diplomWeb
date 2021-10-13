@@ -100,9 +100,9 @@ const Profile = ({
 			onNeedLoadDislikedPlans();
 			
 		if (
-			profilePlans.own.content.length ||
-			profilePlans.liked.content.length ||
-			profilePlans.disliked.content.length
+			profilePlans.own.content?.length ||
+			profilePlans.liked.content?.length ||
+			profilePlans.disliked.content?.length
 		)
 			setTimeout(() => {
 				setShowPlans(true);

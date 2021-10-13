@@ -36,7 +36,7 @@ this will build your own containers with any changes you want to
 ```
 git pull https://github.com/Pechenyice/diplomWeb.git
 
-npm run init
+npm run initial
 
 npm run win_dev (on Windows)
 npm run linux_dev (on Linux)

@@ -10,7 +10,7 @@ services:
     volumes:
       - ./dumps:/docker-entrypoint-initdb.d
   diplom_backend:
-    build: ./server/
+    build: server/
     image: pechenyice/diplom_backend:test
     environment:
       ENV: 'DOCKERDEV'
@@ -23,7 +23,7 @@ services:
     depends_on: 
       - mysql
   diplom:
-    build: ./
+    build: .
     image: pechenyice/diplom:test
     ports:
-      - "80:3000"
+      - "80:80"

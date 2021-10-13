@@ -12,6 +12,14 @@ services:
   diplom_backend:
     build: ./server/
     image: pechenyice/diplom_backend:test
+    environment:
+      ENV: 'DOCKERDEV'
+      PORT: '3001'
+      DBHOST: 'mysql'
+      DBUSER: 'root'
+      DBPASS: 'root'
+      DBNAME: 'diplom'
+      TOKENLIFETIME: '300'
     depends_on: 
       - mysql
   diplom:

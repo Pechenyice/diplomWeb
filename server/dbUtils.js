@@ -5,12 +5,27 @@ require("dotenv").config();
 let connection = null;
 
 (async () => {
-	connection = await mysql.createConnection({
-		host: process.env.DBHOST,
-		user: process.env.DBUSER,
-		password: process.env.DBPASS,
-		database: process.env.DBNAME,
-	});
+	try {
+		connection = await mysql.createConnection({
+			host: process.env.DBHOST,
+			user: process.env.DBUSER,
+			password: process.env.DBPASS,
+			database: process.env.DBNAME,
+		});
+	} catch (e) {
+		console.log("FAILED CONNECT TO BD, TRY AGAIN");
+		try {
+			connection = await mysql.createConnection({
+				host: process.env.DBHOST,
+				user: process.env.DBUSER,
+				password: process.env.DBPASS,
+				database: process.env.DBNAME,
+			});
+		} catch (e) {
+			console.log("FAILED CONNECT TO BD AGAIN", e);
+		}
+	}
+	
 })();
 
 const dbUtils = {
@@ -18,10 +33,10 @@ const dbUtils = {
 		let id = uuid.v4();
 		try {
 			let answer = await connection.execute(
-				`INSERT INTO User (_id, login, password, photo_path, nickname)
+				`INSERT INTO user (_id, login, password, photo_path, nickname)
             SELECT * FROM (SELECT ? as _id, ? as login, ? as password, null as photo_path, ? as nickname) AS tmp
             WHERE NOT EXISTS (
-                SELECT login FROM User WHERE BINARY login = ? or BINARY nickname = ?
+                SELECT login FROM user WHERE BINARY login = ? or BINARY nickname = ?
             ) LIMIT 1;`,
 				[id, login, password, nickname, login, nickname]
 			);
@@ -35,10 +50,11 @@ const dbUtils = {
 	getUser: async ({ login, password }) => {
 		try {
 			return await connection.execute(
-				`Select * from User where BINARY login = ? and BINARY password = ?;`,
+				`Select * from user where BINARY login = ? and BINARY password = ?;`,
 				[login, password]
 			);
-		} catch {
+		} catch (e) {
+			console.log(e);
 			return null;
 		}
 	},
@@ -46,7 +62,7 @@ const dbUtils = {
 	getUserNickname: async (id) => {
 		try {
 			return await connection.execute(
-				`Select (nickname) from User where _id = ?;`,
+				`Select (nickname) from user where _id = ?;`,
 				[id]
 			);
 		} catch {
@@ -56,10 +72,10 @@ const dbUtils = {
 
 	initTypes: async (types) => {
 		try {
-			await connection.execute("delete from Type;", []);
+			await connection.execute("delete from type;", []);
 
 			for (let t of types) {
-				connection.execute("insert into Type(_id, name) values(?, ?);", [
+				connection.execute("insert into type(_id, name) values(?, ?);", [
 					t.id,
 					t.name,
 				]);
@@ -71,11 +87,11 @@ const dbUtils = {
 
 	initCategories: async (categories) => {
 		try {
-			await connection.execute("delete from Category;", []);
+			await connection.execute("delete from category;", []);
 
 			for (let c of categories) {
 				connection.execute(
-					"insert into Category(_id, name) values(?, ?);",
+					"insert into category(_id, name) values(?, ?);",
 					[c.id, c.name]
 				);
 			}
@@ -414,14 +430,14 @@ const dbUtils = {
 
 	getLikedBusinessesByOwnerId: async (owner) => {
 		return await connection.execute(
-			`select b._id from likes l left join edition e on l.edition_id = e._id left join business b on e.business_id = b._id where l.user_id = ? group by b._id order by e.creation_date;`,
+			`select b._id from likes l left join edition e on l.edition_id = e._id left join business b on e.business_id = b._id where l.user_id = ? group by b._id, e.creation_date order by e.creation_date;`,
 			[owner]
 		);
 	},
 
 	getDislikedBusinessesByOwnerId: async (owner) => {
 		return await connection.execute(
-			`select b._id from dislikes d left join edition e on d.edition_id = e._id left join business b on e.business_id = b._id where d.user_id = ? group by b._id order by e.creation_date;`,
+			`select b._id from dislikes d left join edition e on d.edition_id = e._id left join business b on e.business_id = b._id where d.user_id = ? group by b._id, e.creation_date order by e.creation_date;`,
 			[owner]
 		);
 	},
@@ -523,7 +539,8 @@ const dbUtils = {
 				let b = await this.getBusinessById(r._id);
 				businesses.push(b);
 			}
-		} catch {
+		} catch (e) {
+			console.log(e);
 			return null;
 		}
 
@@ -540,7 +557,8 @@ const dbUtils = {
 				let b = await this.getBusinessById(r._id);
 				businesses.push(b);
 			}
-		} catch {
+		} catch (e) {
+			console.log(e);
 			return null;
 		}
 
@@ -709,7 +727,7 @@ const dbUtils = {
 	setToken: async (id, deathDate, ip) => {
 		let token = uuid.v4();
 		let answer = await connection.execute(
-			`Replace into Token (body, user_id, death_date, ip) values (?, ?, ?, ?);`,
+			`Replace into token (body, user_id, death_date, ip) values (?, ?, ?, ?);`,
 			[token, id, deathDate, ip]
 		);
 
@@ -722,13 +740,14 @@ const dbUtils = {
 				`select * from token left join user on token.user_id = user._id where body = ?;`,
 				[token]
 			);
-		} catch {
+		} catch (e) {
+			console.log(e);
 			return null;
 		}
 	},
 
 	dropToken: async (token) => {
-		return await connection.execute(`delete from Token where body = ?;`, [
+		return await connection.execute(`delete from token where body = ?;`, [
 			token,
 		]);
 	},

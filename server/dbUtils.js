@@ -12,6 +12,7 @@ let connection = null;
 			password: process.env.DBPASS,
 			database: process.env.DBNAME,
 		});
+		console.log("SUCCESSFUL CONNECTION TO BD");
 	} catch (e) {
 		console.log("FAILED CONNECT TO BD, TRY AGAIN");
 		try {

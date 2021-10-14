@@ -1,5 +1,8 @@
 version: '3.1'
 services:
+  rabbitmq:
+    image: rabbitmq:3.9
+    restart: always
   mysql:
     image: mysql:8.0
     restart: always
@@ -12,6 +15,7 @@ services:
   diplom_backend:
     build: server/
     image: pechenyice/diplom_backend:test
+    restart: always
     environment:
       ENV: 'DOCKERDEV'
       PORT: '3001'
@@ -20,13 +24,37 @@ services:
       DBPASS: 'root'
       DBNAME: 'diplom'
       TOKENLIFETIME: '300'
+      RESPONSEDELAY: '1000'
+      RABBITURL: 'amqp://rabbitmq:5672'
+      CACHESERVICE: 'cache'
     depends_on: 
       - mysql
+      - rabbitmq
+  diplom_cache:
+    build: 
+      context: server/
+      dockerfile: Dockerfile.cache
+    image: pechenyice/diplom_cache:test
+    restart: always
+    environment:
+      ENV: 'DOCKERDEV'
+      PORT: '3001'
+      DBHOST: 'mysql'
+      DBUSER: 'root'
+      DBPASS: 'root'
+      DBNAME: 'diplom'
+      TOKENLIFETIME: '300'
+      RESPONSEDELAY: '1000'
+      RABBITURL: 'amqp://rabbitmq:5672'
+      CACHESERVICE: 'cache'
+    depends_on: 
+      - rabbitmq
   diplom:
     build:
       context: .
       args:
         BACKEND_PORT: '3001'
     image: pechenyice/diplom:test
+    restart: always
     ports:
       - "80:80"

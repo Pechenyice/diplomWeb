@@ -130,6 +130,7 @@ function reducer(state = initialState, action) {
 				plan: reactionReducer(state.plan, action),
 				planActions: planActionsReducer(state.planActions, action),
 				profilePlans: dropProfilePlans(state),
+				businesses: dropBusinessses(state)
 			});
 		}
 

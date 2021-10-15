@@ -1,16 +1,9 @@
-# pull official base image
 FROM node:14-alpine
-
-# set working directory
 WORKDIR /app/backend
-
-# install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
+COPY package.json .
+COPY package-lock.json .
 RUN npm install
-
-# add app
-COPY . ./
-
-# start app
-CMD ["npm", "run", "start"]
+COPY . .
+CMD npx wait-port rabbitmq:5672 && \
+    npx wait-port mysql:3306 && \
+    npm start

@@ -1,4 +1,10 @@
 [NEEDS]
+1. refactor types and categories, get it from cache
+2. change <-> types and categories
+3. add customization of services to .env and docker-compose
+4. create docker container for analyzer micro-service
+5. add wait-port package
+6. update fast boot docker compose
 
 [CHECKS]
 
@@ -9,7 +15,6 @@
 4. README
 
 [BACKEND]
-1. RabbitMQ
-2. Redis?
+2. Redis
 
 [BUGS]

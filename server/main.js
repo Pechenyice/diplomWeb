@@ -7,6 +7,8 @@ if (process.env.ENV !== 'DOCKERDEV') {
     console.log("LOADED WITH DOCKER_COMPOSE ENV");
 }
 const port = process.env.PORT || 3001;
+const RPC_QUEUE = process.env.RPCQUEUE;
+const RABBIT_URL = process.env.RABBITURL;
 const fs = require('fs');
 const chalk = require('chalk');
 const uuid = require('uuid');
@@ -54,7 +56,7 @@ function getReqData(req) {
 
 let channel = null;
 async function delegate(req, res, callback) {
-    let msg = await amqpClient.sendRPCMessage(channel, getReqData(req), 'rpc_queue');
+    let msg = await amqpClient.sendRPCMessage(channel, getReqData(req), RPC_QUEUE);
     msg = JSON.parse(msg);
     if (msg.success && callback) {
         callback(req, res, msg);
@@ -66,7 +68,7 @@ async function delegate(req, res, callback) {
 
 const amqpClient = require('./services/dataManager/amqpClient');
 
-amqpClient.createClient({ url: 'amqp://localhost:5672' })
+amqpClient.createClient({ url: RABBIT_URL })
     .then(ch => {
         channel = ch;
     });
@@ -119,7 +121,7 @@ app.get('/api/getFiltersCategories', (req, res) => {
     }, API_ANSWER_DELAY);
 });
 
-fs.readFile('./../TODO', (_, content) => {
+fs.readFile('./TODO', (_, content) => {
     app.listen(port, () => {
         console.log(`Main server listening at :${port}`);
         console.log(chalk.bgYellow.whiteBright.bold(`\nTODO:\n`));

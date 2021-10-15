@@ -7,25 +7,12 @@ if (process.env.ENV !== 'DOCKERDEV') {
     console.log("LOADED WITH DOCKER_COMPOSE ENV");
 }
 const port = process.env.PORT || 3001;
-const RABBIT_CACHE_SERVICE = process.env.CACHESERVICE;
 const fs = require('fs');
 const chalk = require('chalk');
 const uuid = require('uuid');
 const middlewares = require('./middlewares');
 const cookieParser = require('cookie-parser');
 const dbUtils = require('./dbUtils');
-const Gateway = require('micromq/gateway');
-
-const gateway = new Gateway({
-    microservices: [RABBIT_CACHE_SERVICE],
-    rabbit: {
-        url: process.env.RABBITURL,
-    },
-    requests: {
-        timeout: 30000,
-    },
-});
-app.use(gateway.middleware());
 
 app.use(express.json());
 app.use(cookieParser());
@@ -54,65 +41,71 @@ function arrangeAbort(cause) {
     });
 }
 
-app.post('/api/checkToken', middlewares.bindAuth, async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+function getReqData(req) {
+    return {
+        path: req.url,
+        body: req.body,
+        cookies: req.cookies,
+        query: req.query,
+        ip: req.ip,
+        params: req.params,
+    };
+}
 
-app.post('/api/createPlanEdition', middlewares.bindAuth, async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+let channel = null;
+async function delegate(req, res, callback) {
+    let msg = await amqpClient.sendRPCMessage(channel, getReqData(req), 'rpc_queue');
+    msg = JSON.parse(msg);
+    if (msg.success && callback) {
+        callback(req, res, msg);
+    }
+    setTimeout(() => {
+        res.send(JSON.stringify(msg));
+    }, API_ANSWER_DELAY);
+}
 
-app.post('/api/createNewPlan', middlewares.bindAuth, async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+const amqpClient = require('./services/dataManager/amqpClient');
 
-app.put('/api/updateProfilePassword', middlewares.bindAuth, async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+amqpClient.createClient({ url: 'amqp://localhost:5672' })
+    .then(ch => {
+        channel = ch;
+    });
 
-app.put('/api/updateProfileData', middlewares.bindAuth, async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+app.post('/api/checkToken', middlewares.bindAuth, async (req, res) => delegate(req, res));
 
-app.post('/api/deletePlan', middlewares.bindAuth, async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+app.post('/api/createPlanEdition', middlewares.bindAuth, async (req, res) => delegate(req, res));
 
-app.post('/api/setReaction', middlewares.bindAuth, async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+app.post('/api/createNewPlan', middlewares.bindAuth, async (req, res) => delegate(req, res));
 
-app.post('/api/publishComment', middlewares.bindAuth, async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+app.get('/api/logout', async (req, res) => delegate(req, res, (req, res, msg) => { if (msg.dropToken) res.cookie('authToken', '', { maxAge: Date.now() }); }));
 
-app.get('/api/getUserNickname', async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+app.put('/api/updateProfilePassword', middlewares.bindAuth, async (req, res) => delegate(req, res));
 
-app.get('/api/getComments', async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+app.put('/api/updateProfileData', middlewares.bindAuth, async (req, res) => delegate(req, res));
 
-app.get('/api/getBusinesses', async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+app.post('/api/deletePlan', middlewares.bindAuth, async (req, res) => delegate(req, res));
 
-app.get('/api/getPlan', async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+app.post('/api/addUser', async (req, res) => delegate(req, res, (req, res, msg) => { if (msg.token) res.cookie('authToken', msg.token, { maxAge: TOKEN_LIFETIME * 1000 }); }));
 
-app.get('/api/getOwnPlans', middlewares.bindAuth, async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+app.post('/api/auth', async (req, res) => delegate(req, res, (req, res, msg) => { if (msg.token) res.cookie('authToken', msg.token, { maxAge: TOKEN_LIFETIME * 1000 }); }));
 
-app.get('/api/getLikedPlans', middlewares.bindAuth, async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+app.post('/api/setReaction', middlewares.bindAuth, async (req, res) => delegate(req, res));
 
-app.get('/api/getDislikedPlans', middlewares.bindAuth, async (req, res) => {
-    await res.delegate(RABBIT_CACHE_SERVICE);
-});
+app.post('/api/publishComment', middlewares.bindAuth, async (req, res) => delegate(req, res));
+
+app.get('/api/getUserNickname', async (req, res) => delegate(req, res));
+
+app.get('/api/getComments', async (req, res) => delegate(req, res));
+
+app.get('/api/getBusinesses', async (req, res) => delegate(req, res));
+
+app.get('/api/getPlan', async (req, res) => delegate(req, res));
+
+app.get('/api/getOwnPlans', middlewares.bindAuth, async (req, res) => delegate(req, res));
+
+app.get('/api/getLikedPlans', middlewares.bindAuth, async (req, res) => delegate(req, res));
+
+app.get('/api/getDislikedPlans', middlewares.bindAuth, async (req, res) => delegate(req, res));
 
 app.get('/api/getFiltersTypes', (req, res) => {
     setTimeout(() => {
@@ -126,104 +119,24 @@ app.get('/api/getFiltersCategories', (req, res) => {
     }, API_ANSWER_DELAY);
 });
 
-app.post('/api/addUser', async (req, res) => {
-    let { id, answer, login, nickname } = await dbUtils.addUser(req.body);
-
-    if (!answer) {
-        setTimeout(() => {
-            res.send(arrangeAbort('Something went wrong!'));
-        }, API_ANSWER_DELAY);
-        return;
-    }
-
-    let [result, fields] = answer;
-
-    if (result.affectedRows) {
-        let token = await dbUtils.setToken(id, Date.now() + TOKEN_LIFETIME * 1000, req.ip);
-        res.cookie('authToken', token, { maxAge: TOKEN_LIFETIME * 1000 });
-
-        setTimeout(() => {
-            res.send(JSON.stringify({
-                success: true,
-                id,
-                login,
-                nickname
-            }));
-        }, API_ANSWER_DELAY);
-        return;
-    }
-
-    setTimeout(() => {
-        res.send(arrangeAbort('Duplicate login or nickname, change it please!'));
-    }, API_ANSWER_DELAY);
-});
-
-app.get('/api/logout', async (req, res) => {
-    let [result, fields] = req.cookies.authToken ? await dbUtils.getUserByToken(req.cookies.authToken) : [null, null];
-
-    if (result?.length === 1) {
-        dbUtils.dropToken(result[0].body);
-        res.cookie('authToken', '', { maxAge: Date.now() });
-    }
-
-    setTimeout(() => {
-        res.send(JSON.stringify({
-            success: true
-        }));
-    }, API_ANSWER_DELAY);
-});
-
-app.post('/api/auth', async (req, res) => {
-    let [result, fields] = await dbUtils.getUser(req.body);
-
-    if (!result) {
-        setTimeout(() => {
-            res.send(arrangeAbort('Something went wrong!'));
-        }, API_ANSWER_DELAY);
-        return;
-    }
-
-    if (result.length == 1) {
-        let token = await dbUtils.setToken(result[0]._id, Date.now() + TOKEN_LIFETIME * 1000, req.ip);
-
-        res.cookie('authToken', token, { maxAge: TOKEN_LIFETIME * 1000 });
-
-        setTimeout(() => {
-            res.send(JSON.stringify({
-                success: true,
-                id: result[0]._id,
-                login: result[0].login,
-                nickname: result[0].nickname
-            }));
-        }, API_ANSWER_DELAY);
-        return;
-    }
-
-    setTimeout(() => {
-        res.send(arrangeAbort('No such user, please check login or password!'));
-    }, API_ANSWER_DELAY);
-});
-
-function onServerStart() {
-    try {
-        dbUtils.initTypes(TYPES);
-    } catch (e) {
-        console.log(e);
-    }
-    try {
-        dbUtils.initCategories(CATEGORIES);
-    } catch (e) {
-        console.log(e);
-    }
-    console.log('Server routing:', app._router.stack.map(e => e.route ? 'api route: ' + e.route?.path + e.route?.methods.toString() : 'api middleware: ' + JSON.stringify(e)))
-}
-
-fs.readFile('./TODO', (_, content) => {
+fs.readFile('./../TODO', (_, content) => {
     app.listen(port, () => {
-        console.log();
         console.log(`Main server listening at :${port}`);
         console.log(chalk.bgYellow.whiteBright.bold(`\nTODO:\n`));
         console.log(chalk.yellowBright(content) + '\n\n');
+
+        function onServerStart() {
+            try {
+                dbUtils.initTypes(TYPES);
+            } catch (e) {
+                console.log(e);
+            }
+            try {
+                dbUtils.initCategories(CATEGORIES);
+            } catch (e) {
+                console.log(e);
+            }
+        }
 
         onServerStart();
     })

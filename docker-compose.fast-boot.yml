@@ -1,0 +1,53 @@
+version: '3.1'
+services:
+  rabbitmq:
+    image: rabbitmq:3.9
+    restart: always
+    ports:
+      - "5672:5672"
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'diplom'
+      MYSQL_PASSWORD: 'root'
+      MYSQL_ROOT_PASSWORD: 'root'
+    volumes:
+      - ./dumps:/docker-entrypoint-initdb.d
+  diplom_backend:
+    image: pechenyice/diplom_backend:test
+    restart: always
+    environment:
+      ENV: 'DOCKERDEV'
+      PORT: '3001'
+      DBHOST: 'mysql'
+      DBUSER: 'root'
+      DBPASS: 'root'
+      DBNAME: 'diplom'
+      TOKENLIFETIME: '300'
+      RESPONSEDELAY: '1000'
+      RABBITURL: 'amqp://rabbitmq:5672'
+      RPCQUEUE: 'rpc_queue'
+    depends_on: 
+      - mysql
+      - rabbitmq
+  diplom_backend_services_dataManager:
+    image: pechenyice/diplom_service_data_manager:test
+    restart: always
+    environment:
+      ENV: 'DOCKERDEV'
+      DBHOST: 'mysql'
+      DBUSER: 'root'
+      DBPASS: 'root'
+      DBNAME: 'diplom'
+      TOKENLIFETIME: '300'
+      RABBITURL: 'amqp://rabbitmq:5672'
+      RPCQUEUE: 'rpc_queue'
+    depends_on: 
+      - mysql
+      - rabbitmq
+  diplom:
+    image: pechenyice/diplom:test
+    restart: always
+    ports:
+      - "80:80"

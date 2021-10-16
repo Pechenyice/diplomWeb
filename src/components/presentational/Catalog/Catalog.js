@@ -39,8 +39,10 @@ const Catalog = ({
 	useEffect(() => {
 		if (businesses.content.length < businesses.count && 
 			onNeedMoreBusinesses // delete this if businesses loading failes
-			)
+			&& businesses.needMore // delete this if fails with more 21 businesses
+			) {
 			onNeedMoreBusinesses();
+			}
 	}, []);
 
 	function handleFiltersSubmitClick() {

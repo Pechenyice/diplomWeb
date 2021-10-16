@@ -13,6 +13,7 @@ let connection = null;
 			database: process.env.DBNAME,
 		});
 		console.log("SUCCESSFUL CONNECTION TO BD");
+		dbUtils.isReady = true;
 	} catch (e) {
 		console.log("FAILED CONNECT TO BD, TRY AGAIN");
 		try {
@@ -22,6 +23,8 @@ let connection = null;
 				password: process.env.DBPASS,
 				database: process.env.DBNAME,
 			});
+			console.log("SUCCESSFUL CONNECTION TO BD");
+			dbUtils.isReady = true;
 		} catch (e) {
 			console.log("FAILED CONNECT TO BD AGAIN", e);
 		}
@@ -30,6 +33,8 @@ let connection = null;
 })();
 
 const dbUtils = {
+	isReady: false,
+
 	addUser: async ({ login, nickname, password }) => {
 		let id = uuid.v4();
 		try {
@@ -71,6 +76,19 @@ const dbUtils = {
 		}
 	},
 
+	getTypes: async () => {
+		let types = [];
+		try {
+			let [data, fields] = await connection.execute("select * from type;");
+
+			types = data;
+		} catch (e) {
+			return null;
+		}
+
+		return types;
+	},
+
 	initTypes: async (types) => {
 		try {
 			await connection.execute("delete from type;", []);
@@ -82,8 +100,21 @@ const dbUtils = {
 				]);
 			}
 		} catch (e) {
-			console.log('failed update TYPES');
+			console.log('failed update TYPES', e);
 		}
+	},
+
+	getCategories: async () => {
+		let categories = [];
+		try {
+			let [data, fields] = await connection.execute("select * from category;");
+
+			categories = data;
+		} catch (e) {
+			return null;
+		}
+
+		return categories;
 	},
 
 	initCategories: async (categories) => {
@@ -97,7 +128,7 @@ const dbUtils = {
 				);
 			}
 		} catch (e) {
-			console.log('failed update CATEGORIES');
+			console.log('failed update CATEGORIES', e);
 		}
 	},
 

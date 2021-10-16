@@ -6,4 +6,5 @@ RUN npm install
 COPY . .
 CMD npx wait-port rabbitmq:5672 && \
     npx wait-port mysql:3306 && \
+    node typesAndCategoriesUpdate.js && \
     npm start

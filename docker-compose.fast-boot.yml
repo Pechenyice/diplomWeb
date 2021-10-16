@@ -1,5 +1,10 @@
 version: '3.1'
 services:
+  redis:
+    image: redis:6.2
+    restart: always
+    ports:
+      - "6379:6379"
   rabbitmq:
     image: rabbitmq:3.9
     restart: always
@@ -28,6 +33,8 @@ services:
       RESPONSEDELAY: '1000'
       RABBITURL: 'amqp://rabbitmq:5672'
       RPCQUEUE: 'rpc_queue'
+      REDISHOST: 'redis'
+      REDISPORT: '6379'
     depends_on: 
       - mysql
       - rabbitmq
@@ -43,6 +50,8 @@ services:
       TOKENLIFETIME: '300'
       RABBITURL: 'amqp://rabbitmq:5672'
       RPCQUEUE: 'rpc_queue'
+      REDISHOST: 'redis'
+      REDISPORT: '6379'
     depends_on: 
       - mysql
       - rabbitmq

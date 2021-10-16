@@ -1,15 +1,14 @@
 [NEEDS]
-1. refactor types and categories, get it from cache
-2. change <-> types and categories
+1. encode passwords
 
 [CHECKS]
 
 [FEATURES]
 1. Unit testing
 2. e2e testing
-3. add proxy not from package, but from code [deprecated, because of build + nginx proxy]
+3. add more redis cache data
+4. add proxy not from package, but from code [deprecated, because of build + nginx proxy]
 
 [BACKEND]
-2. Redis
 
 [BUGS]

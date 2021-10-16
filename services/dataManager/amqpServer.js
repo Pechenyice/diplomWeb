@@ -10,6 +10,7 @@ const RPC_QUEUE = process.env.RPCQUEUE;
 const RABBIT_URL = process.env.RABBITURL;
 const amqp = require('amqplib');
 const dbUtils = require('./dbUtils');
+const redisUtils = require('./redisUtils');
 
 const q = RPC_QUEUE;
 amqp.connect(RABBIT_URL)
@@ -349,7 +350,7 @@ async function analyzer(req) {
                 offset: +req.query.offset + +req.query.count
             };
 
-            let ans = await dbUtils.getBusinessesWithFilters(req.query, req.cookies.authToken && user[0]._id);
+            let ans = await dbUtils.getBusinessesWithFilters(req.query, req.cookies.authToken && user[0]?._id);
 
             if (!ans) {
                 return arrangeAbort('Something went wrong!');
@@ -420,6 +421,40 @@ async function analyzer(req) {
                 success: true,
                 businesses: businesses
             });
+        }
+
+        case '/api/getFiltersTypes': {
+            let types = await redisUtils.getTypes();
+            if (!types) {
+                console.log('try get types from bd');
+                types = await dbUtils.getTypes();
+                await redisUtils.setTypes(types);
+            } else {
+                console.log('get types from cache');
+            }
+
+            for (let t of types) {
+                t._id = parseInt(t._id);
+            }
+
+            return JSON.stringify(types).replace(/_id/g, 'id');
+        }
+
+        case '/api/getFiltersCategories': {
+            let categories = await redisUtils.getCategories();
+            if (!categories) {
+                console.log('try get categories from bd');
+                categories = await dbUtils.getCategories();
+                await redisUtils.setCategories(categories);
+            } else {
+                console.log('get categories from cache');
+            }
+
+            for (let c of categories) {
+                c._id = parseInt(c._id);
+            }
+
+            return JSON.stringify(categories).replace(/_id/g, 'id');
         }
     }
 } 

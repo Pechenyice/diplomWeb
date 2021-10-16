@@ -1,0 +1,22 @@
+[
+    {
+      "id": 0,
+      "name": "Franchise"
+    },
+    {
+      "id": 1,
+      "name": "Startup"
+    },
+    {
+      "id": 2,
+      "name": "Small business"
+    },
+    {
+      "id": 3,
+      "name": "Big business"
+    },
+    {
+      "id": 4,
+      "name": "We will do business, we will do money"
+    }
+]

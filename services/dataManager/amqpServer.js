@@ -11,6 +11,8 @@ const RABBIT_URL = process.env.RABBITURL;
 const amqp = require('amqplib');
 const dbUtils = require('./dbUtils');
 const redisUtils = require('./redisUtils');
+const bcrypt = require('bcrypt');
+const salt = bcrypt.genSaltSync(10);
 
 const q = RPC_QUEUE;
 amqp.connect(RABBIT_URL)
@@ -191,6 +193,7 @@ async function analyzer(req) {
         }
 
         case '/api/addUser': {
+            req.body.password = await bcrypt.hash(req.body.password, salt);
             let { id, answer, login, nickname } = await dbUtils.addUser(req.body);
 
             if (!answer) {
@@ -217,10 +220,16 @@ async function analyzer(req) {
         }
 
         case '/api/auth': {
-            let [result, fields] = await dbUtils.getUser(req.body);
+            let [result, fields] = await dbUtils.getUser(req.body.login);
 
-            if (!result) {
+            if (!result.length) {
                 return arrangeAbort('Something went wrong!');
+            }
+
+            let is = await bcrypt.compare(req.body.password, result[0].password);
+            
+            if (!is) {
+                return arrangeAbort('No such user, please check login or password!');
             }
 
             if (result.length == 1) {

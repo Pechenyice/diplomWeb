@@ -37,8 +37,9 @@ const dbUtils = {
 
 	addUser: async ({ login, nickname, password }) => {
 		let id = uuid.v4();
+		let answer;
 		try {
-			let answer = await connection.execute(
+			answer = await connection.execute(
 				`INSERT INTO user (_id, login, password, photo_path, nickname)
             SELECT * FROM (SELECT ? as _id, ? as login, ? as password, null as photo_path, ? as nickname) AS tmp
             WHERE NOT EXISTS (
@@ -53,11 +54,11 @@ const dbUtils = {
 		return { id, answer, login, nickname };
 	},
 
-	getUser: async ({ login, password }) => {
+	getUser: async (login) => {
 		try {
 			return await connection.execute(
-				`Select * from user where BINARY login = ? and BINARY password = ?;`,
-				[login, password]
+				`Select * from user where BINARY login = ?;`,
+				[login]
 			);
 		} catch (e) {
 			console.log(e);
@@ -784,17 +785,5 @@ const dbUtils = {
 		]);
 	},
 };
-
-// const connection = await dbCon.getConnection();
-// try {
-//   await connection.query('START TRANSACTION');
-//   await query('INSERT INTO `tbl_activity_log` (dt, tm,userid,username,activity) VALUES(?,?,?,?,?)',
-//                     ['2019-02-21', '10:22:01', 'S', 'Pradip', 'RAhul3']);
-//   await dbCon.query('INSERT INTO `tbl_activity_log` (dt, tm,userid,username,activity) VALUES(?,?,?,?,?)', ['2019-02-21', '10:22:01', 'S', 'Pradip','this is test and the valid out put is this and then']);
-//   await connection.release();
-// } catch(e) {
-//   await connection.query('ROLLBACK');
-//   await connection.release();
-// }
 
 module.exports = dbUtils;

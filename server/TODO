@@ -1,5 +1,5 @@
 [NEEDS]
-1. encode passwords
+1. refactor code, styles and layouts to minimize code debt (doublicate svgs, comments, console.log and other)
 
 [CHECKS]
 

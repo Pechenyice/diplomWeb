@@ -271,7 +271,7 @@ CREATE TABLE `token` (
 
 LOCK TABLES `token` WRITE;
 /*!40000 ALTER TABLE `token` DISABLE KEYS */;
-INSERT INTO `token` VALUES ('4606bca4-b8ab-4bda-8bcc-408f6a96888c','c6aa4b0e-6ff8-4d59-8fc5-db66f95f8b49','1634081065557','::ffff:127.0.0.1'),('961a1151-c654-491a-b796-44db918e85c6','bf010189-2e20-419c-9409-5534fcf7f0e1','1634392235556','::ffff:127.0.0.1'),('c9395f8a-9225-4ad2-957c-0955b849db0e','2fd8a41e-877b-41d8-9466-74db4cea2570','1632767581794','::ffff:127.0.0.1'),('d2683608-d895-4277-8ec0-7a8ab29ec700','6c298ee2-07e5-48ca-81af-84b41836e725','1632765016051','::ffff:127.0.0.1');
+INSERT INTO `token` VALUES ('b845b8bb-0630-4a9e-b501-bac2b5fe6f78','b32ec4ef-e617-464b-9608-7d9e7b060133','1634570798651','::ffff:127.0.0.1');
 /*!40000 ALTER TABLE `token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -322,7 +322,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('2fd8a41e-877b-41d8-9466-74db4cea2570','maksim','123',NULL,'maksi'),('6c298ee2-07e5-48ca-81af-84b41836e725','maryana','maryana',NULL,'maryana'),('bf010189-2e20-419c-9409-5534fcf7f0e1','test','test',NULL,'tester'),('c6aa4b0e-6ff8-4d59-8fc5-db66f95f8b49','root','root',NULL,'admin');
+INSERT INTO `user` VALUES ('22783e1a-aab5-47cd-b64a-f93311360299','bcrypted','$2b$10$0v3giyfAiH1zrDjsPllMxOsewrUP1cFbspyfFsjw.WDKu5TYG4CEe',NULL,'bcrypted'),('b32ec4ef-e617-464b-9608-7d9e7b060133','maryana','$2b$10$0v3giyfAiH1zrDjsPllMxOs/g0dwGtl/lc4WEIjDfxMDHuHhUDkpm',NULL,'maryana'),('bddadf63-d86f-47fb-b1af-9142997eee70','maksim','$2b$10$0v3giyfAiH1zrDjsPllMxOsMargnwGVsiEIugznWajq7v5WWUBUrK',NULL,'maksim'),('bf010189-2e20-419c-9409-5534fcf7f0e1','test','$2b$10$fjmrGzLE5XiXiqKaRBseAeBlDo.WhAFYFwaB3754zwvd95UFJ4VGa',NULL,'tester'),('ddd6c536-7df7-40e0-a02a-f144b7e9e5f0','root','$2b$10$0v3giyfAiH1zrDjsPllMxOIlCPqwsSV3eLjY8ybvR7D3EKop62jwS',NULL,'root');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -335,4 +335,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-16 17:04:45
+-- Dump completed on 2021-10-18 23:05:42

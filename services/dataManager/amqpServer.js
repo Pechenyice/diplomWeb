@@ -11,7 +11,7 @@ const RABBIT_URL = process.env.RABBITURL;
 const amqp = require('amqplib');
 const dbUtils = require('./dbUtils');
 const redisUtils = require('./redisUtils');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 
 const q = RPC_QUEUE;

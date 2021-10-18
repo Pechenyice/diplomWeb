@@ -175,10 +175,10 @@ const Catalog = ({
 									<path
 										fill="none"
 										stroke="#ff708b"
-										stroke-width="10"
-										stroke-dasharray="177.0463604736328 79.54256774902345"
+										strokeWidth="10"
+										strokeDasharray="177.0463604736328 79.54256774902345"
 										d="M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40 C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z"
-										stroke-linecap="round"
+										strokeLinecap="round"
 									>
 										<animate
 											attributeName="stroke-dashoffset"
@@ -233,10 +233,10 @@ const Catalog = ({
 								<path
 									fill="none"
 									stroke="#8676FF"
-									stroke-width="10"
-									stroke-dasharray="177.0463604736328 79.54256774902345"
+									strokeWidth="10"
+									strokeDasharray="177.0463604736328 79.54256774902345"
 									d="M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40 C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z"
-									stroke-linecap="round"
+									strokeLinecap="round"
 								>
 									<animate
 										attributeName="stroke-dashoffset"

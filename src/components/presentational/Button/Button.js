@@ -9,10 +9,10 @@ const Button = ({text, onClick, theme='light', style={}, className=null}) => (
 );
 
 Button.propTypes = {
-    text: PropTypes.string,
+    text: PropTypes.any,
     onClick: PropTypes.func,
     theme: PropTypes.string,
-    className: PropTypes.object,
+    className: PropTypes.any,
     style: PropTypes.object
 }
 

@@ -84,16 +84,16 @@ const Landing = () => {
 						<path
 							d="M1.17578 11.0015L20.9701 11.347"
 							stroke="#101010"
-							stroke-width="1.15816"
-							stroke-linecap="square"
-							stroke-linejoin="round"
+							strokeWidth="1.15816"
+							strokeLinecap="square"
+							strokeLinejoin="round"
 						/>
 						<path
 							d="M11.4467 1.17931L21.1694 11.3505L11.0977 21.1763"
 							stroke="#101010"
-							stroke-width="1.15816"
-							stroke-linecap="square"
-							stroke-linejoin="round"
+							strokeWidth="1.15816"
+							strokeLinecap="square"
+							strokeLinejoin="round"
 						/>
 					</svg>
 				</div>

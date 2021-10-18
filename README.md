@@ -45,3 +45,16 @@ npm run linux_dev (on Linux)
 this will install all packages and start both frontend and backend servers
 
 but you need run [rabbitMQ](https://www.rabbitmq.com/), [redis](https://redis.io/) and [mySQL](https://www.mysql.com/) by yourself, and if you configure it with not default ports, don't forget to change [./server/.env](server/.env) and [./services/dataManager/.env](services/dataManager/.env) if needed!
+
+## 2. dumped data
+
+### 2.1 Users
+
+We have got hard-coded users:
+
+|login  |password|
+|-------|--------|
+|root   |root    |
+|test   |test    |
+|maksim |maksim  |
+|maryana|maryana |

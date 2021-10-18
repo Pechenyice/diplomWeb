@@ -52,9 +52,10 @@ but you need run [rabbitMQ](https://www.rabbitmq.com/), [redis](https://redis.io
 
 We have got hard-coded users:
 
-|login  |password|
-|-------|--------|
-|root   |root    |
-|test   |test    |
-|maksim |maksim  |
-|maryana|maryana |
+|login   |password|
+|--------|--------|
+|root    |root    |
+|test    |test    |
+|bcrypted|bcrypted|
+|maksim  |maksim  |
+|maryana |maryana |

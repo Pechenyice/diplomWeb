@@ -14,7 +14,6 @@ const middlewares = {
 
         (async () => {
             let [result, fields] = await dbUtils.getUserByToken(req.cookies.authToken);
-
             if (!result.length) {
                 res.send(JSON.stringify({AUTH: 'FAIL', cause: 'Need auth again!'}));
                 return;

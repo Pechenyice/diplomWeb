@@ -29,7 +29,7 @@
     "eject": "react-scripts eject",
     "win_dev": "start npm run start && cd ./server && start npm run start && cd ../services/dataManager && start node amqpServer.js",
     "linux_dev": "npm run start && cd ./server && npm run start cd ../services/dataManager && node amqpServer.js",
-    "initial": "npm i && cd ./server && npm i && cd ../ && npm run dev"
+    "initial": "npm i && cd ./server && npm i && cd ../ && cd ./services/dataManager && npm i && cd ../../"
   },
   "eslintConfig": {
     "extends": [

@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: diplom-configmap
+data:
+  ENV: 'DOCKERDEV'
+  DBHOST: 'mysql'
+  DBUSER: 'root'
+  DBPASS: 'root'
+  DBNAME: 'diplom'
+  TOKENLIFETIME: '300'
+  RABBITURL: 'amqp://rabbitmq:5672'
+  RPCQUEUE: 'rpc_queue'
+  REDISHOST: 'redis'
+  REDISPORT: '6379'
+...

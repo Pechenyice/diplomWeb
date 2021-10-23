@@ -63,6 +63,8 @@ services:
       context: .
       args:
         BACKEND_URL: 'diplom-backend:3001'
+    links:
+      - "diplom-backend:diplom-backend"
     image: pechenyice/diplom:test
     restart: always
     ports:

@@ -20,7 +20,7 @@ services:
     volumes:
       - ./dumps:/docker-entrypoint-initdb.d
   diplom_backend:
-    image: pechenyice/diplom_backend:test
+    image: pechenyice/diplom-backend:test
     restart: always
     environment:
       ENV: 'DOCKERDEV'
@@ -39,7 +39,7 @@ services:
       - mysql
       - rabbitmq
   diplom_backend_services_dataManager:
-    image: pechenyice/diplom_service_data_manager:test
+    image: pechenyice/diplom-service-data-manager:test
     restart: always
     environment:
       ENV: 'DOCKERDEV'

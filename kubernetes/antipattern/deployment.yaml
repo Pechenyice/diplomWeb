@@ -40,11 +40,15 @@ spec:
         - containerPort: 3306
       - image: pechenyice/diplom-service-data-manager:test
         name: diplom-service-data-manager
+        command: ["node", "amqpServer.js"]
+        imagePullPolicy: Always
         envFrom:
         - configMapRef:
             name: diplom-configmap
       - image: pechenyice/diplom-backend:test
         name: diplom-backend
+        command: ["npm", "start"]
+        imagePullPolicy: Always
         env:
         - name: PORT
           value: '3000'
@@ -58,4 +62,11 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx/conf.d/
+      volumes:
+      - name: config
+        configMap:
+          name: nginx-config-map
 ...

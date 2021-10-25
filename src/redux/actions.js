@@ -70,7 +70,14 @@ const actions = {
         NEW_REACTION_REQUEST_STARTED: 'NEW_REACTION_REQUEST_STARTED',
         NEW_REACTION_REQUEST_SUCCESSED: 'NEW_REACTION_REQUEST_SUCCESSED',
         NEW_REACTION_REQUEST_FAILED: 'NEW_REACTION_REQUEST_FAILED',
-        CLEAR_PROFILE_PLANS: 'CLEAR_PROFILE_PLANS'
+        CLEAR_PROFILE_PLANS: 'CLEAR_PROFILE_PLANS',
+        COOKIE_AGREEMENT: 'COOKIE_AGREEMENT'
+    },
+
+    agreeWithCookie: function() {
+        return {
+            type: this.types.COOKIE_AGREEMENT,
+        }
     },
 
     findPlan: function ({ planId, edId }) {

@@ -86,10 +86,18 @@ const initialState = {
 	successes: {
 		content: [],
 	},
+	cookie: localStorage.getItem('knowAboutCookie') || false
 };
 
 function reducer(state = initialState, action) {
 	switch (action.type) {
+		case actions.types.COOKIE_AGREEMENT: {
+			localStorage.setItem('knowAboutCookie', true);
+			return Object.assign({}, state, {
+				cookie: localStorage.getItem('knowAboutCookie')
+			});
+		}
+
 		case actions.types.APPLY_FILTERS: {
 			return Object.assign({}, state, {
 				filters: action.filters,

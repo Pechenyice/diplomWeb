@@ -1,5 +1,6 @@
 [NEEDS]
 1. refactor code, styles and layouts to minimize code debt (doublicate svgs, comments, console.log and other)
+2. Check if test mode not (in BusinessPlan) not crashes main logic and rebuild fast-boot docker containers
 
 [CHECKS]
 

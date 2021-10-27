@@ -15,6 +15,7 @@ import ProfileDisplay from './components/container/ProfileDisplay/ProfileDisplay
 import ProfileRedirect from './components/container/ProfileRedirect/ProfileRedirect';
 import Footer from './components/presentational/Footer/Footer';
 import Terms from './components/presentational/Terms/Terms';
+import CookieDisplay from './components/container/CookieDisplay/CookieDisplay';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
 
       <Footer />
       <EventsDisplay />
+      <CookieDisplay />
     </section>
   );
 }

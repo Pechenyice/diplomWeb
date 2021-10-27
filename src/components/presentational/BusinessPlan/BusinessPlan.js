@@ -29,6 +29,7 @@ const BusinessPlan = ({
 	onPlanDeleted,
 	onUserReact,
 	planActions,
+	testMode=false,
 }) => {
 	const IS_PROFITABLE =
 		plan?.data?.expence?.salary +
@@ -768,6 +769,7 @@ const BusinessPlan = ({
 														style={{
 															width: "100%",
 														}}
+														testMode={testMode}
 													/>
 												</div>
 												<div
@@ -890,6 +892,7 @@ const BusinessPlan = ({
 														GRAPH_SPENDINGS_OPTIONS
 													}
 													style={{ width: "100%" }}
+													testMode={testMode}
 												/>
 											</div>
 											<div
@@ -1323,6 +1326,7 @@ BusinessPlan.propTypes = {
 	onPlanDeleted: PropTypes.func,
 	onUserReact: PropTypes.func,
 	planActions: PropTypes.object,
+	testMode: PropTypes.bool
 };
 
 export default BusinessPlan;

@@ -579,6 +579,7 @@ const Profile = ({
 
 Profile.propTypes = {
 	userId: PropTypes.string,
+	cachedForUser: PropTypes.string,
 	businessman: PropTypes.string,
 	login: PropTypes.any,
 	nickname: PropTypes.any,

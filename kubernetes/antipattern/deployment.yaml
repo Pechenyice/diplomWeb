@@ -38,16 +38,21 @@ spec:
           value: 'root'
         ports:
         - containerPort: 3306
+        volumeMounts:
+        - name: db-dump
+          mountPath: /docker-entrypoint-initdb.d
       - image: pechenyice/diplom-service-data-manager:test
         name: diplom-service-data-manager
-        command: ["node", "amqpServer.js"]
+        command: ["/bin/sh","-c"]
+        args: ["npx wait-port localhost:5672 && npx wait-port localhost:3306 && node amqpServer.js"]
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
             name: diplom-configmap
       - image: pechenyice/diplom-backend:test
         name: diplom-backend
-        command: ["npm", "start"]
+        command: ["/bin/sh","-c"]
+        args: ["npx wait-port localhost:5672 && npx wait-port localhost:3306 && npm start"]
         imagePullPolicy: Always
         env:
         - name: PORT
@@ -69,4 +74,7 @@ spec:
       - name: config
         configMap:
           name: nginx-config-map
+      - name: db-dump
+        configMap:
+          name: db-dump
 ...

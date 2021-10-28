@@ -70,6 +70,7 @@ PlanEditor.propTypes = {
     onNeedTypes: PropTypes.func,
     onSubmit: PropTypes.func,
 	onError: PropTypes.func,
+    plan: PropTypes.any
 }
 
 export default PlanEditor;

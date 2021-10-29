@@ -98,7 +98,7 @@ but you need run [rabbitMQ](https://www.rabbitmq.com/), [redis](https://redis.io
 
 ## Users
 
-Project has got hard-coded users are honored for for participating and helping the project:
+Project has got hard-coded users that are honored for participating and helping the project:
 
 |login         |password      |
 |--------------|--------------|

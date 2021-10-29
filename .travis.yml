@@ -1,0 +1,16 @@
+os: linux
+dist: trusty
+sudo: required
+language: node_js
+node_js:
+  - "stable"
+before_script:
+  - npm start &
+cache:
+  npm: true
+  directories:
+    - node_modules
+install:
+  - npm install
+script:
+  - npm test

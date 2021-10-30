@@ -11,6 +11,7 @@
 2. e2e testing
 3. add more redis cache data
 4. add proxy not from package, but from code [deprecated, because of build + nginx proxy]
+5. refactor e2e to not to use puppeteer because of 350mb size
 
 [BACKEND]
 

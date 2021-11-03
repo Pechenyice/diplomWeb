@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 import PropTypes from 'prop-types';
 
-const Graph = ({ style, type, data, options, testMode=false }) => {
+const Graph = React.memo(({ style, type, data, options, testMode=false }) => {
     const graphRef = useRef(null);
 
     useEffect(() => {
@@ -23,7 +23,7 @@ const Graph = ({ style, type, data, options, testMode=false }) => {
             <canvas ref={graphRef} style={style} />
         </div>
     );
-}
+}, (prevProps, nextProps) => true);
 
 Graph.propTypes = {
     style: PropTypes.object, 

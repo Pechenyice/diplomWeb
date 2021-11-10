@@ -9,7 +9,7 @@ import Comment from "./Comment";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 import Select from "../Select/Select";
-import Graph from "../../helpers/AuthorizedRoute/Graph";
+import Graph from "../../helpers/Graph/Graph";
 import BusinessTag from "../BusinessTag/BusinessTag";
 import { CSSTransition } from "react-transition-group";
 import SVGManager from "../../../svgs/svgs";

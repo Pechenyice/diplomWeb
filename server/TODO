@@ -1,8 +1,8 @@
 [NEEDS]
 1. refactor code, styles and layouts to minimize code debt (doublicate svgs, comments, console.log and other)
 2. Check if test mode not (in BusinessPlan) not crashes main logic and rebuild fast-boot docker containers
-3. Refactor Graph.js path in it's own directory
-4. Remove wait-ports timeout because of re-initing cmd in kubernetes deploy
+3. Remove wait-ports timeout because of re-initing cmd in kubernetes deploy
+4. fix inputs on create page to normal size and words
 
 [CHECKS]
 
@@ -11,7 +11,6 @@
 2. e2e testing
 3. add more redis cache data
 4. add proxy not from package, but from code [deprecated, because of build + nginx proxy]
-5. refactor e2e to not to use puppeteer because of 350mb size
 
 [BACKEND]
 

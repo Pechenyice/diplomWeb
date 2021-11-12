@@ -74,7 +74,7 @@ const actions = {
         COOKIE_AGREEMENT: 'COOKIE_AGREEMENT'
     },
 
-    agreeWithCookie: function() {
+    agreeWithCookie: function () {
         return {
             type: this.types.COOKIE_AGREEMENT,
         }
@@ -332,7 +332,7 @@ const actions = {
         }
     },
 
-    fetchPublishComment: function(businessId, edId, comment) {
+    fetchPublishComment: function (businessId, edId, comment) {
         return (dispatch) => {
             dispatch(this.fetchPublishCommentRequest());
             Client.addComment(businessId, edId, comment)
@@ -342,7 +342,7 @@ const actions = {
                     } else {
                         this.fetchPublishCommentFail();
                         dispatch(this.addError(result.cause));
-                    }                    
+                    }
                 })
                 .catch((e) => {
                     if (e.name === 'AbortError') {
@@ -420,9 +420,12 @@ const actions = {
             dispatch(this.fetchSignUpRequest());
             Client.sendSignUpRequest(login, nickname, pass)
                 .then((result) => {
-                    result.success ?
-                        dispatch(this.fetchSignUpSuccess(result)) :
+                    if (result.success) {
+                        dispatch(this.fetchSignUpSuccess(result))
+                    } else {
+                        dispatch(this.fetchSignUpFail());
                         dispatch(this.addError(result.cause));
+                    }
                 })
                 .catch((e) => {
                     if (e.name === 'AbortError') {
@@ -514,7 +517,7 @@ const actions = {
                 })
         }
     },
-    
+
     fetchDeletePlanRequest: function () {
         return {
             type: this.types.DELETE_PLAN_REQUEST_STARTED
@@ -535,7 +538,7 @@ const actions = {
         }
     },
 
-    fetchDeletePlan: function(bId, eId) {
+    fetchDeletePlan: function (bId, eId) {
         return (dispatch) => {
             dispatch(this.fetchDeletePlanRequest());
             Client.deletePlan(bId, eId)
@@ -744,7 +747,7 @@ const actions = {
         }
     },
 
-    fetchNewReaction: function(reaction, bId, eId) {
+    fetchNewReaction: function (reaction, bId, eId) {
         return (dispatch) => {
             dispatch(this.fetchNewReactionRequest());
             Client.sendReaction(reaction, bId, eId)

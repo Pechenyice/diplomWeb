@@ -9,11 +9,5 @@ describe('App loads right', () => {
       'have.text',
       'Business area for business idea'
     );
-
-    /**
-     * go to 1_auth spec
-     */
-    cy.xpath('/html/body/div/section/header/div[2]/a[3]').click();
-    cy.url().should('eq', 'http://localhost:3000/auth');
   });
 });

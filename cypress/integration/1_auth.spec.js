@@ -116,13 +116,6 @@ describe('Auth page is functioning right', () => {
     cy.get('button[class^="Button_button"]').eq(1).click({ force: true }); //want to set force option because of out of the view, it is very strange
   });
 
-  it('goes to next test spec', () => {
-    /**
-     * go to 2_profile spec
-     */
-    cy.url().should('eq', 'http://localhost:3000/profile/own');
-  });
-
   /**
    * this is e2e test, so we shouldn't use mock for register users
    * cy.intercept('POST', '/api/addUser', []).as('register');

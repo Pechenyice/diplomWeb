@@ -1,102 +1,131 @@
+/**
+ * uuid analog
+ */
+function generateHash() {
+  return '--' + Date.now();
+}
+
 describe('Auth page is functioning right', () => {
-    it('show page content', () => {
-        cy.visit('http://localhost:3000/auth');
+  it('shows page content', () => {
+    cy.visit('http://localhost:3000/auth');
 
-        /*
-         * check page renders without errors
-         */
-        cy.get('input').should('have.length', 7);
+    /**
+     * check page renders without errors
+     */
+    cy.get('input').should('have.length', 7);
+  });
 
-        /*
-         * check empty field validation
-         */
-        cy.get('input').eq(0).type('root');
+  it('validates empty fields', () => {
+    /**
+     * check empty field validation
+     */
+    cy.get('input').eq(0).type('root');
 
-        cy.get('button[class^="Button_button"]').eq(0).click();
+    cy.get('button[class^="Button_button"]').eq(0).click();
 
-        cy.get('div[class*="EventsSection_error"]').eq(0).should('have.text', 'Need to correct fields!')
+    cy.get('div[class*="EventsSection_error"]')
+      .eq(0)
+      .should('have.text', 'Need to correct fields!');
+  });
 
-        /*
-         * check wrong password server answer
-         */
-        cy.get('input').eq(1).type('root1');
+  it('checks wrong password server response', () => {
+    /**
+     * check wrong password server answer
+     */
+    cy.get('input').eq(1).type('root1');
 
-        cy.get('button[class^="Button_button"]').eq(0).click();
+    cy.get('button[class^="Button_button"]').eq(0).click();
 
-        cy.get('div[class*="EventsSection_error"]').should('have.length', 2) // if check second elem right here, it will fail, but it knows about length = 2 WOW
-        cy.get('div[class*="EventsSection_error"]').eq(1).should('have.text', 'No such user, please check login or password!')
+    cy.get('div[class*="EventsSection_error"]').should('have.length', 2); // if check second elem right here, it will fail, but it knows about length = 2 WOW
+    cy.get('div[class*="EventsSection_error"]')
+      .eq(1)
+      .should('have.text', 'No such user, please check login or password!');
+  });
 
+  it('checks right server response', () => {
+    /**
+     * check good auth data submition
+     */
+    cy.get('input').eq(1).clear();
+    cy.get('input').eq(1).type('root');
 
-        /*
-         * check good auth data submition
-         */
-        cy.get('input').eq(1).clear();
-        cy.get('input').eq(1).type('root');
+    cy.get('button[class^="Button_button"]').eq(0).click();
 
-        cy.get('button[class^="Button_button"]').eq(0).click();
+    cy.url().should('eq', 'http://localhost:3000/profile');
+  });
 
-        cy.url().should('eq', 'http://localhost:3000/profile');
+  it('checks right server check token response', () => {
+    /**
+     * exit, we didn't finished
+     * part of 2_profile.spec testing
+     */
+    cy.visit('http://localhost:3000/profile/own');
 
-        /*
-         * exit, we didn't finished
-         */
-        cy.visit('http://localhost:3000/profile/own');
+    cy.url().should('eq', 'http://localhost:3000/auth');
+  });
 
-        cy.get('button[class*="Profile_profileButton"]').eq(2).click();
+  it('checks wrong sign up server response', () => {
+    /**
+     * check wrong sign up data submition
+     */
+    cy.get('button[class^="Button_button"]').eq(1).click();
+    cy.get('div[class*="EventsSection_error"]')
+      .eq(0)
+      .should('have.text', 'Please, accept the terms!');
 
-        cy.url().should('eq', 'http://localhost:3000/auth');
+    cy.get('#checkbox').click();
+    cy.get('button[class^="Button_button"]').eq(1).click();
+    cy.get('div[class*="EventsSection_error"]')
+      .eq(1)
+      .should('have.text', 'Need to correct fields!');
 
-        /*
-         * check wrong sign up data submition
-         */
-        cy.get('button[class^="Button_button"]').eq(1).click();
-        cy.get('div[class*="EventsSection_error"]').eq(0).should('have.text', 'Please, accept the terms!');
+    cy.get('input').eq(2).type('root');
+    cy.get('input').eq(3).type('root');
+    cy.get('input').eq(4).type('root');
+    cy.get('input').eq(5).type('root');
+    cy.get('button[class^="Button_button"]').eq(1).click();
+    cy.get('div[class*="EventsSection_error"]').should('have.length', 3); // Same problem [GO TO line 26]
+    cy.get('div[class*="EventsSection_error"]')
+      .eq(2)
+      .should('have.text', 'Duplicate login or nickname, change it please!');
 
-        cy.get('#checkbox').click();
-        cy.get('button[class^="Button_button"]').eq(1).click();
-        cy.get('div[class*="EventsSection_error"]').eq(1).should('have.text', 'Need to correct fields!');
+    cy.get('input').eq(2).clear();
+    cy.get('input').eq(3).clear();
+    cy.get('input').eq(4).clear();
+    cy.get('input').eq(5).clear();
+  });
 
-        cy.get('input').eq(2).type('root');
-        cy.get('input').eq(3).type('root');
-        cy.get('input').eq(4).type('root');
-        cy.get('input').eq(5).type('root');
-        cy.get('button[class^="Button_button"]').eq(1).click();
-        cy.get('div[class*="EventsSection_error"]').should('have.length', 3) // Same problem [GO TO line 26]
-        cy.get('div[class*="EventsSection_error"]').eq(2).should('have.text', 'Duplicate login or nickname, change it please!');
+  it('checks right sign up server response', () => {
+    /**
+     * need run in TEST_DEV (isolated docker container gor example)
+     * so it will create test accounts with rnd hash
+     */
+    let uniqueHash = generateHash();
+    cy.get('input')
+      .eq(2)
+      .type('fakeRoot:TEST' + uniqueHash);
+    cy.get('input')
+      .eq(3)
+      .type('fakeRoot:TEST' + uniqueHash);
+    cy.get('input')
+      .eq(4)
+      .type('fakeRoot:TEST' + uniqueHash);
+    cy.get('input')
+      .eq(5)
+      .type('fakeRoot:TEST' + uniqueHash);
+    cy.get('button[class^="Button_button"]').eq(1).click({ force: true }); //want to set force option because of out of the view, it is very strange
+  });
 
-        cy.get('input').eq(2).clear();
-        cy.get('input').eq(3).clear();
-        cy.get('input').eq(4).clear();
-        cy.get('input').eq(5).clear();
+  it('goes to next test spec', () => {
+    /**
+     * go to 2_profile spec
+     */
+    cy.url().should('eq', 'http://localhost:3000/profile/own');
+  });
 
-        /*
-         * uuid analog
-         */
-        function generateHash() {
-            return '--' + Date.now();
-        }
-
-        /*
-         * need run in TEST_DEV (isolated docker container gor example)
-         * so it will create test accounts with rnd hash
-         */
-        let uniqueHash = generateHash();
-        cy.get('input').eq(2).type('fakeRoot:TEST' + uniqueHash);
-        cy.get('input').eq(3).type('fakeRoot:TEST' + uniqueHash);
-        cy.get('input').eq(4).type('fakeRoot:TEST' + uniqueHash);
-        cy.get('input').eq(5).type('fakeRoot:TEST'+ uniqueHash);
-        cy.get('button[class^="Button_button"]').eq(1).click({force: true}); //want to set force option because of out of the view, it is very strange
-
-        /*
-         * go to 2_profile spec
-         */
-        cy.url().should('eq', 'http://localhost:3000/profile/own');
-
-
-        /*
-         * this is e2e test, so we shouldn't use mock for register users
-         */
-        // cy.intercept('POST', '/api/addUser', []).as('register');
-        // cy.wait('@register');
-    });
+  /**
+   * this is e2e test, so we shouldn't use mock for register users
+   * cy.intercept('POST', '/api/addUser', []).as('register');
+   * cy.wait('@register');
+   */
 });

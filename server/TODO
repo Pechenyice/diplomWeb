@@ -2,7 +2,7 @@
 1. refactor code, styles and layouts to minimize code debt (doublicate svgs, comments, console.log and other)
 2. Check if test mode not (in BusinessPlan) not crashes main logic and rebuild fast-boot docker containers
 3. Remove wait-ports timeout because of re-initing cmd in kubernetes deploy
-4. fix inputs on create page to normal size and words
+4. rebuild and push docker images
 
 [CHECKS]
 

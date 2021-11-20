@@ -209,7 +209,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan = null }) => 
             <Input
               id={'projectMaintenance'}
               value={state.spendings.maintenance}
-              label={'Maintenance*'}
+              label={'Maintenance, month*'}
               isEmpty={!state.spendings.maintenance.length}
               onChange={handleMaintenanceInput}
               style={{ marginBottom: '12px' }}

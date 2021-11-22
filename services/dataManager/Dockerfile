@@ -4,7 +4,7 @@ COPY package.json .
 COPY package-lock.json .
 RUN npm install
 COPY . .
-CMD npx wait-port -t 15 rabbitmq:5672 && \
-    npx wait-port -t 15 mysql:3306 && \
-    npx wait-port -t 15 redis:6379 && \
+CMD npx wait-port rabbitmq:5672 && \
+    npx wait-port mysql:3306 && \
+    npx wait-port redis:6379 && \
     node amqpServer.js

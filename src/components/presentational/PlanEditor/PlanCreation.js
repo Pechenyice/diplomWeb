@@ -193,7 +193,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan = null }) => 
             <Input
               id={'projectSalary'}
               value={state.spendings.salary}
-              label={'Salary, month*'}
+              label={'Salary, $/month*'}
               isEmpty={!state.spendings.salary.length}
               onChange={handleSalaryInput}
               style={{ marginBottom: '12px' }}
@@ -201,7 +201,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan = null }) => 
             <Input
               id={'projectElec'}
               value={state.spendings.electricity}
-              label={'Electricity, month*'}
+              label={'Electricity, $/month*'}
               isEmpty={!state.spendings.electricity.length}
               onChange={handleElectricityInput}
               style={{ marginBottom: '12px' }}
@@ -209,7 +209,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan = null }) => 
             <Input
               id={'projectMaintenance'}
               value={state.spendings.maintenance}
-              label={'Maintenance, month*'}
+              label={'Maintenance, $/month*'}
               isEmpty={!state.spendings.maintenance.length}
               onChange={handleMaintenanceInput}
               style={{ marginBottom: '12px' }}
@@ -218,7 +218,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan = null }) => 
               <Input
                 id={'projectMat'}
                 value={state.spendings.materials}
-                label={'Materials*'}
+                label={'Materials, $*'}
                 isEmpty={!state.spendings.materials.length}
                 onChange={handleMaterialsInput}
                 style={{ marginBottom: '12px' }}
@@ -226,7 +226,7 @@ const PlanCreation = ({ categories, types, onError, onSubmit, plan = null }) => 
               <Input
                 id={'projectAm'}
                 value={state.spendings.amortization}
-                label={'Amortization*'}
+                label={'Amortization, $*'}
                 isEmpty={!state.spendings.amortization.length}
                 onChange={handleAmortizationInput}
                 style={{ marginBottom: '12px' }}
